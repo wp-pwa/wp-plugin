@@ -3,7 +3,7 @@
 Plugin Name: Worona
 Plugin URI: http://www.worona.org/
 Description: Turn your WordPress site into a native iOS, Android and Windows Phone App.
-Version: 1.0.1
+Version: 1.1.6
 Author: Worona Labs SL
 Author URI: http://www.worona.org/
 License: GPL v3
@@ -17,7 +17,7 @@ if( !class_exists('worona') ):
 class worona
 {
 	// vars
-	public $plugin_version = '1.0.1';
+	public $plugin_version = '1.1.6';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -43,11 +43,13 @@ class worona
 		add_action('init', array($this, 'init'), 1);
 		add_action('admin_menu', array($this, 'worona_admin_actions')); //add the admin page
 		add_action('admin_init', array($this,'worona_register_settings')); //register the settings
-		add_action('admin_notices',array($this,'worona_admin_notices'));//Display the validation errors and update messages
+		add_action('admin_notices',array($this,'worona_admin_notices')); //Display the validation errors and update messages
 
 		add_action('wp_ajax_sync_with_worona',array($this,'sync_with_worona'));
 		add_action('wp_ajax_worona_change_siteid',array($this,'change_siteid_ajax'));
+		add_action('wp_ajax_worona_change_advanced_settings',array($this,'change_advanced_settings_ajax'));
 		add_action('wp_ajax_worona_send_contact_form',array($this,'send_contact_form_ajax'));
+		add_action('wp_head', array($this, 'worona_add_js_injector'), 1); // adds the injector
 
 		add_action('plugins_loaded', array($this,'wp_rest_api_plugin_is_installed'));
 		add_action('plugins_loaded', array($this,'wp_rest_api_plugin_is_active'));
@@ -68,6 +70,10 @@ class worona
 			register_rest_route( 'worona/v1', '/plugin-version/', array(
 				'methods' => 'GET',
 				'callback' => array( $this,'get_worona_plugin_version'))
+			);
+			register_rest_route( 'worona/v1', '/site-info/', array(
+				'methods' => 'GET',
+				'callback' => array( $this,'get_site_info'))
 			);
 		});
 		// filters
@@ -228,6 +234,26 @@ class worona
 	}
 
 	/*
+  *  worona_add_js_detector
+  *
+  *  This function is called during the wp_head() and will do things such as:
+  *  include a js script to detect if it's mobile
+  *
+  *  @type  method
+  *  @date  30/07/15
+  *  @since  1.0.0
+  *
+  *  @param  N/A
+  *  @return  N/A
+  */
+
+  function worona_add_js_injector() {
+		// require('injector/worona-injector.php');
+		// Commented because we are using require(WP_PLUGIN_DIR . '/worona/injector/worona-injector.php');
+		// on header.php, just after <head>.
+  }
+
+	/*
 	*  add_worona_content_to_api
 	*
 	*  This function is called during the 'json_prepare_post' filter and will do things such as:
@@ -273,6 +299,22 @@ class worona
 
 	function get_worona_plugin_version() {
 		return array('plugin_version' => $this->plugin_version);
+	}
+
+	function get_site_info() {
+		$homepage_title = get_bloginfo( 'name' );
+		$homepage_metadesc = get_bloginfo( 'description' );
+
+		$site_info = array(
+			'homepage_title' => $homepage_title,
+			'homepage_metadesc' => $homepage_metadesc
+		);
+
+		if(has_filter('worona_get_site_info')) {
+			$site_info = apply_filters('worona_get_site_info', $site_info);
+		}
+
+		return $site_info;
 	}
 
 	/*
@@ -437,6 +479,22 @@ class worona
 		}
 	}
 
+	function change_advanced_settings_ajax() {
+
+		$worona_ssr = $_POST['worona_ssr'];
+		$worona_cdn = $_POST['worona_cdn'];
+
+		$settings = get_option('worona_settings');
+		$settings['worona_ssr'] = $worona_ssr;
+		$settings['worona_cdn'] = $worona_cdn;
+
+		update_option('worona_settings', $settings);
+
+		wp_send_json( array(
+			'status' => 'ok',
+		));
+	}
+
 	public function send_contact_form_ajax() {
 		$from = $_POST['email'];
 		$name = $_POST['name'];
@@ -590,8 +648,28 @@ function worona_activation() {
 		$siteId = generate_siteId();
 	}
 
-	add_option('worona_settings', array("synced_with_worona" => $synced_with_worona, "worona_siteid" => $siteId), '','yes');
+	if (isset($settings['worona_ssr'])) {
+		$worona_ssr = $settings['worona_ssr'];
+	} else {
+		$worona_ssr = 'https://pwa.worona.io';
+	}
 
+	if (isset($settings['worona_cdn'])) {
+		$worona_cdn = $settings['worona_cdn'];
+	} else {
+		$worona_cdn = 'https://pwa-cdn.worona.io';
+	}
+
+	$defaults = array("synced_with_worona" => $synced_with_worona,
+										"worona_siteid" => $siteId,
+										"worona_ssr" => $worona_ssr,
+										"worona_cdn" => $worona_cdn);
+
+	if($settings === false){
+		add_option('worona_settings',$defaults , '','yes');
+	} else {
+		update_option('worona_settings',$defaults);
+	}
 	flush_rewrite_rules();
 }
 
