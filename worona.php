@@ -3,7 +3,7 @@
 Plugin Name: Worona
 Plugin URI: http://www.worona.org/
 Description: Turn your WordPress site into a native iOS, Android and Windows Phone App.
-Version: 1.1.6
+Version: 1.1.7
 Author: Worona Labs SL
 Author URI: http://www.worona.org/
 License: GPL v3
@@ -17,7 +17,7 @@ if( !class_exists('worona') ):
 class worona
 {
 	// vars
-	public $plugin_version = '1.1.6';
+	public $plugin_version = '1.1.7';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -654,10 +654,10 @@ function worona_activation() {
 		$worona_ssr = 'https://pwa.worona.io';
 	}
 
-	if (isset($settings['worona_cdn'])) {
-		$worona_cdn = $settings['worona_cdn'];
+	if (isset($settings['worona_static'])) {
+		$worona_static = $settings['worona_static'];
 	} else {
-		$worona_cdn = 'https://pwa-cdn.worona.io';
+		$worona_static = 'https://pwa-static.worona.io';
 	}
 
 	$defaults = array("synced_with_worona" => $synced_with_worona,
