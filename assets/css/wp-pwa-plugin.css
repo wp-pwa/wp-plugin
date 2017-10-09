@@ -14,7 +14,7 @@
   text-decoration: underline;
 }
 
-.worona-message {
+.wp-pwa-message {
 	position: relative;
 	border-left-color: #4a90e2 !important;
 	overflow: hidden;

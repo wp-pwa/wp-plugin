@@ -13,11 +13,11 @@ function getIframeUrl(e) {
   props += "&user-name=" + jQuery('input[name=user-name]').val();
   props += "&email=" + jQuery('input[name=email]').val();
   props += "&wp-lan=" + jQuery('input[name=wp-lan]').val();
-  props += "&worona-version=" + jQuery('input[name=worona-version]').val();
-  props += "&worona-siteid=" + jQuery('input[name=worona-siteid]').val();
+  props += "&wp-pwa-version=" + jQuery('input[name=wp-pwa-version]').val();
+  props += "&wp-pwa-siteid=" + jQuery('input[name=wp-pwa-siteid]').val();
 
   if (e == "change-site-id") {
-      props += "&worona-siteid-new=" +jQuery('input#worona-siteid').val();
+      props += "&wp-pwa-siteid-new=" +jQuery('input#wp-pwa-siteid').val();
   }
 
   url = "https://plugin.worona.org/?event=" + e + props;
@@ -73,8 +73,8 @@ jQuery(document).on('ready', function () {
     });
 
     //Create App via AJAX
-    jQuery('#sync-with-worona').on('click', function (e) {
-      jQuery('#sync-with-worona').addClass('is-loading');
+    jQuery('#sync-with-wp-pwa').on('click', function (e) {
+      jQuery('#sync-with-wp-pwa').addClass('is-loading');
       e.preventDefault();
       e.stopPropagation();
 
@@ -102,7 +102,7 @@ jQuery(document).on('ready', function () {
           url: ajaxurl,
           method: "POST",
           data: {
-              action: 'sync_with_worona',
+              action: 'sync_with_wp_pwa',
           },
           success: function (response) {
             if (response.hasOwnProperty('status') && response.status == 'ok' ) {
@@ -110,14 +110,14 @@ jQuery(document).on('ready', function () {
               jQuery('#label-created').toggle();
               jQuery('progress')[0].value = 100;
               jQuery('#step-message').text('You are on step 4/4');
-              jQuery('#worona-siteid-lateral').show();
-              jQuery('span#worona-siteid-span').text(response.siteId);
-              jQuery('input#worona-siteid').val(response.siteId);
+              jQuery('#wp-pwa-siteid-lateral').show();
+              jQuery('span#wp-pwa-siteid-span').text(response.siteId);
+              jQuery('input#wp-pwa-siteid').val(response.siteId);
 
               jQuery('#dashboard-button').removeClass('disabled');
               jQuery('#dashboard-button').addClass('button-primary button-hero');
 
-              var siteid = jQuery('#worona-siteid-span').text();
+              var siteid = jQuery('#wp-pwa-siteid-span').text();
               var url = "https://dashboard.worona.org/" + "site/" + siteid;
               jQuery('#dashboard-button').on('click', function(e){window.open(url)});
             }
@@ -133,19 +133,19 @@ jQuery(document).on('ready', function () {
       jQuery('#change-siteid').addClass('is-loading');
       e.preventDefault();
       e.stopPropagation();
-      var id = jQuery('input#worona-siteid').val();
+      var id = jQuery('input#wp-pwa-siteid').val();
 
       if ( id.length !=17 || id.includes(' ')){
         jQuery('#lateral-error-siteid').show();
-        jQuery('#siteid-error-message').text("Invalid App ID");
+        jQuery('#siteid-error-message').text("Invalid Site ID");
         jQuery('#change-siteid').removeClass('is-loading');
       } else {
         jQuery.ajax({
           url: ajaxurl,
           method: "POST",
           data: {
-              action: 'worona_change_siteid',
-              siteid: jQuery('input#worona-siteid').val()
+              action: 'wp_pwa_change_siteid',
+              siteid: jQuery('input#wp-pwa-siteid').val()
           },
           success: function (response) {
             if (response.hasOwnProperty('status') && response.status == 'ok' ) {
@@ -159,13 +159,13 @@ jQuery(document).on('ready', function () {
               jQuery('#label-created').show(); //it can be displayed already
               jQuery('progress')[0].value = 100;
               jQuery('#step-message').text('You are on step 4/4');
-              jQuery('#worona-siteid-lateral').show();
-              jQuery('span#worona-siteid-span').text(jQuery('input#worona-siteid').val());
+              jQuery('#wp-pwa-siteid-lateral').show();
+              jQuery('span#wp-pwa-siteid-span').text(jQuery('input#wp-pwa-siteid').val());
 
               jQuery('#dashboard-button').removeClass('disabled');
               jQuery('#dashboard-button').addClass('button-primary button-hero');
 
-              var siteid = jQuery('#worona-siteid-span').text();
+              var siteid = jQuery('#wp-pwa-siteid-span').text();
               jQuery('#dashboard-button').on('click', function(e){window.open(url)});
 
               var dashboard_url = 'https://dashboard.worona.org/check-site/' + siteid;
@@ -195,9 +195,9 @@ jQuery(document).on('ready', function () {
         url: ajaxurl,
         method: "POST",
         data: {
-            action: 'worona_change_advanced_settings',
-            worona_ssr: jQuery('input#worona-ssr').val(),
-            worona_static: jQuery('input#worona-static').val()
+            action: 'wp_pwa_change_advanced_settings',
+            wp_pwa_ssr: jQuery('input#wp-pwa-ssr').val(),
+            wp_pwa_static: jQuery('input#wp-pwa-static').val()
         },
         success: function (response) {
           if (response.hasOwnProperty('status') && response.status == 'ok' ) {
@@ -220,48 +220,6 @@ jQuery(document).on('ready', function () {
           jQuery('#advanced-settings-error-message').text("The Advanced Settings couldn't be modified. Please try again.");
           jQuery('#change-advanced-settings').removeClass('is-loading');
         }
-      });
-    });
-
-    //populate unsubscribe checkbox
-    jQuery.ajax({
-        url: "https://backend.worona.io/api/v1/subscriptions/is-unsubscribed",
-        method: "POST",
-        data: {
-            listSlug: 'plugin',
-            email: jQuery('input[name=email]').val()
-        },
-        success: function (response) {
-          if (response.hasOwnProperty('unsubscribed')) {
-            jQuery('#checkbox-plugin-support').prop('checked', !response.unsubscribed);
-          }
-        }
-    });
-
-    //subscribe/unsubscribe from support
-    jQuery('#checkbox-plugin-support').on('change',function() {
-      jQuery('#checkbox-plugin-support').attr('disabled',true);
-
-      var subsUrl;
-
-      if ( jQuery('#checkbox-plugin-support').prop('checked')) {
-        subsUrl = "https://backend.worona.io/api/v1/subscriptions/subscribe";
-      } else {
-        subsUrl = "https://backend.worona.io/api/v1/subscriptions/unsubscribe";
-      }
-
-      jQuery.ajax({
-          url: subsUrl,
-          method: "POST",
-          data: {
-              listSlug: 'plugin',
-              email: jQuery('input[name=email]').val()
-          },
-          success: function (response) {
-            if (response.hasOwnProperty('unsubscribed')) {
-              jQuery('#checkbox-plugin-support').removeAttr('disabled');
-            }
-          }
       });
     });
 });

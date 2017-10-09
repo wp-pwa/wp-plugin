@@ -1,23 +1,23 @@
 <?php
-	global $worona;
+	global $wp_pwa;
 
-	$settings = get_option('worona_settings');
+	$settings = get_option('wp_pwa_settings');
 	//var_dump($settings);
-	//delete_option('worona_settings');
+	//delete_option('wp_pwa_settings');
 	$current_user = wp_get_current_user();
 
-	if (isset($settings["synced_with_worona"])) {
-		$synced_with_worona = $settings["synced_with_worona"];
+	if (isset($settings["synced_with_wp_pwa"])) {
+		$synced_with_wp_pwa = $settings["synced_with_wp_pwa"];
 	} else {
-		$synced_with_worona = false;
+		$synced_with_wp_pwa = false;
 	}
 
 	/* step, progress & GTM events */
 	$progress = 0;
 	$step = 0;
 	$wp_version = get_bloginfo('version');
-	$rest_api_installed = $worona->rest_api_installed;
-	$rest_api_active = $worona->rest_api_active;
+	$rest_api_installed = $wp_pwa->rest_api_installed;
+	$rest_api_active = $wp_pwa->rest_api_active;
 	$rest_api_compatible = true;
 
 	if (version_compare($wp_version, '4.7', '>=')) { //From WP 4.7, the REST API is already installed.
@@ -35,18 +35,18 @@
 		$step = 2;
 		$progress = 33;
 		$gtm_event = "rest-api-installed";
-	} else if ( $rest_api_installed && $rest_api_active && !$synced_with_worona) {
+	} else if ( $rest_api_installed && $rest_api_active && !$synced_with_wp_pwa) {
 		$step = 3;
 		$progress = 66;
 		$gtm_event = "rest-api-active";
-	} else if ( $rest_api_installed && $rest_api_active && $synced_with_worona) {
+	} else if ( $rest_api_installed && $rest_api_active && $synced_with_wp_pwa) {
 		$step = 4;
 		$progress = 100;
 		$gtm_event = "plugin-configured";
 	}
 ?>
 <div class="wrap">
-	<p class="title is-2">Worona</p>
+	<p class="title is-2">WordPress PWA</p>
 	<div class="columns">
 		<div class="column is-half">
 			<div class="box">
@@ -68,7 +68,7 @@
 		 		<?php elseif ($step==1): ?>
 				<div class="content">
 					<p>
-						Worona uses the <a href="http://v2.wp-api.org/" target="_blank">REST API</a> plugin to send the content from your site to the App.
+						WP PWA uses the <a href="http://v2.wp-api.org/" target="_blank">REST API</a> plugin to send the content from your site to the App.
 						<?php
 							if($rest_api_installed) {
 									$install_api_href ="#";
@@ -101,7 +101,7 @@
 					<p>
 						<?php
 							if($rest_api_installed || $rest_api_active ) {
-									$activate_api_href =$worona->get_activate_wp_rest_api_plugin_url();
+									$activate_api_href =$wp_pwa->get_activate_wp_rest_api_plugin_url();
 									$activate_class = "button button-lg button-primary";
 							} else {
 								$activate_api_href = "#";
@@ -117,16 +117,16 @@
 			<div class="box">
 				<nav class="level">
 					<div class="level-left">
-						<p class="title is-5">3. Register in Worona</p>
+						<p class="title is-5">3. Connect this WordPress with the dashboard</p>
 					</div>
 					<div id='label-created' class="level-right" <?php echo ( $step > 3 ? '':'style="display:none;"');?>>
-						<span class="tag is-success">Registered&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-check-circle" aria-hidden="true"></i></span></span>
+						<span class="tag is-success">Connected&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-check-circle" aria-hidden="true"></i></span></span>
 					</div>
 				</nav>
 					<?php if ($step==3): ?>
 					<div class="content">
 						<p>
-							Create an account in the Worona dashboard, and add this site.
+							Copy the Site Id from the dashboard.
 						</p>
 						<?php
 							/*
@@ -141,7 +141,7 @@
 							$email = "";
 							$siteURL = get_site_url();
 							$siteName = get_bloginfo( 'name' );
-							$siteId = $settings["worona_siteid"];
+							$siteId = $settings["wp_pwa_siteid"];
 
 							$current_user = wp_get_current_user();
 							if ($current_user instanceof WP_User) {
@@ -159,23 +159,20 @@
 						<input id="param-siteId" type="hidden" value="<?php echo $siteId; ?>">
 
 						<p id="label-create-buttons">
-							<a href="#" id="sync-with-worona" class="button button-hero button-primary">Register</a>
-							or <a href="#" class="open-change-siteid">insert an existing Site ID</a>
+							<a href="#" target="_blank" style="color:white" class="open-change-siteid button button-lg button-primary button-hero">Insert a valid Site ID</a>
 						</p>
 					</div>
 
 					<?php elseif($step<3):?>
 					<div class="content">
 						<p>
-							Create an account in the Worona dashboard, and add this site.
+							Insert your Site ID from the Dashboard.
 						</p>
 						<p>
-							<a href="#" class="button button-hero disabled">Register</a>
-							or <span style="text-decoration: underline;">insert an existing Site ID</span>
+							<span style="text-decoration: underline;">Insert a PWA Site ID</span>
 						</p>
 					</div>
 					<?php endif;?>
-
 			</div>
 
 			<div class="box">
@@ -186,20 +183,20 @@
 				</nav>
 				<div class="content">
 					<p>
-						Go to the Worona Dashboard to preview your App, configure it and publish it to the stores.
+						Go to the dashboard to preview your PWA and configure it.
 					</p>
 					<p>
 						<?php
-							$worona_dashboard_url = "https://dashboard.worona.org/site/" . $settings["worona_siteid"];
+							$wp_pwa_dashboard_url = "https://dashboard.worona.org/site/" . $settings["wp_pwa_siteid"];
 
 							if ($step==4) {
 								$button_disabled = false;
 							} else {
-								$worona_dashboard_url = "#";
+								$wp_pwa_dashboard_url = "#";
 								$button_disabled = true;
 							}
 						?>
-						<a id="dashboard-button" href="<?php echo $worona_dashboard_url ?>" target="_blank" style="color:white" class="button button-lg <?php echo ($button_disabled ? 'disabled button-hero' : 'button-primary button-hero'); ?>">Configure</a>
+						<a id="dashboard-button" href="<?php echo $wp_pwa_dashboard_url ?>" target="_blank" style="color:white" class="button button-lg <?php echo ($button_disabled ? 'disabled button-hero' : 'button-primary button-hero'); ?>">Configure</a>
 					</p>
 				</div>
 			</div>
@@ -209,51 +206,42 @@
 	 <div class="column is-one-third">
 		 <article class="message is-info">
 			<div class="message-header">
-			  Follow the 4 steps to configure the plugin
+			  <?php if ($step == 4) { echo "Plugin settings"; } else { echo "Follow the 4 steps to configure the plugin";} ?>
 			</div>
 			<div id="#lateral-info-box"class="message-body">
-				<progress class="progress is-info is-medium" value="<?php echo $progress;?>" max="100"></progress>
-				<p id="step-message">
-					You are on <strong>step <?php echo $step;?>/4.</strong>
-				</p>
+				<?php if($step < 4):?>
+					<progress class="progress is-info is-medium" value="<?php echo $progress;?>" max="100"></progress>
+					<p id="step-message">
+						You are on <strong>step <?php echo $step;?>/4.</strong>
+					</p>
+					<hr>
+				<?php endif;?>
 				<?php if ($rest_api_active):?>
-				<hr>
 				<p>
 					<h2>REST API URL:</h2>
 					<?php print(rest_url()); ?>
 				</p>
 			  <?php endif;?>
-				<div id="worona-siteid-lateral" <?php echo ($synced_with_worona?'':'style="display:none;"');?>>
-				<p>
-					<hr>
-					<h2>Worona Site Id:</h2>
-					<span id="worona-siteid-span"><?php echo $settings['worona_siteid'];?></span> <a class="open-change-siteid" href="#">(change)</a>
-				</p>
+				<div id="wp-pwa-siteid-lateral" <?php echo ($synced_with_wp_pwa?'':'style="display:none;"');?>>
+					<p>
+						<hr>
+						<h2>Site Id:</h2>
+						<span id="wp-pwa-siteid-span"><?php echo $settings['wp_pwa_siteid'];?></span> <a class="open-change-siteid" style="text-decoration: underline; font-size: 10px;" href="#">change</a>
+					</p>
 				</div>
-				<div id="worona-advanced-settings-lateral" style="text-align: right; font-size: 10px;" <?php echo ($synced_with_worona?'':'style="display:none;"');?>>
-				<p>
-					<hr>
-					<a class="open-advanced-settings" href="#" style="text-decoration: underline;">Advanced settings</a>
-				</p>
+				<div id="wp-pwa-advanced-settings-lateral" style="text-align: right;" <?php echo ($synced_with_wp_pwa?'':'style="display:none;"');?>>
+					<p>
+						<hr>
+						<a class="open-advanced-settings" href="#" style="font-size: 10px; text-decoration: underline;">Advanced settings</a>
+					</p>
 				</div>
 			</div>
 		 </article>
-		 <article class="message">
-			 <div class="message-body">
-				 <p class="control">
-					 <strong>Worona Support</strong><br><br>
-					 <label class="checkbox">
-						 <input id="checkbox-plugin-support" type="checkbox" 'checked'>
-						 Do you want to receive support emails from our team?
-					 </label>
-				 </p>
-			 </div>
-		</article>
 		 <article id="lateral-change-siteid" class="message is-warning" style="display:none;">
 			 <div class="message-header">
 					<nav class="level">
 						<div class="level-left">
-							<strong> Change Site Id</strong>
+							<strong>Change Site Id</strong>
 						</div>
 						<div class="level-right">
 							<a href="#" class="close-change-siteid" style="color:inherit"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
@@ -262,7 +250,7 @@
 			  </div>
 			  <div class="message-body">
 					<p>
-						<strong>Warning!</strong> Changing your Site Id can create conflicts with the Dashboard and the App.
+						<strong>Warning!</strong> Changing your Site Id can create conflicts with the Dashboard and the PWA.
 					</p>
 					<br>
 					<p>
@@ -285,7 +273,7 @@
 							<td>
 									<fieldset>
 											<label>
-													<input type="text" id="worona-siteid" value="<?php echo ($settings['synced_with_worona']) ? $settings['worona_siteid'] : ''; ?>"/>
+													<input type="text" id="wp-pwa-siteid" value="<?php echo ($settings['synced_with_wp_pwa']) ? $settings['wp_pwa_siteid'] : ''; ?>"/>
 													<br />
 													<span class="description">Enter a valid Site Id</span>
 											</label>
@@ -330,11 +318,11 @@
 					</p>
 					<table class="form-table">
 						<tr>
-							<th scope="row">SSR server</th>
+							<th scope="row">SSR Server</th>
 							<td>
 									<fieldset>
 											<label>
-													<input type="text" id="worona-ssr" value="<?php echo $settings['worona_ssr']; ?>"/>
+													<input type="text" id="wp-pwa-ssr" value="<?php echo $settings['wp_pwa_ssr']; ?>"/>
 													<br />
 													<span class="description">SSR URL</span>
 											</label>
@@ -342,11 +330,11 @@
 							</td>
 						</tr>
 						<tr>
-							<th scope="row">Static server</th>
+							<th scope="row">Static Server</th>
 							<td>
 									<fieldset>
 											<label>
-													<input type="text" id="worona-static" value="<?php echo $settings['worona_static']; ?>"/>
+													<input type="text" id="wp-pwa-static" value="<?php echo $settings['wp_pwa_static']; ?>"/>
 													<br />
 													<span class="description">Static URL</span>
 											</label>
@@ -374,8 +362,8 @@
 <input type="hidden" name="user-name" value="<?php echo $name ?>">
 <input type="hidden" name="email" value="<?php echo $current_user->user_email; ?>">
 <input type="hidden" name="wp-lan" value="<?php echo get_bloginfo('language'); ?>">
-<input type="hidden" name="worona-version" value="<?php echo $worona->plugin_version; ?>">
-<input type="hidden" name="worona-siteid" value="<?php echo $settings['worona_siteid']; ?>">
+<input type="hidden" name="wp-pwa-version" value="<?php echo $wp_pwa->plugin_version; ?>">
+<input type="hidden" name="wp-pwa-siteid" value="<?php echo $settings['wp_pwa_siteid']; ?>">
 
 <?php
 	$wp_version = "&wp-version=" . get_bloginfo('version');
@@ -384,10 +372,10 @@
 	$user_name = "&user-name=" . $name;
 	$email = "&email=" . $current_user->user_email;
 	$wp_lan = "&wp-lan=" . get_bloginfo('language');
-	$worona_version = "&worona-version=" . $worona->plugin_version ;
-	$worona_siteid = "&worona-siteid=" . $settings['worona_siteid'];
+	$wp_pwa_version = "&wp-pwa-version=" . $wp_pwa->plugin_version ;
+	$wp_pwa_siteid = "&wp-pwa-siteid=" . $settings['wp_pwa_siteid'];
 
-	$gtm_url = "https://plugin.worona.org/?event=" . $gtm_event . $wp_version . $site_name . $user_name .  $wp_url . $email . $wp_lan . $worona_version . $worona_siteid;
+	$gtm_url = "https://plugin.worona.org/?event=" . $gtm_event . $wp_version . $site_name . $user_name .  $wp_url . $email . $wp_lan . $wp_pwa_version . $wp_pwa_siteid;
  ?>
 
 <iframe id="gtm-iframe" src="<?php echo $gtm_url; ?>" width="1" height="1"></iframe>

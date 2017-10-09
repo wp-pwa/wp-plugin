@@ -42,11 +42,11 @@ if (is_paged()) {
   $wpPage = 1;
 }
 
-$settings = get_option('worona_settings');
+$settings = get_option('wp_pwa_settings');
 if (isset($_GET['siteId'])) {
   $siteId = $_GET['siteId'];
-} elseif (isset($settings['worona_siteid'])) {
-  $siteId = $settings["worona_siteid"];
+} elseif (isset($settings['wp_pwa_siteid'])) {
+  $siteId = $settings["wp_pwa_siteid"];
 } else {
   $siteId = 'none';
 }
@@ -54,24 +54,24 @@ if (isset($_GET['server'])) {
   $ssr = $_GET['server'];
 } elseif (isset($_GET['ssr'])) {
   $ssr = $_GET['ssr'];
-} elseif (isset($settings['worona_ssr'])) {
-  $ssr = $settings["worona_ssr"];
+} elseif (isset($settings['wp_pwa_ssr'])) {
+  $ssr = $settings["wp_pwa_ssr"];
 } else {
   $ssr = 'https://pwa.worona.io';
 }
 if (isset($_GET['server'])) {
-  $static = $_GET['server'];
-} elseif (isset($_GET['static'])) {
-  $static = $_GET['static'];
-} elseif (isset($settings['worona_static'])) {
-  $static = $settings["worona_static"];
+  $cdn = $_GET['server'];
+} elseif (isset($_GET['cdn'])) {
+  $cdn = $_GET['cdn'];
+} elseif (isset($settings['wp_pwa_cdn'])) {
+  $cdn = $settings["wp_pwa_cdn"];
 } else {
-  $static = 'https://pwa-static.worona.io';
+  $cdn = 'https://pwa-cdn.worona.io';
 }
 
 ?>
 
 <script type='text/javascript'>
-var siteId = '<?php echo $siteId; ?>', wpType = '<?php echo $wpType; ?>', wpId = '<?php echo $wpId; ?>', wpPage = '<?php echo $wpPage; ?>', ssr = '<?php echo $ssr; ?>', statik = '<?php echo $static; ?>';
-<?php require(WP_PLUGIN_DIR . '/worona/injector/injector.min.js'); ?>
+var siteId = '<?php echo $siteId; ?>', wpType = '<?php echo $wpType; ?>', wpId = '<?php echo $wpId; ?>', wpPage = '<?php echo $wpPage; ?>', ssr = '<?php echo $ssr; ?>', cdn = '<?php echo $cdn; ?>';
+<?php require(WP_PLUGIN_DIR . '/wp-pwa/injector/injector.min.js'); ?>
 </script>
