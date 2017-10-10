@@ -180,7 +180,7 @@ class wp_pwa
 
 	function render_wp_pwa_admin() {
 		wp_enqueue_style('bulma-css');
-	  include( 'admin/wp_pwa_admin_page.php');
+	  include( 'admin/wp-pwa-admin-page.php');
 	}
 
 	function get_wp_pwa_site_id() {
