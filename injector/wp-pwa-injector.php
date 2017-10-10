@@ -2,7 +2,7 @@
 
 // Copy on header.php, just after <head> the following code:
 //
-// require(WP_PLUGIN_DIR . '/wordpress-pwa/injector/worona-injector.php');
+// require(WP_PLUGIN_DIR . '/wordpress-pwa/injector/wp-pwa-injector.php');
 //
 // The plugin folder name /wordpress-pwa/ is exposed in the global $wp_pwa_path
 
@@ -67,18 +67,18 @@ if (isset($_GET['server'])) {
   $ssr = 'https://pwa.worona.io';
 }
 if (isset($_GET['server'])) {
-  $cdn = $_GET['server'];
-} elseif (isset($_GET['cdn'])) {
-  $cdn = $_GET['cdn'];
-} elseif (isset($settings['wp_pwa_cdn'])) {
-  $cdn = $settings["wp_pwa_cdn"];
+  $static = $_GET['server'];
+} elseif (isset($_GET['static'])) {
+  $static = $_GET['static'];
+} elseif (isset($settings['wp_pwa_static'])) {
+  $static = $settings["wp_pwa_static"];
 } else {
-  $cdn = 'https://pwa-cdn.worona.io';
+  $static = 'https://pwa-static.worona.io';
 }
 
 ?>
 
 <script type='text/javascript'>
-var siteId = '<?php echo $siteId; ?>', wpType = '<?php echo $wpType; ?>', wpId = '<?php echo $wpId; ?>', wpPage = '<?php echo $wpPage; ?>', ssr = '<?php echo $ssr; ?>', cdn = '<?php echo $cdn; ?>';
-<?php require(WP_PLUGIN_DIR . '/wp-pwa/injector/injector.min.js'); ?>
+var siteId = '<?php echo $siteId; ?>', wpType = '<?php echo $wpType; ?>', wpId = '<?php echo $wpId; ?>', wpPage = '<?php echo $wpPage; ?>', ssr = '<?php echo $ssr; ?>', statik = '<?php echo $static; ?>';
+<?php require(WP_PLUGIN_DIR . '/wordpress-pwa/injector/injector.min.js'); ?>
 </script>
