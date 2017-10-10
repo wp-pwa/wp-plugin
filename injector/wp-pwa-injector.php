@@ -2,7 +2,7 @@
 
 // Copy on header.php, just after <head> the following code:
 //
-// require(WP_PLUGIN_DIR . '/wordpress-pwa/injector/wp-pwa-injector.php');
+// require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] .'/injector/wp-pwa-injector.php');
 //
 // The plugin folder name /wordpress-pwa/ is exposed in the global $wp_pwa_path
 
@@ -80,5 +80,5 @@ if (isset($_GET['server'])) {
 
 <script type='text/javascript'>
 var siteId = '<?php echo $siteId; ?>', wpType = '<?php echo $wpType; ?>', wpId = '<?php echo $wpId; ?>', wpPage = '<?php echo $wpPage; ?>', ssr = '<?php echo $ssr; ?>', statik = '<?php echo $static; ?>';
-<?php require(WP_PLUGIN_DIR . '/wordpress-pwa/injector/injector.min.js'); ?>
+<?php require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.min.js'); ?>
 </script>
