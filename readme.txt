@@ -1,4 +1,4 @@
-=== WordPress Progressive Web Apps ===
+=== WordPress PWA ===
 Contributors: poliuk, luisherranz, rmartinezduque, orballo
 Tags: html5, pwa, webapp, progressive web app
 Donate link:
@@ -13,14 +13,6 @@ The simplest way to create Progressive Web Apps with WordPress. No coding skills
 == Description ==
 
 The simplest way to create Progressive Web Apps with WordPress. No coding skills required. Free forever.
-
-= Our promise =
-
-* *Free forever*. Worona is free and it will always be. We strongly support a free, open internet.
-
-* *Hassle-free*. Getting your site ready for mobile can be time-consuming, frustrating, and expensive, but we believe it doesn’t have to be that way. We’ve built Worona to remove all barriers and make mobile easy.
-
-* *Future-proof*. We will always do our best to provide you with whatever the future brings in mobile development. There’s no reason to worry - we won’t never let you down.
 
 == Installation ==
 
