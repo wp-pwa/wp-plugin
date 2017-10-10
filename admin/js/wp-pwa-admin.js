@@ -157,7 +157,6 @@ jQuery(document).on('ready', function () {
               jQuery('#lateral-change-siteid').hide();
               jQuery('#label-create-buttons').hide(); //they can be hidden already
               jQuery('#label-created').show(); //it can be displayed already
-              jQuery('progress')[0].value = 100;
               jQuery('#step-message').text('You are on step 4/4');
               jQuery('#wp-pwa-siteid-lateral').show();
               jQuery('span#wp-pwa-siteid-span').text(jQuery('input#wp-pwa-siteid').val());
