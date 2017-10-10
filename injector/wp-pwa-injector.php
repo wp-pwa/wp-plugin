@@ -1,5 +1,12 @@
 <?php
 
+// Copy on header.php, just after <head> the following code:
+//
+// require(WP_PLUGIN_DIR . '/wordpress-pwa/injector/worona-injector.php');
+//
+// The plugin folder name /wordpress-pwa/ is exposed in the global $wp_pwa_path
+
+
 if (is_home()) {
   $wpType = 'latest';
   $wpId = 0;

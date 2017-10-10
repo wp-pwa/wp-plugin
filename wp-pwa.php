@@ -471,11 +471,14 @@ class wp_pwa
 function wp_pwa()
 {
 	global $wp_pwa;
+	global $wp_pwa_path;
 
 	if( !isset($wp_pwa) )
 	{
 		$wp_pwa = new wp_pwa();
 	}
+
+	$wp_pwa_path = basename(plugin_dir_path( __FILE__ ));
 
 	return $wp_pwa;
 }
