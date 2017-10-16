@@ -7,10 +7,8 @@ Version: 1.0.8
 Author: WordPress PWA
 Author URI:
 License: GPL v3
-Copyright: WordPress PWA
+Copyright: Worona Labs SL
 */
-
-
 
 if( !class_exists('wp_pwa') ):
 

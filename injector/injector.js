@@ -58,7 +58,7 @@
     var options = {
       tag: 'script',
       id: 'woronaClassic',
-      src: statik + 'static/go-back-to-worona.min.js',
+      src: ssr + 'static/go-back-to-worona.min.js',
     };
     loadScript(options);
   } else if (
@@ -72,7 +72,7 @@
     /* Unescaped html (use http://www.utilities-online.info/urlencode to escape it)
     /* Don't forget to change the CHANGE_FOR_SITE_ID for the javascript variable siteId.
     <head>
-      <link rel='manifest' href='https://precdn.worona.io/api/v1/manifest/CHANGE_FOR_SITE_ID'>
+      <link rel='manifest' href='https://ssr.wppwa.com/api/v1/manifest/CHANGE_FOR_SITE_ID'>
       <style>
         @keyframes progress {
           from {
