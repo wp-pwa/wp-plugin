@@ -1,7 +1,7 @@
 <?php
 
 // Copy on header.php, just after <head> the following code:
-// require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] .'/injector/wp-pwa-injector.php');
+// if (isset($GLOBALS['wp_pwa_path'])) { require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] .'/injector/wp-pwa-injector.php'); }
 
 
 if (is_home()) {
