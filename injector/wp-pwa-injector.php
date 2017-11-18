@@ -3,7 +3,6 @@
 // Copy on header.php, just after <head> the following code:
 // if (isset($GLOBALS['wp_pwa_path'])) { require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] .'/injector/wp-pwa-injector.php'); }
 
-
 if (is_home()) {
   $wpType = 'latest';
   $wpId = 0;
@@ -46,6 +45,18 @@ if (is_paged()) {
   $wpPage = 1;
 }
 
+$site_info = array(
+  'homepage_title' => get_bloginfo( 'name' ),
+  'homepage_metadesc' => get_bloginfo( 'description' )
+);
+
+if(has_filter('wp_pwa_get_site_info')) {
+  $site_info = apply_filters('wp_pwa_get_site_info', $site_info);
+}
+
+$homepage_title = $site_info['homepage_title'];
+$homepage_metadesc = $site_info['homepage_metadesc'];
+
 $settings = get_option('wp_pwa_settings');
 if (isset($_GET['siteId'])) {
   $siteId = $_GET['siteId'];
@@ -81,5 +92,6 @@ if ((isset($_GET['serverType']) && ($_GET['serverType'] === 'prod'))) {
 
 <script type='text/javascript'>
 var siteId = '<?php echo $siteId; ?>', wpType = '<?php echo $wpType; ?>', wpId = '<?php echo $wpId; ?>', wpPage = '<?php echo $wpPage; ?>', ssr = '<?php echo $ssr; ?>', statik = '<?php echo $static; ?>', serverType = '<?php echo $serverType; ?>';
+var homepageTitle = '<?php echo $homepage_title; ?>', homepageMetadesc = '<?php echo $homepage_metadesc; ?>';
 <?php require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.js'); ?>
 </script>
