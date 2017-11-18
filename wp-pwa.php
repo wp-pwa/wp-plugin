@@ -67,10 +67,6 @@ class wp_pwa
 				'methods' => 'GET',
 				'callback' => array( $this,'get_wp_pwa_plugin_version'))
 			);
-			register_rest_route( 'wp_pwa/v1', '/site-info/', array(
-				'methods' => 'GET',
-				'callback' => array( $this,'get_site_info'))
-			);
 		});
 		// filters
 	}
@@ -195,22 +191,6 @@ class wp_pwa
 
 	function get_wp_pwa_plugin_version() {
 		return array('plugin_version' => $this->plugin_version);
-	}
-
-	function get_site_info() {
-		$homepage_title = get_bloginfo( 'name' );
-		$homepage_metadesc = get_bloginfo( 'description' );
-
-		$site_info = array(
-			'homepage_title' => $homepage_title,
-			'homepage_metadesc' => $homepage_metadesc
-		);
-
-		if(has_filter('wp_pwa_get_site_info')) {
-			$site_info = apply_filters('wp_pwa_get_site_info', $site_info);
-		}
-
-		return $site_info;
 	}
 
 	/*

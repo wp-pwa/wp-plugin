@@ -93,7 +93,7 @@
       '%3Chead%3E%3Cstyle%3E@keyframes%20progress%7Bfrom%7Bwidth%3A0%25%3B%7Dto%7Bwidth%3A80%25%3B%7D%7D%3C/style%3E%3C/head%3E%3Cbody%20style%3D%22height%3A100%25%3Bbackground%3A%23FDFDFD%3Bdisplay%3Aflex%3Bjustify-content%3Acenter%3Balign-items%3Acenter%3B%22%3E%3Cdiv%20style%3D%22animation%3A6s%20ease-out%201s%201%20forwards%20progress%3Bheight%3A2px%3Bbackground%3A%23000%3B%22%3E%3C/div%3E%3C/body%3E';
     document.write(unescape(html));
 
-    var query = '?siteId=' + siteId + '&' + wpType + '=' + wpId + '&static=' + statik;
+    var query = '?siteId=' + siteId + '&' + wpType + '=' + wpId + '&static=' + statik + '&homepageTitle=' + homepageTitle + '&homepageMetadesc=' + homepageMetadesc;
     if (wpPage) query += '&paged=' + wpPage;
 
     var loadWorona = function() {
