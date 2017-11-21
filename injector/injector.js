@@ -6,8 +6,8 @@
   var isAndroidMobile = /android (?![1-3]\.)(?!4\.[0-3]).* mobile/i; // from Android 4.4
   var isAndroidTablet = /android (?![1-3]\.)(?!4\.[0-3]).* (?!mobile)/i; // from Android 4.4
 
-  ssr = ssr.replace(/\/$/g, '') + '/';
-  statik = statik.replace(/\/$/g, '') + '/';
+  window['wp-pwa'].ssr = window['wp-pwa'].ssr.replace(/\/$/g, '') + '/';
+  window['wp-pwa'].static = window['wp-pwa'].static.replace(/\/$/g, '') + '/';
 
   var isMobile = function(ua) {
     return isIphone.test(ua) || isAndroidMobile.test(ua);
@@ -54,25 +54,17 @@
     document.body.scrollTop = 0;
   };
 
-  if (readCookie('woronaClassicVersion')) {
+  if (readCookie('wppwaClassicVersion')) {
     var options = {
       tag: 'script',
-      id: 'woronaClassic',
-      src: ssr + 'static/go-back-to-worona.min.js',
+      id: 'wppwaClassic',
+      src: window['wp-pwa'].ssr + 'static/go-back-to-wppwa.min.js',
     };
     loadScript(options);
-  } else if (
-    siteId !== 'none' &&
-    wpType !== 'none' &&
-    !readCookie('woronaInjectorFailed') &&
-    navigator &&
-    isMobile(navigator.userAgent)
-  ) {
+  } else if (!readCookie('wppwaInjectorFailed') && navigator && isMobile(navigator.userAgent)) {
     window.stop();
     /* Unescaped html (use http://www.utilities-online.info/urlencode to escape it)
-    /* Don't forget to change the CHANGE_FOR_SITE_ID for the javascript variable siteId.
     <head>
-      <link rel='manifest' href='https://ssr.wppwa.com/api/v1/manifest/CHANGE_FOR_SITE_ID'>
       <style>
         @keyframes progress {
           from {
@@ -85,23 +77,26 @@
       </style>
     </head>
 
-    <body style="height:100%;background:#FDFDFD;display:flex;justify-content:center;align-items:center;">
-      <div style="animation:6s ease-out 1s 1 forwards progress;height:2px;background:#000;"></div>
+    <body style="height:100%;background:#FDFDFD;display:flex;justify-content:center;align-items:center;margin:0;">
+      <div style="animation:6s ease-out 1s 1 forwards progress;height:1px;background:#000;"></div>
     </body>
     */
     var html =
-      '%3Chead%3E%3Cstyle%3E@keyframes%20progress%7Bfrom%7Bwidth%3A0%25%3B%7Dto%7Bwidth%3A80%25%3B%7D%7D%3C/style%3E%3C/head%3E%3Cbody%20style%3D%22height%3A100%25%3Bbackground%3A%23FDFDFD%3Bdisplay%3Aflex%3Bjustify-content%3Acenter%3Balign-items%3Acenter%3B%22%3E%3Cdiv%20style%3D%22animation%3A6s%20ease-out%201s%201%20forwards%20progress%3Bheight%3A2px%3Bbackground%3A%23000%3B%22%3E%3C/div%3E%3C/body%3E';
+      '%3Chead%3E%0A%20%20%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%20%20@keyframes%20progress%20%7B%0A%20%20%20%20%20%20%20%20%20%20from%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%200%25%3B%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20to%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2080%25%3B%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%3C/style%3E%0A%20%20%20%20%3C/head%3E%0A%0A%20%20%20%20%3Cbody%20style%3D%22height%3A100%25%3Bbackground%3A%23FDFDFD%3Bdisplay%3Aflex%3Bjustify-content%3Acenter%3Balign-items%3Acenter%3Bmargin%3A0%3B%22%3E%0A%20%20%20%20%20%20%3Cdiv%20style%3D%22animation%3A6s%20ease-out%201s%201%20forwards%20progress%3Bheight%3A1px%3Bbackground%3A%23000%3B%22%3E%3C/div%3E%0A%20%20%20%20%3C/body%3E';
     document.write(unescape(html));
 
-    var query = '?siteId=' + siteId + '&' + wpType + '=' + wpId + '&static=' + statik + '&homepageTitle=' + homepageTitle + '&homepageMetadesc=' + homepageMetadesc;
-    if (wpPage) query += '&paged=' + wpPage;
+    var query = '?siteId=' + window['wp-pwa'].siteId + '&static=' + window['wp-pwa'].static + '&env=' + window['wp-pwa'].env;
+    if (window['wp-pwa'].listType) query += '&listType=' + window['wp-pwa'].listType;
+    if (window['wp-pwa'].listId) query += '&listId=' + window['wp-pwa'].listId;
+    if (window['wp-pwa'].page) query += '&page=' + window['wp-pwa'].page;
+    if (window['wp-pwa'].singleType) query += '&singleType=' + window['wp-pwa'].singleType;
+    if (window['wp-pwa'].singleId) query += '&singleId=' + window['wp-pwa'].singleId;
 
     var loadWorona = function() {
       var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
-            window.__worona_public_path__ = statik;
             loadHtml(xhr.responseText);
           } else {
             var rollbarXhr = new XMLHttpRequest();
@@ -122,15 +117,14 @@
               })
             );
             console.error('Error loading the injector on: ' + window.location.href, xhr.statusText);
-            setCookie('woronaInjectorFailed', 'true', 1);
+            setCookie('wppwaInjectorFailed', 'true', 1);
             window.location.reload(true);
           }
         }
       };
-      xhr.open('GET', ssr + query, true);
+      xhr.open('GET', window['wp-pwa'].ssr + query, true);
       xhr.send();
     };
-
     loadWorona();
   }
 })(document, window, navigator);

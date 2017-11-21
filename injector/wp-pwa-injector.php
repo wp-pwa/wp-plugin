@@ -101,6 +101,6 @@ if ((isset($_GET['env']) && ($_GET['env'] === 'pre'))) {
 <?php if ($siteId && ($listType || $singleType)) { ?>
   <script type='text/javascript'>
   window['wp-pwa'] = { siteId: '<?php echo $siteId; ?>',<?php if ($listType) echo ' listType: \'' . $listType . '\',' ?><?php if ($listId) echo ' listId: \'' . $listId . '\',' ?><?php if ($singleType) echo ' singleType: \'' . $singleType . '\',' ?><?php if ($singleId) echo ' singleId: \'' . $singleId . '\',' ?><?php if ($page) echo ' page: \'' . $page . '\',' ?> env: '<?php echo $env; ?>', perPage: '<?php echo $perPage; ?>', ssr: '<?php echo $ssr; ?>', static: '<?php echo $static; ?>', home: { title: '<?php echo $homeTitle; ?>', description: '<?php echo $homeDescription; ?>' } };
-  <?php require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.js'); ?>
+  <?php require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.min.js'); ?>
   </script>
 <?php } ?>
