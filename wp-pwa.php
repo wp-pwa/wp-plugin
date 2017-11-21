@@ -498,13 +498,13 @@ function wp_pwa_activation() {
 	if (isset($settings['wp_pwa_ssr'])) {
 		$wp_pwa_ssr = $settings['wp_pwa_ssr'];
 	} else {
-		$wp_pwa_ssr = 'https://pwa.worona.io';
+		$wp_pwa_ssr = 'https://ssr.wp-pwa.com';
 	}
 
 	if (isset($settings['wp_pwa_static'])) {
 		$wp_pwa_static = $settings['wp_pwa_static'];
 	} else {
-		$wp_pwa_static = 'https://pwa-static.worona.io';
+		$wp_pwa_static = 'https://static.wp-pwa.com';
 	}
 
 	$defaults = array("synced_with_wp_pwa" => $synced_with_wp_pwa,
