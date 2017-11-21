@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.0.8
+Version: 1.0.0
 Author: WordPress PWA
 Author URI:
 License: GPL v3
@@ -66,10 +66,6 @@ class wp_pwa
 			register_rest_route( 'wp_pwa/v1', '/plugin-version/', array(
 				'methods' => 'GET',
 				'callback' => array( $this,'get_wp_pwa_plugin_version'))
-			);
-			register_rest_route( 'wp_pwa/v1', '/site-info/', array(
-				'methods' => 'GET',
-				'callback' => array( $this,'get_site_info'))
 			);
 		});
 		// filters
@@ -195,22 +191,6 @@ class wp_pwa
 
 	function get_wp_pwa_plugin_version() {
 		return array('plugin_version' => $this->plugin_version);
-	}
-
-	function get_site_info() {
-		$homepage_title = get_bloginfo( 'name' );
-		$homepage_metadesc = get_bloginfo( 'description' );
-
-		$site_info = array(
-			'homepage_title' => $homepage_title,
-			'homepage_metadesc' => $homepage_metadesc
-		);
-
-		if(has_filter('wp_pwa_get_site_info')) {
-			$site_info = apply_filters('wp_pwa_get_site_info', $site_info);
-		}
-
-		return $site_info;
 	}
 
 	/*
@@ -518,13 +498,13 @@ function wp_pwa_activation() {
 	if (isset($settings['wp_pwa_ssr'])) {
 		$wp_pwa_ssr = $settings['wp_pwa_ssr'];
 	} else {
-		$wp_pwa_ssr = 'https://pwa.worona.io';
+		$wp_pwa_ssr = 'https://ssr.wp-pwa.com';
 	}
 
 	if (isset($settings['wp_pwa_static'])) {
 		$wp_pwa_static = $settings['wp_pwa_static'];
 	} else {
-		$wp_pwa_static = 'https://pwa-static.worona.io';
+		$wp_pwa_static = 'https://static.wp-pwa.com';
 	}
 
 	$defaults = array("synced_with_wp_pwa" => $synced_with_wp_pwa,
