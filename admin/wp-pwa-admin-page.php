@@ -318,6 +318,29 @@
 					</p>
 					<table class="form-table">
 						<tr>
+							<th scope="row">Enviroment</th>
+							<td>
+									<fieldset>
+											<label>
+													<select id="wp-pwa-env">
+														<?php
+															$options = array( 'pre', 'prod');
+															$env = $settings['wp_pwa_env'];
+															$output = '';
+															for( $i=0; $i<count($options); $i++ ) {
+																$output .= '<option '
+					 											. ( $env == $options[$i] ? 'selected="selected"' : '' ) . '>'
+					 											. $options[$i]
+					 											. '</option>';
+															}
+															echo $output;
+														?>
+													</select>
+											</label>
+									</fieldset>
+							</td>
+						</tr>
+						<tr>
 							<th scope="row">SSR Server</th>
 							<td>
 									<fieldset>

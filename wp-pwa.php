@@ -357,10 +357,12 @@ class wp_pwa
 
 	function change_advanced_settings_ajax() {
 
+		$wp_pwa_env = $_POST['wp_pwa_env'];
 		$wp_pwa_ssr = $_POST['wp_pwa_ssr'];
 		$wp_pwa_static = $_POST['wp_pwa_static'];
 
 		$settings = get_option('wp_pwa_settings');
+		$settings['wp_pwa_env'] = $wp_pwa_env;
 		$settings['wp_pwa_ssr'] = $wp_pwa_ssr;
 		$settings['wp_pwa_static'] = $wp_pwa_static;
 
@@ -495,6 +497,12 @@ function wp_pwa_activation() {
 		$siteId = generate_siteId();
 	}
 
+	if (isset($settings['wp_pwa_env'])) {
+		$wp_pwa_env = $settings['wp_pwa_env'];
+	} else {
+		$wp_pwa_env = 'prod';
+	}
+
 	if (isset($settings['wp_pwa_ssr'])) {
 		$wp_pwa_ssr = $settings['wp_pwa_ssr'];
 	} else {
@@ -509,6 +517,7 @@ function wp_pwa_activation() {
 
 	$defaults = array("synced_with_wp_pwa" => $synced_with_wp_pwa,
 										"wp_pwa_siteid" => $siteId,
+										"wp_pwa_env" => $wp_pwa_env,
 										"wp_pwa_ssr" => $wp_pwa_ssr,
 										"wp_pwa_static" => $wp_pwa_static);
 
