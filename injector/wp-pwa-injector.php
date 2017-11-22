@@ -78,6 +78,12 @@ if (isset($_GET['siteId'])) {
   $siteId = $settings["wp_pwa_siteid"];
 }
 
+if (isset($_GET['env']) && ($_GET['env'] === 'pre' || $_GET['env'] === 'prod')) {
+  $env = $_GET['env'];
+} elseif (isset($settings['wp_pwa_env'])) {
+  $env = $settings['wp_pwa_env'];
+}
+
 if (isset($_GET['ssr'])) {
   $ssr = $_GET['ssr'];
 } elseif (isset($_GET['server'])) {
@@ -93,9 +99,6 @@ if (isset($_GET['static'])) {
   $static = $settings["wp_pwa_static"];
 }
 
-if ((isset($_GET['env']) && ($_GET['env'] === 'pre'))) {
-  $env = 'pre';
-}
 ?>
 
 <?php if ($siteId && ($listType || $singleType)) { ?>
