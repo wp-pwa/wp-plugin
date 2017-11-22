@@ -22,9 +22,10 @@ The simplest way to create Progressive Web Apps with WordPress. No coding skills
 
 == Changelog ==
 
+= 1.0.1 =
+* Added "env" variable to advanced settings.
+
 = 1.0.0 =
 * First release of the plugin.
-
-== Useful Links ==
 
 == Upgrade Notice ==
