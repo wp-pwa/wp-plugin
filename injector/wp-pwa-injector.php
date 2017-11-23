@@ -74,7 +74,7 @@ $homeDescription = $site_info['homepage_metadesc'];
 $settings = get_option('wp_pwa_settings');
 if (isset($_GET['siteId'])) {
   $siteId = $_GET['siteId'];
-} elseif (isset($settings['wp_pwa_siteid'])) {
+} elseif (isset($settings['wp_pwa_siteid']) && $settings['wp_pwa_siteid'] !== '' ) {
   $siteId = $settings["wp_pwa_siteid"];
 }
 
