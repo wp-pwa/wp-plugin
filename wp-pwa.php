@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.0.1
+Version: 1.0.2
 Author: WordPress PWA
 Author URI:
 License: GPL v3
@@ -15,7 +15,7 @@ if( !class_exists('wp_pwa') ):
 class wp_pwa
 {
 	// vars
-	public $plugin_version = '1.0.8';
+	public $plugin_version = '1.0.2';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -467,19 +467,6 @@ wp_pwa();
 
 function wp_pwa_activation() {
 
-	//generates a random Site Id
-	function generate_siteId() {
-		$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
-		$chars_length = (strlen($chars) - 1);// Length of character list
-		$string = $chars{rand(0, $chars_length)};// Start our string
-
-		for ($i = 1; $i < 17; $i++) {// Generate random string
-				$r = $chars{rand(0, $chars_length)};// Grab a random character from our list
-				$string .= $r;// Make sure the same two characters don't appear next to each other
-		}
-		return $string;
-	}
-
 	$current_user = wp_get_current_user();
 	$email = $current_user->user_email;
 
@@ -494,7 +481,7 @@ function wp_pwa_activation() {
 	if (isset($settings['wp_pwa_siteid'])) {
 		$siteId = $settings['wp_pwa_siteid'];
 	} else {
-		$siteId = generate_siteId();
+		$siteId = '';
 	}
 
 	if (isset($settings['wp_pwa_env'])) {
