@@ -198,14 +198,16 @@ class wp_pwa
 	}
 
 	function get_site_info() {
-		$homepage_title = get_bloginfo( 'name' );
-		$homepage_metadesc = get_bloginfo( 'description' );
-		$per_page = get_option("posts_per_page");
+		$title = get_bloginfo('name');
+		$description = get_bloginfo('description');
+		$perPage = get_option('posts_per_page');
 
 		$site_info = array(
-			'homepage_title' => $homepage_title,
-			'homepage_metadesc' => $homepage_metadesc,
-			'per_page' => $per_page
+			'home' => array(
+				'title' => $title,
+				'description' => $description
+			),
+			'perPage' => $perPage
 		);
 
 		if(has_filter('wp_pwa_get_site_info')) {
