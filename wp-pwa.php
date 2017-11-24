@@ -212,7 +212,13 @@ class wp_pwa
 			$site_info = apply_filters('wp_pwa_get_site_info', $site_info);
 		}
 
-		return $site_info;
+		return array(
+			'home' => array(
+				'title' => $site_info['homepage_title'],
+				'description' => $site_info['homepage_metadesc']
+			),
+			'perPage' => $site_info['per_page']
+		);
 	}
 
 	/*
