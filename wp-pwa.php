@@ -55,18 +55,22 @@ class wp_pwa
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_wp_pwa_styles' ) );
 
 		add_action( 'rest_api_init', function () {
-			register_rest_route( 'wp_pwa/v1', '/siteid/', array(
+			register_rest_route( 'wp-pwa/v1', '/siteid/', array(
 				'methods' => 'GET',
 				'callback' => array( $this,'get_wp_pwa_site_id'))
 			);
-			register_rest_route( 'wp_pwa/v1', '/discover/', array(
+			register_rest_route( 'wp-pwa/v1', '/discover/', array(
 				'methods' => 'GET',
 				'callback' => array( $this,'discover_url'))
 			);
-			register_rest_route( 'wp_pwa/v1', '/plugin-version/', array(
+			register_rest_route( 'wp-pwa/v1', '/plugin-version/', array(
 				'methods' => 'GET',
 				'callback' => array( $this,'get_wp_pwa_plugin_version'))
 			);
+			register_rest_route( 'wp-pwa/v1', '/site-info/', array(
+ 				'methods' => 'GET',
+ 				'callback' => array( $this,'get_site_info'))
+ 			);
 		});
 		// filters
 	}
@@ -191,6 +195,24 @@ class wp_pwa
 
 	function get_wp_pwa_plugin_version() {
 		return array('plugin_version' => $this->plugin_version);
+	}
+
+	function get_site_info() {
+		$homepage_title = get_bloginfo( 'name' );
+		$homepage_metadesc = get_bloginfo( 'description' );
+		$per_page = get_option("posts_per_page");
+
+		$site_info = array(
+			'homepage_title' => $homepage_title,
+			'homepage_metadesc' => $homepage_metadesc,
+			'per_page' => $per_page
+		);
+
+		if(has_filter('wp_pwa_get_site_info')) {
+			$site_info = apply_filters('wp_pwa_get_site_info', $site_info);
+		}
+
+		return $site_info;
 	}
 
 	/*
