@@ -58,7 +58,7 @@
     var options = {
       tag: 'script',
       id: 'wppwaClassic',
-      src: window['wp-pwa'].ssr + 'static/go-back-to-wppwa.min.js',
+      src: window['wp-pwa'].ssr + 'dynamic/wp-org-connection-app-extension-worona/go-back-to-wppwa.js',
     };
     loadScript(options);
   } else if (!readCookie('wppwaInjectorFailed') && navigator && isMobile(navigator.userAgent)) {
