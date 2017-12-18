@@ -4,14 +4,14 @@ Tags: html5, pwa, webapp, progressive web app
 Donate link:
 Requires at least: 4.4
 Tested up to: 4.8.2
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
 The simplest way to create Progressive Web Apps with WordPress. No coding skills required. Free forever.
 
 == Description ==
-<blockquote><strong>IMPORTANT</strong> 
+<blockquote><strong>IMPORTANT</strong>
 This plugin is still in beta, if you want to access the beta program please write an email to support@worona.org.</blockquote>
 
 
@@ -25,6 +25,9 @@ The simplest way to create Progressive Web Apps with WordPress. No coding skills
 == Screenshots ==
 
 == Changelog ==
+
+= 1.0.4 =
+* New url for go-back javascript.
 
 = 1.0.3 =
 * /wp-pwa/site-info/ endpoint available again.
