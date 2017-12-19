@@ -39,17 +39,6 @@ if (is_home()) {
 } elseif (is_author()) {
   $listType = 'author';
   $listId = get_queried_object()->ID;
-} elseif (is_search()) {
-  $listType = 'search';
-  $listId = get_query_var('s');
-} elseif (is_date()) {
-  $listType = 'date';
-  $listId = get_query_var('m');
-  if ($listId === '') {
-    $year = get_query_var('year');
-    $monthnum = str_pad(get_query_var('monthnum'), 2, '0', STR_PAD_LEFT);
-    $listId = $year . $monthnum;
-  }
 }
 
 if (is_paged()) {
