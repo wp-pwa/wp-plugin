@@ -204,6 +204,41 @@
 	 <div class="column">
 	 </div>
 	 <div class="column is-one-third">
+		 <div class="box">
+			 <nav class="level">
+				 <div class="level-left">
+					 <p class="title is-5">Progressive Web App</p>
+				 </div>
+				 <div class="level-right">
+					 <div class="control">
+						<div class="select">
+							  <select>
+									<option>Disabled</option>
+									<option>Mobile & tablet</option>
+									<option>Mobile</option>
+							  </select>
+							</div>
+					 </div>
+			 	</div>
+			 </nav>
+		 </div>
+		 <div class="box">
+			 <nav class="level">
+				 <div class="level-left">
+					<p class="title is-5">Google AMP</p>
+				 </div>
+				 <div class="level-right">
+					 <div class="control">
+						<div class="select">
+							  <select>
+									<option>Disabled</option>
+									<option>Enabled</option>
+							  </select>
+							</div>
+					 </div>
+			 	</div>
+			 </nav>
+		 </div>
 		 <article class="message is-info">
 			<div class="message-header">
 			  <?php if ($step == 4) { echo "Plugin settings"; } else { echo "Follow the 4 steps to configure the plugin";} ?>
