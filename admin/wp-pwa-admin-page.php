@@ -204,7 +204,7 @@
 	 <div class="column">
 	 </div>
 	 <div class="column is-one-third">
-		 <div class="box">
+		 <div id="wp-pwa-status-box" class="box" <?php echo (($step==4)?'':'style="display:none;"');?>>
 			 <nav class="level">
 				 <div class="level-left">
 					 <p class="title is-5">Progressive Web App</p>
@@ -212,28 +212,20 @@
 				 <div class="level-right">
 					 <div class="control">
 						<div class="select">
-							  <select>
-									<option>Disabled</option>
-									<option>Mobile & tablet</option>
-									<option>Mobile</option>
-							  </select>
-							</div>
-					 </div>
-			 	</div>
-			 </nav>
-		 </div>
-		 <div class="box">
-			 <nav class="level">
-				 <div class="level-left">
-					<p class="title is-5">Google AMP</p>
-				 </div>
-				 <div class="level-right">
-					 <div class="control">
-						<div class="select">
-							  <select>
-									<option>Disabled</option>
-									<option>Enabled</option>
-							  </select>
+								<select id="wp-pwa-status">
+									<?php
+										$options = array( 'enabled', 'disabled');
+										$status = $settings['wp_pwa_status'];
+										$output = '';
+										for( $i=0; $i<count($options); $i++ ) {
+											$output .= '<option '
+											. ( $status == $options[$i] ? 'selected="selected"' : '' ) . '>'
+											. $options[$i]
+											. '</option>';
+										}
+										echo $output;
+									?>
+								</select>
 							</div>
 					 </div>
 			 	</div>

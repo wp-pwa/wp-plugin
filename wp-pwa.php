@@ -506,6 +506,12 @@ function wp_pwa_activation() {
 		$synced_with_wp_pwa = false;
 	}
 
+	if (isset($settings['wp_pwa_status'])) {
+		$wp_pwa_status = $settings['wp_pwa_status'];
+	} else {
+		$wp_pwa_status = 'disabled';
+	}
+
 	if (isset($settings['wp_pwa_siteid'])) {
 		$siteId = $settings['wp_pwa_siteid'];
 	} else {
@@ -531,6 +537,7 @@ function wp_pwa_activation() {
 	}
 
 	$defaults = array("synced_with_wp_pwa" => $synced_with_wp_pwa,
+										"wp_pwa_status" => $wp_pwa_status,
 										"wp_pwa_siteid" => $siteId,
 										"wp_pwa_env" => $wp_pwa_env,
 										"wp_pwa_ssr" => $wp_pwa_ssr,
