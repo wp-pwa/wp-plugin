@@ -44,6 +44,7 @@ class wp_pwa
 		add_action('admin_notices',array($this,'wp_pwa_admin_notices')); //Display the validation errors and update messages
 
 		add_action('wp_ajax_sync_with_wp_pwa',array($this,'sync_with_wp_pwa'));
+		add_action('wp_ajax_wp_pwa_change_status',array($this,'change_status_ajax'));
 		add_action('wp_ajax_wp_pwa_change_siteid',array($this,'change_siteid_ajax'));
 		add_action('wp_ajax_wp_pwa_change_advanced_settings',array($this,'change_advanced_settings_ajax'));
 
@@ -357,6 +358,21 @@ class wp_pwa
 		wp_send_json( array(
 			'status' => 'ok',
 			'siteId' => $siteId
+		));
+	}
+
+	function change_status_ajax() {
+		flush_rewrite_rules();
+
+		$status = $_POST['status'];
+
+		$settings = get_option('wp_pwa_settings');
+		$settings['wp_pwa_status'] = $status;
+
+		update_option('wp_pwa_settings', $settings);
+
+		wp_send_json( array(
+			'status' => 'ok',
 		));
 	}
 

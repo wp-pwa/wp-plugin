@@ -12,6 +12,12 @@
 		$synced_with_wp_pwa = false;
 	}
 
+	if (isset($settings["wp_pwa_status"])) {
+		$wp_pwa_status = $settings["wp_pwa_status"];
+	} else {
+		$wp_pwa_status = 'disabled';
+	}
+
 	/* step, progress & GTM events */
 	$progress = 0;
 	$step = 0;
@@ -207,7 +213,15 @@
 		 <div id="wp-pwa-status-box" class="box" <?php echo (($step==4)?'':'style="display:none;"');?>>
 			 <nav class="level">
 				 <div class="level-left">
-					 <p class="title is-5">Progressive Web App</p>
+					 <p class="title is-5">
+						 	Progressive Web App
+						 	<span id="wp-pwa-status-enabled" class="icon is" <? echo (($wp_pwa_status=='enabled')?'style="color:#97cd76;"':'style="display:none;color:#97cd76"');?>>
+								<i class="fa fa-check-circle" aria-hidden="true"></i>
+							</span>
+							<span id="wp-pwa-status-disabled" class="icon" <? echo (($wp_pwa_status=='disabled')?'style="color:#ed6c63;"':'style="display:none;color:#ed6c63"');?>>
+								<i class="fa fa-times-circle" aria-hidden="true"></i>
+							</span>
+					 </p>
 				 </div>
 				 <div class="level-right">
 					 <div class="control">
