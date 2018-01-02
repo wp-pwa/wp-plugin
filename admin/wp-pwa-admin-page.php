@@ -12,6 +12,12 @@
 		$synced_with_wp_pwa = false;
 	}
 
+	if (isset($settings["wp_pwa_status"])) {
+		$wp_pwa_status = $settings["wp_pwa_status"];
+	} else {
+		$wp_pwa_status = 'disabled';
+	}
+
 	/* step, progress & GTM events */
 	$progress = 0;
 	$step = 0;
@@ -204,6 +210,41 @@
 	 <div class="column">
 	 </div>
 	 <div class="column is-one-third">
+		 <div id="wp-pwa-status-box" class="box" <?php echo (($step==4)?'':'style="display:none;"');?>>
+			 <nav class="level">
+				 <div class="level-left">
+					 <p class="title is-5">
+						 	Progressive Web App
+						 	<span id="wp-pwa-status-enabled" class="icon is" <? echo (($wp_pwa_status!='disabled')?'style="color:#97cd76;"':'style="display:none;color:#97cd76"');?>>
+								<i class="fa fa-check-circle" aria-hidden="true"></i>
+							</span>
+							<span id="wp-pwa-status-disabled" class="icon" <? echo (($wp_pwa_status=='disabled')?'style="color:#ed6c63;"':'style="display:none;color:#ed6c63"');?>>
+								<i class="fa fa-times-circle" aria-hidden="true"></i>
+							</span>
+					 </p>
+				 </div>
+				 <div class="level-right">
+					 <div class="control">
+						<div class="select">
+								<select id="wp-pwa-status">
+									<?php
+										$options = array( ['mobile', 'Enabled'], ['disabled', 'Disabled']); // [value, Label]
+										$status = $settings['wp_pwa_status'];
+										$output = '';
+										for( $i=0; $i<count($options); $i++ ) {
+											$output .= '<option value="' . $options[$i][0] . '"'
+											. ( $status == $options[$i][0] ? 'selected="selected"' : '' ) . '>'
+											. $options[$i][1]
+											. '</option>';
+										}
+										echo $output;
+									?>
+								</select>
+							</div>
+					 </div>
+			 	</div>
+			 </nav>
+		 </div>
 		 <article class="message is-info">
 			<div class="message-header">
 			  <?php if ($step == 4) { echo "Plugin settings"; } else { echo "Follow the 4 steps to configure the plugin";} ?>

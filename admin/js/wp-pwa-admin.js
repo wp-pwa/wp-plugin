@@ -72,6 +72,36 @@ jQuery(document).on('ready', function () {
       jQuery('#lateral-error-advanced-settings').hide();
     });
 
+    //PWA Status - Enabled / disabled
+    jQuery('#wp-pwa-status').on('change', function(e) {
+      var valueSelected = this.value;
+
+      jQuery.ajax({
+          url: ajaxurl,
+          method: "POST",
+          data: {
+              action: 'wp_pwa_change_status',
+              status: valueSelected,
+          },
+          success: function (response) {
+            if (response.hasOwnProperty('status') && response.status == 'ok' ) {
+              if (valueSelected == 'disabled') {
+                jQuery('#wp-pwa-status-enabled').hide();
+                jQuery('#wp-pwa-status-disabled').show();
+              }
+              if(valueSelected == 'mobile') {
+                jQuery('#wp-pwa-status-enabled').show();
+                jQuery('#wp-pwa-status-disabled').hide();
+              }
+            }
+          },
+          error: function () {
+
+          }
+      });
+
+    });
+
     //Create App via AJAX
     jQuery('#sync-with-wp-pwa').on('click', function (e) {
       jQuery('#sync-with-wp-pwa').addClass('is-loading');
@@ -110,6 +140,7 @@ jQuery(document).on('ready', function () {
               jQuery('#label-created').toggle();
               jQuery('progress')[0].value = 100;
               jQuery('#step-message').text('You are on step 4/4');
+              jQuery('#wp-pwa-status-box').show();
               jQuery('#wp-pwa-siteid-lateral').show();
               jQuery('span#wp-pwa-siteid-span').text(response.siteId);
               jQuery('input#wp-pwa-siteid').val(response.siteId);
@@ -157,6 +188,7 @@ jQuery(document).on('ready', function () {
               jQuery('#lateral-change-siteid').hide();
               jQuery('#label-create-buttons').hide(); //they can be hidden already
               jQuery('#label-created').show(); //it can be displayed already
+              jQuery('#wp-pwa-status-box').show();
               jQuery('#step-message').text('You are on step 4/4');
               jQuery('#wp-pwa-siteid-lateral').show();
               jQuery('span#wp-pwa-siteid-span').text(jQuery('input#wp-pwa-siteid').val());
