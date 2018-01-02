@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.0.5
+Version: 1.0.6
 Author: WordPress PWA
 Author URI:
 License: GPL v3
@@ -15,7 +15,7 @@ if( !class_exists('wp_pwa') ):
 class wp_pwa
 {
 	// vars
-	public $plugin_version = '1.0.5';
+	public $plugin_version = '1.0.6';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -44,6 +44,7 @@ class wp_pwa
 		add_action('admin_notices',array($this,'wp_pwa_admin_notices')); //Display the validation errors and update messages
 
 		add_action('wp_ajax_sync_with_wp_pwa',array($this,'sync_with_wp_pwa'));
+		add_action('wp_ajax_wp_pwa_change_status',array($this,'change_status_ajax'));
 		add_action('wp_ajax_wp_pwa_change_siteid',array($this,'change_siteid_ajax'));
 		add_action('wp_ajax_wp_pwa_change_advanced_settings',array($this,'change_advanced_settings_ajax'));
 
@@ -360,6 +361,21 @@ class wp_pwa
 		));
 	}
 
+	function change_status_ajax() {
+		flush_rewrite_rules();
+
+		$status = $_POST['status'];
+
+		$settings = get_option('wp_pwa_settings');
+		$settings['wp_pwa_status'] = $status;
+
+		update_option('wp_pwa_settings', $settings);
+
+		wp_send_json( array(
+			'status' => 'ok',
+		));
+	}
+
 	function change_siteid_ajax() {
 		flush_rewrite_rules();
 
@@ -506,6 +522,12 @@ function wp_pwa_activation() {
 		$synced_with_wp_pwa = false;
 	}
 
+	if (isset($settings['wp_pwa_status'])) {
+		$wp_pwa_status = $settings['wp_pwa_status'];
+	} else {
+		$wp_pwa_status = 'disabled';
+	}
+
 	if (isset($settings['wp_pwa_siteid'])) {
 		$siteId = $settings['wp_pwa_siteid'];
 	} else {
@@ -531,6 +553,7 @@ function wp_pwa_activation() {
 	}
 
 	$defaults = array("synced_with_wp_pwa" => $synced_with_wp_pwa,
+										"wp_pwa_status" => $wp_pwa_status,
 										"wp_pwa_siteid" => $siteId,
 										"wp_pwa_env" => $wp_pwa_env,
 										"wp_pwa_ssr" => $wp_pwa_ssr,

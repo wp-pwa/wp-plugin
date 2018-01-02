@@ -13,6 +13,8 @@ $env = 'prod';
 $perPage = get_option('posts_per_page');
 $ssr = 'https://ssr.wp-pwa.com';
 $static = 'https://static.wp-pwa.com';
+$force = false;
+$inject = false;
 
 if (is_home()) {
   $listType = 'latest';
@@ -61,6 +63,9 @@ $homeTitle = $site_info['homepage_title'];
 $homeDescription = $site_info['homepage_metadesc'];
 
 $settings = get_option('wp_pwa_settings');
+
+$pwa_status = $settings['wp_pwa_status'];
+
 if (isset($_GET['siteId'])) {
   $siteId = $_GET['siteId'];
 } elseif (isset($settings['wp_pwa_siteid']) && $settings['wp_pwa_siteid'] !== '' ) {
@@ -88,9 +93,19 @@ if (isset($_GET['static'])) {
   $static = $settings["wp_pwa_static"];
 }
 
+if (isset($_GET['force']) && $_GET['force'] === 'true' ){
+  $force = true;
+}
+
+if ($siteId && ($listType || $singleType)) {
+  if ($force || $pwa_status === 'mobile') {
+    $inject = true;
+  }
+}
+
 ?>
 
-<?php if ($siteId && ($listType || $singleType)) { ?>
+<?php if ($inject) { ?>
   <script type='text/javascript'>
   window['wp-pwa'] = { siteId: '<?php echo $siteId; ?>',<?php if ($listType) echo ' listType: \'' . $listType . '\',' ?><?php if ($listId) echo ' listId: \'' . $listId . '\',' ?><?php if ($singleType) echo ' singleType: \'' . $singleType . '\',' ?><?php if ($singleId) echo ' singleId: \'' . $singleId . '\',' ?><?php if ($page) echo ' page: \'' . $page . '\',' ?> env: '<?php echo $env; ?>', perPage: '<?php echo $perPage; ?>', ssr: '<?php echo $ssr; ?>', static: '<?php echo $static; ?>', home: { title: '<?php echo $homeTitle; ?>', description: '<?php echo $homeDescription; ?>' } };
   <?php require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.min.js'); ?>
