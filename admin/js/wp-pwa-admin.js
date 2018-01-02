@@ -89,7 +89,7 @@ jQuery(document).on('ready', function () {
                 jQuery('#wp-pwa-status-enabled').hide();
                 jQuery('#wp-pwa-status-disabled').show();
               }
-              if(valueSelected == 'enabled') {
+              if(valueSelected == 'mobile') {
                 jQuery('#wp-pwa-status-enabled').show();
                 jQuery('#wp-pwa-status-disabled').hide();
               }

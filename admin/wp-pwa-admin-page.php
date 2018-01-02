@@ -215,7 +215,7 @@
 				 <div class="level-left">
 					 <p class="title is-5">
 						 	Progressive Web App
-						 	<span id="wp-pwa-status-enabled" class="icon is" <? echo (($wp_pwa_status=='enabled')?'style="color:#97cd76;"':'style="display:none;color:#97cd76"');?>>
+						 	<span id="wp-pwa-status-enabled" class="icon is" <? echo (($wp_pwa_status!='disabled')?'style="color:#97cd76;"':'style="display:none;color:#97cd76"');?>>
 								<i class="fa fa-check-circle" aria-hidden="true"></i>
 							</span>
 							<span id="wp-pwa-status-disabled" class="icon" <? echo (($wp_pwa_status=='disabled')?'style="color:#ed6c63;"':'style="display:none;color:#ed6c63"');?>>
@@ -228,13 +228,13 @@
 						<div class="select">
 								<select id="wp-pwa-status">
 									<?php
-										$options = array( 'enabled', 'disabled');
+										$options = array( ['mobile', 'Enabled'], ['disabled', 'Disabled']); // [value, Label]
 										$status = $settings['wp_pwa_status'];
 										$output = '';
 										for( $i=0; $i<count($options); $i++ ) {
-											$output .= '<option '
-											. ( $status == $options[$i] ? 'selected="selected"' : '' ) . '>'
-											. $options[$i]
+											$output .= '<option value="' . $options[$i][0] . '"'
+											. ( $status == $options[$i][0] ? 'selected="selected"' : '' ) . '>'
+											. $options[$i][1]
 											. '</option>';
 										}
 										echo $output;
