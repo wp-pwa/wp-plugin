@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.0.6
+Version: 1.0.7
 Author: WordPress PWA
 Author URI:
 License: GPL v3
@@ -15,7 +15,7 @@ if( !class_exists('wp_pwa') ):
 class wp_pwa
 {
 	// vars
-	public $plugin_version = '1.0.6';
+	public $plugin_version = '1.0.7';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -55,27 +55,31 @@ class wp_pwa
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_wp_pwa_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_wp_pwa_styles' ) );
 
-		add_action( 'rest_api_init', function () {
-			register_rest_route( 'wp-pwa/v1', '/siteid/', array(
-				'methods' => 'GET',
-				'callback' => array( $this,'get_wp_pwa_site_id'))
-			);
-			register_rest_route( 'wp-pwa/v1', '/discover/', array(
-				'methods' => 'GET',
-				'callback' => array( $this,'discover_url'))
-			);
-			register_rest_route( 'wp-pwa/v1', '/plugin-version/', array(
-				'methods' => 'GET',
-				'callback' => array( $this,'get_wp_pwa_plugin_version'))
-			);
-			register_rest_route( 'wp-pwa/v1', '/site-info/', array(
- 				'methods' => 'GET',
- 				'callback' => array( $this,'get_site_info'))
- 			);
-		});
+
+
+		add_action( 'rest_api_init', array($this,'rest_routes'));
+
 		// filters
 	}
 
+	function rest_routes() {
+		register_rest_route( 'wp-pwa/v1', '/siteid/', array(
+			'methods' => 'GET',
+			'callback' => array( $this,'get_wp_pwa_site_id'))
+		);
+		register_rest_route( 'wp-pwa/v1', '/discover/', array(
+			'methods' => 'GET',
+			'callback' => array( $this,'discover_url'))
+		);
+		register_rest_route( 'wp-pwa/v1', '/plugin-version/', array(
+			'methods' => 'GET',
+			'callback' => array( $this,'get_wp_pwa_plugin_version'))
+		);
+		register_rest_route( 'wp-pwa/v1', '/site-info/', array(
+			'methods' => 'GET',
+			'callback' => array( $this,'get_site_info'))
+		);
+	}
 	/*
 	*  init
 	*
@@ -448,7 +452,9 @@ class wp_pwa
 
 	//Adds Cross origin * to the header
 	function allow_origin() {
-    header("Access-Control-Allow-Origin: *");
+		if (!headers_sent()) {
+			header("Access-Control-Allow-Origin: *");
+		}
 	}
 
 	//Checks if the json posts endpoint is responding correctly
