@@ -18,7 +18,7 @@
 		$wp_pwa_status = 'disabled';
 	}
 
-	/* step, progress & GTM events */
+	/* step & progress */
 	$progress = 0;
 	$step = 0;
 	$wp_version = get_bloginfo('version');
@@ -33,22 +33,17 @@
 
 	if (version_compare($wp_version, '4.4', '<')) { //REST API Plugin is only compatible from WP 4.4 ahead
 		$rest_api_compatible = false;
-		$gtm_event = "rest-api-not-compatible";
 	} else if (!$rest_api_installed) {
 		$step = 1;
-		$gtm_event = "plugin-active";
 	} else if ($rest_api_installed && !$rest_api_active) {
 		$step = 2;
 		$progress = 33;
-		$gtm_event = "rest-api-installed";
 	} else if ( $rest_api_installed && $rest_api_active && !$synced_with_wp_pwa) {
 		$step = 3;
 		$progress = 66;
-		$gtm_event = "rest-api-active";
 	} else if ( $rest_api_installed && $rest_api_active && $synced_with_wp_pwa) {
 		$step = 4;
 		$progress = 100;
-		$gtm_event = "plugin-configured";
 	}
 ?>
 <div class="wrap">
@@ -414,32 +409,3 @@
 	 </div><!-- column one-third-->
 	</div><!-- columns -->
 </div><!-- wrap -->
-<!-- GTM iframe -->
-
-<?php
-	$name = ($current_user->user_firstname > 0)? $current_user->user_firstname : $current_user->user_login;
-?>
-
-<input type="hidden" name="wp-version" value="<?php echo get_bloginfo('version'); ?>">
-<input type="hidden" name="wp-url" value="<?php echo get_bloginfo('wpurl'); ?>">
-<input type="hidden" name="site-name" value="<?php echo get_bloginfo('name'); ?>">
-<input type="hidden" name="user-name" value="<?php echo $name ?>">
-<input type="hidden" name="email" value="<?php echo $current_user->user_email; ?>">
-<input type="hidden" name="wp-lan" value="<?php echo get_bloginfo('language'); ?>">
-<input type="hidden" name="wp-pwa-version" value="<?php echo $wp_pwa->plugin_version; ?>">
-<input type="hidden" name="wp-pwa-siteid" value="<?php echo $settings['wp_pwa_siteid']; ?>">
-
-<?php
-	$wp_version = "&wp-version=" . get_bloginfo('version');
-	$wp_url = "&wp-url=" . get_bloginfo('wpurl');
-	$site_name = "&site-name=" .get_bloginfo('name');
-	$user_name = "&user-name=" . $name;
-	$email = "&email=" . $current_user->user_email;
-	$wp_lan = "&wp-lan=" . get_bloginfo('language');
-	$wp_pwa_version = "&wp-pwa-version=" . $wp_pwa->plugin_version ;
-	$wp_pwa_siteid = "&wp-pwa-siteid=" . $settings['wp_pwa_siteid'];
-
-	$gtm_url = "https://plugin.worona.org/?event=" . $gtm_event . $wp_version . $site_name . $user_name .  $wp_url . $email . $wp_lan . $wp_pwa_version . $wp_pwa_siteid;
- ?>
-
-<iframe id="gtm-iframe" src="<?php echo $gtm_url; ?>" width="1" height="1"></iframe>
