@@ -51,18 +51,6 @@ if (is_paged()) {
   $page = 1;
 }
 
-$site_info = array(
-  'homepage_title' => get_bloginfo('name'),
-  'homepage_metadesc' => get_bloginfo('description')
-);
-
-if(has_filter('wp_pwa_get_site_info')) {
-  $site_info = apply_filters('wp_pwa_get_site_info', $site_info);
-}
-
-$homeTitle = $site_info['homepage_title'];
-$homeDescription = $site_info['homepage_metadesc'];
-
 $settings = get_option('wp_pwa_settings');
 
 $pwa_status = $settings['wp_pwa_status'];
