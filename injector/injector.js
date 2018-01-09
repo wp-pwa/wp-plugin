@@ -91,6 +91,8 @@
     if (window['wp-pwa'].page) query += '&page=' + window['wp-pwa'].page;
     if (window['wp-pwa'].singleType) query += '&singleType=' + window['wp-pwa'].singleType;
     if (window['wp-pwa'].singleId) query += '&singleId=' + window['wp-pwa'].singleId;
+    if (window['wp-pwa'].dev === false) query += '&dev=false';
+    if (window['wp-pwa'].dev === true) query += '&dev=true';
 
     var loadWorona = function() {
       var xhr = new XMLHttpRequest();
