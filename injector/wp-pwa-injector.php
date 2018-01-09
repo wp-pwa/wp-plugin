@@ -15,6 +15,7 @@ $ssr = 'https://ssr.wp-pwa.com';
 $static = 'https://static.wp-pwa.com';
 $force = false;
 $inject = false;
+$dev = 'false';
 
 if (is_home()) {
   $listType = 'latest';
@@ -97,6 +98,11 @@ if (isset($_GET['force']) && $_GET['force'] === 'true' ){
   $force = true;
 }
 
+if (isset($_GET['force']) || isset($_GET['server']) || isset($_GET['static']) ||
+  isset($_GET['ssr']) || isset($_GET['env']) || isset($_GET['siteId'])) {
+    $dev = 'true';
+  }
+
 if ($siteId && ($listType || $singleType)) {
   if ($force || $pwa_status === 'mobile') {
     $inject = true;
@@ -107,7 +113,7 @@ if ($siteId && ($listType || $singleType)) {
 
 <?php if ($inject) { ?>
   <script type='text/javascript'>
-  window['wp-pwa'] = { siteId: '<?php echo $siteId; ?>',<?php if ($listType) echo ' listType: \'' . $listType . '\',' ?><?php if ($listId) echo ' listId: \'' . $listId . '\',' ?><?php if ($singleType) echo ' singleType: \'' . $singleType . '\',' ?><?php if ($singleId) echo ' singleId: \'' . $singleId . '\',' ?><?php if ($page) echo ' page: \'' . $page . '\',' ?> env: '<?php echo $env; ?>', perPage: '<?php echo $perPage; ?>', ssr: '<?php echo $ssr; ?>', static: '<?php echo $static; ?>', home: { title: '<?php echo $homeTitle; ?>', description: '<?php echo $homeDescription; ?>' } };
+  window['wp-pwa'] = { siteId: '<?php echo $siteId; ?>',<?php if ($listType) echo ' listType: \'' . $listType . '\',' ?><?php if ($listId) echo ' listId: \'' . $listId . '\',' ?><?php if ($singleType) echo ' singleType: \'' . $singleType . '\',' ?><?php if ($singleId) echo ' singleId: \'' . $singleId . '\',' ?><?php if ($page) echo ' page: \'' . $page . '\',' ?> env: '<?php echo $env; ?>', dev: <?php echo $dev; ?>, perPage: '<?php echo $perPage; ?>', ssr: '<?php echo $ssr; ?>', static: '<?php echo $static; ?>' };
   <?php require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.min.js'); ?>
   </script>
 <?php } ?>
