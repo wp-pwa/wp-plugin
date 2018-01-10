@@ -1,5 +1,4 @@
 // Uglify using "npx uglify-js injector.js --output injector.min.js --compress --mangle"
-
 (function(document, window, navigator) {
   var isIpad = /ipad.*?OS (?![1-8]_|X)/i; // from iOS 9
   var isIphone = /ip(hone|od).*?OS (?![1-8]_|X)/i; // from iOS 9
