@@ -13,9 +13,10 @@ $env = 'prod';
 $perPage = get_option('posts_per_page');
 $ssr = 'https://ssr.wp-pwa.com';
 $static = 'https://static.wp-pwa.com';
-$force = false;
 $inject = false;
+$force = false;
 $dev = 'false';
+$break = false;
 
 if (is_home()) {
   $listType = 'latest';
@@ -91,6 +92,10 @@ if (isset($_GET['force']) || isset($_GET['server']) || isset($_GET['static']) ||
     $dev = 'true';
   }
 
+if (isset($_GET['break']) && ($_GET['break'] === 'true')) {
+  $break = true;
+}
+
 if ($siteId && ($listType || $singleType)) {
   if ($force || $pwa_status === 'mobile') {
     $inject = true;
@@ -101,7 +106,12 @@ if ($siteId && ($listType || $singleType)) {
 
 <?php if ($inject) { ?>
   <script type='text/javascript'>
-  window['wp-pwa'] = { siteId: '<?php echo $siteId; ?>',<?php if ($listType) echo ' listType: \'' . $listType . '\',' ?><?php if ($listId) echo ' listId: \'' . $listId . '\',' ?><?php if ($singleType) echo ' singleType: \'' . $singleType . '\',' ?><?php if ($singleId) echo ' singleId: \'' . $singleId . '\',' ?><?php if ($page) echo ' page: \'' . $page . '\',' ?> env: '<?php echo $env; ?>', dev: <?php echo $dev; ?>, perPage: '<?php echo $perPage; ?>', ssr: '<?php echo $ssr; ?>', static: '<?php echo $static; ?>' };
-  <?php require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.min.js'); ?>
+  window['wp-pwa'] = { siteId: '<?php echo $siteId; ?>',<?php if ($listType) echo ' listType: \'' . $listType . '\',' ?><?php if ($listId) echo ' listId: \'' . $listId . '\',' ?><?php if ($singleType) echo ' singleType: \'' . $singleType . '\',' ?><?php if ($singleId) echo ' singleId: \'' . $singleId . '\',' ?><?php if ($page) echo ' page: \'' . $page . '\',' ?> env: '<?php echo $env; ?>', dev: <?php echo $dev; ?>, perPage: '<?php echo $perPage; ?>', ssr: '<?php echo $ssr; ?>', static: '<?php echo $static; ?>'<?php if ($break) echo ', break: true'; ?> };
+  <?php if ($break) {
+    echo 'debugger;';
+    require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.js');
+  } else {
+    require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.min.js');
+  } ?>
   </script>
 <?php } ?>
