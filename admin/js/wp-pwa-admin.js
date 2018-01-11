@@ -229,7 +229,8 @@ jQuery(document).on('ready', function () {
             action: 'wp_pwa_change_advanced_settings',
             wp_pwa_env: jQuery('select#wp-pwa-env').find(":selected").val(),
             wp_pwa_ssr: jQuery('input#wp-pwa-ssr').val(),
-            wp_pwa_static: jQuery('input#wp-pwa-static').val()
+            wp_pwa_static: jQuery('input#wp-pwa-static').val(),
+            wp_pwa_force_frontpage: jQuery('input#wp-pwa-force-frontpage').is(':checked')
         },
         success: function (response) {
           if (response.hasOwnProperty('status') && response.status == 'ok' ) {

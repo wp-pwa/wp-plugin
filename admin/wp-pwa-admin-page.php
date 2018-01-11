@@ -400,9 +400,21 @@
 									</fieldset>
 							</td>
 						</tr>
+						<tr>
+							<th scope="row">Force FrontPage</th>
+							<td>
+									<fieldset>
+											<label>
+													<input type="checkbox" id="wp-pwa-force-frontpage" <?php echo ($settings['wp_pwa_force_frontpage'] == "true" ?'checked':''); ?>/>
+													<br />
+													<span class="description">Force FrontPage to retrieve Latest posts</span>
+											</label>
+									</fieldset>
+							</td>
+						</tr>
 					</table>
 					<p>
-						<a href="#" id="change-advanced-settings"class="button button-lg">Change</a>
+						<a href="#" id="change-advanced-settings"class="button button-lg">Save changes</a>
 					</p>
 			  </div>
 		 </article>
