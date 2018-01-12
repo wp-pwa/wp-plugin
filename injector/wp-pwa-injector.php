@@ -17,8 +17,12 @@ $inject = false;
 $force = false;
 $dev = 'false';
 $break = false;
+$settings = get_option('wp_pwa_settings');
 
-if (is_home()) {
+$pwaStatus = $settings['wp_pwa_status'];
+$forceFrontpage = $settings['wp_pwa_force_frontpage'];
+
+if (($forceFrontpage === true && is_front_page()) || is_home()) {
   $listType = 'latest';
   $listId = 'post';
 } elseif (is_page() || is_single()) {
@@ -51,10 +55,6 @@ if (is_paged()) {
   is_tax() || is_post_type_archive()) {
   $page = 1;
 }
-
-$settings = get_option('wp_pwa_settings');
-
-$pwa_status = $settings['wp_pwa_status'];
 
 if (isset($_GET['siteId'])) {
   $siteId = $_GET['siteId'];
@@ -97,7 +97,7 @@ if (isset($_GET['break']) && ($_GET['break'] === 'true')) {
 }
 
 if ($siteId && ($listType || $singleType)) {
-  if ($force || $pwa_status === 'mobile') {
+  if ($force || $pwaStatus === 'mobile') {
     $inject = true;
   }
 }

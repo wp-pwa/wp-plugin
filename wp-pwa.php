@@ -408,7 +408,7 @@ class wp_pwa
 		$wp_pwa_env = $_POST['wp_pwa_env'];
 		$wp_pwa_ssr = $_POST['wp_pwa_ssr'];
 		$wp_pwa_static = $_POST['wp_pwa_static'];
-		$wp_pwa_force_frontpage = $_POST['wp_pwa_force_frontpage'];
+		$wp_pwa_force_frontpage = ($_POST['wp_pwa_force_frontpage'] === 'true');
 
 		$settings = get_option('wp_pwa_settings');
 		$settings['wp_pwa_env'] = $wp_pwa_env;

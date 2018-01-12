@@ -405,7 +405,7 @@
 							<td>
 									<fieldset>
 											<label>
-													<input type="checkbox" id="wp-pwa-force-frontpage" <?php echo ($settings['wp_pwa_force_frontpage'] == "true" ?'checked':''); ?>/>
+													<input type="checkbox" id="wp-pwa-force-frontpage" <?php echo ($settings['wp_pwa_force_frontpage'] === true ?'checked':''); ?>/>
 													<br />
 													<span class="description">Force FrontPage to retrieve Latest posts</span>
 											</label>
