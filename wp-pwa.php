@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.0.10
+Version: 1.0.11
 Author: WordPress PWA
 Author URI:
 License: GPL v3
@@ -15,7 +15,7 @@ if( !class_exists('wp_pwa') ):
 class wp_pwa
 {
 	// vars
-	public $plugin_version = '1.0.10';
+	public $plugin_version = '1.0.11';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -408,11 +408,13 @@ class wp_pwa
 		$wp_pwa_env = $_POST['wp_pwa_env'];
 		$wp_pwa_ssr = $_POST['wp_pwa_ssr'];
 		$wp_pwa_static = $_POST['wp_pwa_static'];
+		$wp_pwa_force_frontpage = ($_POST['wp_pwa_force_frontpage'] === 'true');
 
 		$settings = get_option('wp_pwa_settings');
 		$settings['wp_pwa_env'] = $wp_pwa_env;
 		$settings['wp_pwa_ssr'] = $wp_pwa_ssr;
 		$settings['wp_pwa_static'] = $wp_pwa_static;
+		$settings['wp_pwa_force_frontpage'] =$wp_pwa_force_frontpage;
 
 		update_option('wp_pwa_settings', $settings);
 
@@ -558,12 +560,19 @@ function wp_pwa_activation() {
 		$wp_pwa_static = 'https://static.wp-pwa.com';
 	}
 
+	if (isset($settings['wp_pwa_force_frontpage'])) {
+		$wp_pwa_force_frontpage = $settings['wp_pwa_force_frontpage'];
+	} else {
+		$wp_pwa_force_frontpage = false;
+	}
+
 	$defaults = array("synced_with_wp_pwa" => $synced_with_wp_pwa,
 										"wp_pwa_status" => $wp_pwa_status,
 										"wp_pwa_siteid" => $siteId,
 										"wp_pwa_env" => $wp_pwa_env,
 										"wp_pwa_ssr" => $wp_pwa_ssr,
-										"wp_pwa_static" => $wp_pwa_static);
+										"wp_pwa_static" => $wp_pwa_static,
+										"wp_pwa_force_frontpage" => $wp_pwa_force_frontpage);
 
 	if($settings === false){
 		add_option('wp_pwa_settings',$defaults , '','yes');
