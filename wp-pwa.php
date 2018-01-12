@@ -134,8 +134,7 @@ class wp_pwa
 	* Register and enqueue scripts.
 	*/
 	public function register_wp_pwa_scripts($hook) {
-		wp_register_script('wp_pwa_admin_js',plugin_dir_url(__FILE__) . 'admin/js/wp-pwa-admin.js', array( 'jquery' ), true, true);
-
+		wp_register_script('wp_pwa_admin_js',plugin_dir_url(__FILE__) . 'admin/js/wp-pwa-admin.js', array( 'jquery' ), $this->plugin_version, true);
 		wp_enqueue_script('wp_pwa_admin_js');
 	}
 
