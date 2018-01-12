@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.0.11
+Version: 1.0.12
 Author: WordPress PWA
 Author URI:
 License: GPL v3
@@ -15,7 +15,7 @@ if( !class_exists('wp_pwa') ):
 class wp_pwa
 {
 	// vars
-	public $plugin_version = '1.0.11';
+	public $plugin_version = '1.0.12';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -134,8 +134,7 @@ class wp_pwa
 	* Register and enqueue scripts.
 	*/
 	public function register_wp_pwa_scripts($hook) {
-		wp_register_script('wp_pwa_admin_js',plugin_dir_url(__FILE__) . 'admin/js/wp-pwa-admin.js', array( 'jquery' ), true, true);
-
+		wp_register_script('wp_pwa_admin_js',plugin_dir_url(__FILE__) . 'admin/js/wp-pwa-admin.js', array( 'jquery' ), $this->plugin_version, true);
 		wp_enqueue_script('wp_pwa_admin_js');
 	}
 
