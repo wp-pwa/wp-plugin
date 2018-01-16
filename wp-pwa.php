@@ -55,9 +55,8 @@ class wp_pwa
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_wp_pwa_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_wp_pwa_styles' ) );
 
-
-
 		add_action( 'rest_api_init', array($this,'rest_routes'));
+		add_action( 'wp_head', array($this,'amp_add_canonical'));
 
 		// filters
 	}
@@ -481,6 +480,19 @@ class wp_pwa
 			return false;
 		}
 	}
+
+	//Injects the amp URL to the header
+	public function amp_add_canonical() {
+		$settings = get_option('wp_pwa_settings');
+
+		if ( ($settings['wp_pwa_amp'] !== 'disabled') && (is_single())) {
+			$amp_url = "www.amp-test.com";
+			printf( '<link rel="amphtml" href="%s" />', esc_url( $amp_url ) );
+			printf("\n");
+		} else {
+			return;
+		}
+	}
 }
 
 /*
@@ -565,13 +577,20 @@ function wp_pwa_activation() {
 		$wp_pwa_force_frontpage = false;
 	}
 
+	if (isset($settings['wp_pwa_amp'])) {
+		$wp_pwa_amp = $settings['wp_pwa_amp'];
+	} else {
+		$wp_pwa_amp = 'disabled';
+	}
+
 	$defaults = array("synced_with_wp_pwa" => $synced_with_wp_pwa,
 										"wp_pwa_status" => $wp_pwa_status,
 										"wp_pwa_siteid" => $siteId,
 										"wp_pwa_env" => $wp_pwa_env,
 										"wp_pwa_ssr" => $wp_pwa_ssr,
 										"wp_pwa_static" => $wp_pwa_static,
-										"wp_pwa_force_frontpage" => $wp_pwa_force_frontpage);
+										"wp_pwa_force_frontpage" => $wp_pwa_force_frontpage,
+										"wp_pwa_amp" => $wp_pwa_amp);
 
 	if($settings === false){
 		add_option('wp_pwa_settings',$defaults , '','yes');
