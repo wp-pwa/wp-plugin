@@ -62,24 +62,7 @@
     loadScript(options);
   } else if (!readCookie('wppwaInjectorFailed') && navigator && isMobile(navigator.userAgent)) {
     window.stop();
-    /* Unescaped html (use http://www.utilities-online.info/urlencode to escape it)
-    <head>
-      <style>
-        @keyframes progress {
-          from {
-            width: 0%;
-          }
-          to {
-            width: 80%;
-          }
-        }
-      </style>
-    </head>
-
-    <body style="height:100%;background:#FDFDFD;display:flex;justify-content:center;align-items:center;margin:0;">
-      <div style="animation:6s ease-out 1s 1 forwards progress;height:1px;background:#000;"></div>
-    </body>
-    */
+    // This is the escaped html from loader.html.
     var html =
       '%3Chead%3E%0A%20%20%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%20%20@keyframes%20progress%20%7B%0A%20%20%20%20%20%20%20%20%20%20from%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%200%25%3B%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20to%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2080%25%3B%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%3C/style%3E%0A%20%20%20%20%3C/head%3E%0A%0A%20%20%20%20%3Cbody%20style%3D%22height%3A100%25%3Bbackground%3A%23FDFDFD%3Bdisplay%3Aflex%3Bjustify-content%3Acenter%3Balign-items%3Acenter%3Bmargin%3A0%3B%22%3E%0A%20%20%20%20%20%20%3Cdiv%20style%3D%22animation%3A6s%20ease-out%201s%201%20forwards%20progress%3Bheight%3A1px%3Bbackground%3A%23000%3B%22%3E%3C/div%3E%0A%20%20%20%20%3C/body%3E';
     document.write(unescape(html));
