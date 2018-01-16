@@ -74,6 +74,9 @@ jQuery(document).on('ready', function () {
 
     //PWA Status - Enabled / disabled
     jQuery('#wp-pwa-status').on('change', function(e) {
+      jQuery('#wp-pwa-status-saving').show();
+      jQuery('#wp-pwa-status-enabled').hide();
+      jQuery('#wp-pwa-status-disabled').hide();
       var valueSelected = this.value;
 
       jQuery.ajax({
@@ -87,10 +90,12 @@ jQuery(document).on('ready', function () {
             if (response.hasOwnProperty('status') && response.status == 'ok' ) {
               if (valueSelected == 'disabled') {
                 jQuery('#wp-pwa-status-enabled').hide();
+                jQuery('#wp-pwa-status-saving').hide();
                 jQuery('#wp-pwa-status-disabled').show();
               }
               if(valueSelected == 'mobile') {
                 jQuery('#wp-pwa-status-enabled').show();
+                jQuery('#wp-pwa-status-saving').hide();
                 jQuery('#wp-pwa-status-disabled').hide();
               }
             }
@@ -100,6 +105,41 @@ jQuery(document).on('ready', function () {
           }
       });
 
+    });
+
+
+    //AMP - Enabled / disabled
+    jQuery('#wp-pwa-amp').on('change', function(e) {
+      jQuery('#wp-pwa-amp-saving').show();
+      jQuery('#wp-pwa-amp-enabled').hide();
+      jQuery('#wp-pwa-amp-disabled').hide();
+
+      var valueSelected = this.value;
+
+      jQuery.ajax({
+          url: ajaxurl,
+          method: "POST",
+          data: {
+              action: 'wp_pwa_change_amp',
+              amp: valueSelected,
+          },
+          success: function (response) {
+            if (response.hasOwnProperty('status') && response.status == 'ok' ) {
+              if (valueSelected == 'disabled') {
+                jQuery('#wp-pwa-amp-enabled').hide();
+                jQuery('#wp-pwa-amp-saving').hide();
+                jQuery('#wp-pwa-amp-disabled').show();
+              }
+              if(valueSelected == 'posts') {
+                jQuery('#wp-pwa-amp-enabled').show();
+                jQuery('#wp-pwa-amp-saving').hide();
+                jQuery('#wp-pwa-amp-disabled').hide();
+              }
+            }
+          },
+          error: function () {
+          }
+      });
     });
 
     //Create App via AJAX
@@ -141,6 +181,7 @@ jQuery(document).on('ready', function () {
               jQuery('progress')[0].value = 100;
               jQuery('#step-message').text('You are on step 4/4');
               jQuery('#wp-pwa-status-box').show();
+              jQuery('#wp-pwa-amp-box').show();
               jQuery('#wp-pwa-siteid-lateral').show();
               jQuery('span#wp-pwa-siteid-span').text(response.siteId);
               jQuery('input#wp-pwa-siteid').val(response.siteId);
@@ -230,6 +271,7 @@ jQuery(document).on('ready', function () {
             wp_pwa_env: jQuery('select#wp-pwa-env').find(":selected").val(),
             wp_pwa_ssr: jQuery('input#wp-pwa-ssr').val(),
             wp_pwa_static: jQuery('input#wp-pwa-static').val(),
+            wp_pwa_amp_server: jQuery('input#wp-pwa-amp-server').val(),
             wp_pwa_force_frontpage: jQuery('input#wp-pwa-force-frontpage').is(':checked')
         },
         success: function (response) {

@@ -219,6 +219,9 @@
 						 	<span id="wp-pwa-status-enabled" class="icon is" <?php echo (($wp_pwa_status!='disabled')?'style="color:#97cd76;"':'style="display:none;color:#97cd76"');?>>
 								<i class="fa fa-check-circle" aria-hidden="true"></i>
 							</span>
+							<span id="wp-pwa-status-saving" class="icon is" style="display:none;color:#808080">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</span>
 							<span id="wp-pwa-status-disabled" class="icon" <?php echo (($wp_pwa_status=='disabled')?'style="color:#ed6c63;"':'style="display:none;color:#ed6c63"');?>>
 								<i class="fa fa-times-circle" aria-hidden="true"></i>
 							</span>
@@ -253,6 +256,9 @@
 						 	<span id="wp-pwa-amp-enabled" class="icon is" <?php echo (($wp_pwa_amp!='disabled')?'style="color:#97cd76;"':'style="display:none;color:#97cd76"');?>>
 								<i class="fa fa-check-circle" aria-hidden="true"></i>
 							</span>
+						 	<span id="wp-pwa-amp-saving" class="icon is" style="display:none;color:#808080">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</span>
 							<span id="wp-pwa-amp-disabled" class="icon" <?php echo (($wp_pwa_amp=='disabled')?'style="color:#ed6c63;"':'style="display:none;color:#ed6c63"');?>>
 								<i class="fa fa-times-circle" aria-hidden="true"></i>
 							</span>
@@ -261,7 +267,7 @@
 				 <div class="level-right">
 					 <div class="control">
 						<div class="select">
-								<select id="wp-pwa-status">
+								<select id="wp-pwa-amp">
 									<?php
 										$options = array(array('posts','Enabled'), array('disabled','Disabled')); // [value, Label]
 										$output = '';
@@ -435,6 +441,18 @@
 													<input type="text" id="wp-pwa-static" value="<?php echo $settings['wp_pwa_static']; ?>"/>
 													<br />
 													<span class="description">Static URL</span>
+											</label>
+									</fieldset>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">AMP Server</th>
+							<td>
+									<fieldset>
+											<label>
+													<input type="text" id="wp-pwa-amp-server" value="<?php echo $settings['wp_pwa_amp_server']; ?>"/>
+													<br />
+													<span class="description">AMP Server</span>
 											</label>
 									</fieldset>
 							</td>
