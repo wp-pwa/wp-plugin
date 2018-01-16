@@ -504,7 +504,14 @@ class wp_pwa
 		$settings = get_option('wp_pwa_settings');
 
 		if ( ($settings['wp_pwa_amp'] !== 'disabled') && (is_single())) {
-			$amp_url = "www.amp-test.com";
+			$singleId = get_queried_object_id();
+			$permalink = get_permalink($singleId);
+			$permalink = preg_replace("(^https?://)", "", $permalink );
+
+			$query = 'siteId=' . $settings["wp_pwa_siteid"] . '&env=' . $settings['wp_pwa_env'] . '&singleType=post';
+
+			$amp_url = $settings['wp_pwa_amp_server'] . '/'. $permalink . '?' .$query;
+
 			printf( '<link rel="amphtml" href="%s" />', esc_url( $amp_url ) );
 			printf("\n");
 		} else {
