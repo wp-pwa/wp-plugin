@@ -503,6 +503,7 @@ class wp_pwa
 	public function amp_add_canonical() {
 		$settings = get_option('wp_pwa_settings');
 
+		//posts
 		if ( ($settings['wp_pwa_amp'] !== 'disabled') && (is_single())) {
 			$singleId = get_queried_object_id();
 			$permalink = get_permalink($singleId);
@@ -510,9 +511,11 @@ class wp_pwa
 
 			$query = 'siteId=' . $settings["wp_pwa_siteid"] . '&env=' . $settings['wp_pwa_env'] . '&singleType=post';
 
-			$amp_url = $settings['wp_pwa_amp_server'] . '/'. $permalink . '?' .$query;
+			// https://amp.wp-pwa.com/www.example.com/final-post-permalink?QUERY
+			// {amp_server} {site_url} / permalink ?QUERY
+			$amp_url = $settings['wp_pwa_amp_server'] . '/'. $permalink . '?' . $query;
 
-			printf( '<link rel="amphtml" href="%s" />', esc_url( $amp_url ) );
+			printf( '<link rel="amphtml" href="%s" />', $amp_url );
 			printf("\n");
 		} else {
 			return;
