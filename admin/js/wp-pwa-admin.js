@@ -46,6 +46,18 @@ jQuery(document).on('ready', function () {
       jQuery('#lateral-error-siteid').hide();
     });
 
+    jQuery('.open-excludes').on('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      jQuery('#lateral-excludes').toggle();
+    });
+
+    jQuery('.close-excludes').on('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      jQuery('#lateral-excludes').hide();
+    });
+
     jQuery('.open-advanced-settings').on('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -215,6 +227,32 @@ jQuery(document).on('ready', function () {
           }
         });
       }
+    });
+
+    jQuery('#save-excludes').on('click', function(e) {
+      jQuery('#save-excludes').addClass('is-loading');
+      e.preventDefault();
+      e.stopPropagation();
+
+      jQuery.ajax({
+        url: ajaxurl,
+        method: "POST",
+        data: {
+            action: 'wp_pwa_save_excludes',
+            wp_pwa_excludes: jQuery('textarea#excludes').val()
+        },
+        success: function (response) {
+          if (response.hasOwnProperty('status') && response.status == 'ok' ) {
+            jQuery('#save-excludes').removeClass('is-loading');
+            jQuery('#lateral-excludes').hide();
+
+          }
+        },
+        error: function (response) {
+          console.log("ERROR: Excludes couldn't be saved");
+          jQuery('#save-excludes').removeClass('is-loading');
+        }
+      });
     });
 
     jQuery('#change-advanced-settings').on('click', function(e) {
