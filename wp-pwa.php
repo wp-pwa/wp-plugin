@@ -60,6 +60,7 @@ class wp_pwa
 		add_action( 'rest_api_init', array($this,'rest_routes'));
 
 		// filters
+		add_filter( 'wp_get_attachment_link', array( $this, 'add_data_to_images' ), 10, 2 );
 	}
 
 	function rest_routes() {
@@ -80,6 +81,26 @@ class wp_pwa
 			'callback' => array( $this,'get_site_info'))
 		);
 	}
+
+	// Adds attribute data-attachment-id="X" to the gallery images
+	function add_data_to_images( $html, $attachment_id ) {
+
+		$attachment_id   = intval( $attachment_id );
+
+		$html = str_replace(
+			'<img ',
+			sprintf(
+				'<img data-attachment-id="%1$d" ',
+				$attachment_id
+			),
+			$html
+		);
+
+		$html = apply_filters( 'jp_carousel_add_data_to_images', $html, $attachment_id );
+
+		return $html;
+	}
+
 	/*
 	*  init
 	*
