@@ -336,14 +336,12 @@
 					</nav>
 			  </div>
 			  <div class="message-body">
-					<p>
-						<strong>Important:</strong> Add only one URL per line.
-					</p>
+					<p><strong>Important:</strong> Add only one URL per line.</p>
 					<br>
 					<p>
 						<?php
 							$wp_pwa_excludes = $settings['wp_pwa_excludes'];
-							
+
 							$excludes_output = '';
 							for( $i=0; $i<count($wp_pwa_excludes); $i++ ) {
 								$excludes_output .= $wp_pwa_excludes[$i];
@@ -353,8 +351,9 @@
 								}
 							}
 						?>
-						<textarea id="excludes" class="textarea" placeholder="http://www.mysite.com/contact"><?php echo $excludes_output; ?></textarea>
+						<textarea id="excludes" class="textarea"><?php echo $excludes_output; ?></textarea>
 					</p>
+					<p><em>* You can use regular expressions.</em></p>
 					<br>
 					<p>
 						<a href="#" id="save-excludes"class="button button-lg">Save</a>
