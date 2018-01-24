@@ -3,6 +3,7 @@
 // Copy on header.php, just after <head> the following code:
 // if (isset($GLOBALS['wp_pwa_path'])) { require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] .'/injector/wp-pwa-injector.php'); }
 
+global $wp;
 $siteId = null;
 $listType = null;
 $listId = null;
@@ -15,12 +16,15 @@ $ssr = 'https://ssr.wp-pwa.com';
 $static = 'https://static.wp-pwa.com';
 $inject = false;
 $force = false;
+$exclusion = false;
 $dev = 'false';
 $break = false;
+$url = home_url($wp->request);
 $settings = get_option('wp_pwa_settings');
 
 $pwaStatus = $settings['wp_pwa_status'];
 $forceFrontpage = $settings['wp_pwa_force_frontpage'];
+$excludes = $settings['wp_pwa_excludes'];
 
 if (($forceFrontpage === true && is_front_page()) || is_home()) {
   $listType = 'latest';
@@ -96,22 +100,31 @@ if (isset($_GET['break']) && ($_GET['break'] === 'true')) {
   $break = true;
 }
 
-if ($siteId && ($listType || $singleType)) {
-  if ($force || $pwaStatus === 'mobile') {
-    $inject = true;
+if (sizeof($excludes) !== 0 && $force === false) {
+  foreach ($excludes as $regex) {
+    $output = array();
+    $regex = str_replace('/', '\/', $regex);
+    $regex = str_replace('\\\\', '\\', $regex);
+    preg_match('/' . $regex . '/', $url, $output);
+    if (sizeof($output) > 0) {
+      $exclusion = true;
+    }
   }
 }
 
+if ($siteId && ($listType || $singleType)) {
+  if ($force || ($pwaStatus === 'mobile' && $exclusion === false)) {
+    $inject = true;
+  }
+}
 ?>
 
 <?php if ($inject) { ?>
-  <script type='text/javascript'>
-  window['wp-pwa'] = { siteId: '<?php echo $siteId; ?>',<?php if ($listType) echo ' listType: \'' . $listType . '\',' ?><?php if ($listId) echo ' listId: \'' . $listId . '\',' ?><?php if ($singleType) echo ' singleType: \'' . $singleType . '\',' ?><?php if ($singleId) echo ' singleId: \'' . $singleId . '\',' ?><?php if ($page) echo ' page: \'' . $page . '\',' ?> env: '<?php echo $env; ?>', dev: <?php echo $dev; ?>, perPage: '<?php echo $perPage; ?>', ssr: '<?php echo $ssr; ?>', static: '<?php echo $static; ?>'<?php if ($break) echo ', break: true'; ?> };
+  <script type='text/javascript'>window['wp-pwa'] = { siteId: '<?php echo $siteId; ?>',<?php if ($listType) echo ' listType: \'' . $listType . '\',' ?><?php if ($listId) echo ' listId: \'' . $listId . '\',' ?><?php if ($singleType) echo ' singleType: \'' . $singleType . '\',' ?><?php if ($singleId) echo ' singleId: \'' . $singleId . '\',' ?><?php if ($page) echo ' page: \'' . $page . '\',' ?> env: '<?php echo $env; ?>', dev: <?php echo $dev; ?>, perPage: '<?php echo $perPage; ?>', ssr: '<?php echo $ssr; ?>', initialUrl: '<?php echo $url; ?>', static: '<?php echo $static; ?>'<?php if ($break) echo ', break: true' ?><?php if (sizeof($excludes) !== 0) echo ', excludes: ["' . str_replace('\\\\', '\\', implode('", "', $excludes)) . '"]' ?> };
   <?php if ($break) {
     echo 'debugger;';
     require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.js');
   } else {
     require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.min.js');
-  } ?>
-  </script>
+  } ?></script>
 <?php } ?>
