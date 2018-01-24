@@ -448,7 +448,8 @@ class wp_pwa
 		if ($_POST['wp_pwa_excludes'] === '') {
 			$wp_pwa_excludes = array();
 		} else {
-			$wp_pwa_excludes = explode("\n", $_POST['wp_pwa_excludes']);
+			$excluses = stripslashes($_POST['wp_pwa_excludes']);
+			$wp_pwa_excludes = explode("\n", $excluses);
 		}
 
 		$settings = get_option('wp_pwa_settings');

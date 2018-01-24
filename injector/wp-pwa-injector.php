@@ -106,7 +106,6 @@ if (sizeof($excludes) !== 0 && $force === false) {
   foreach ($excludes as $regex) {
     $output = array();
     $regex = str_replace('/', '\/', $regex);
-    $regex = str_replace('\\\\', '\\', $regex);
     preg_match('/' . $regex . '/', $url, $output);
     if (sizeof($output) > 0) {
       $exclusion = true;
