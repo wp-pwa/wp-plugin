@@ -234,12 +234,15 @@ jQuery(document).on('ready', function () {
       e.preventDefault();
       e.stopPropagation();
 
+      var excludes = jQuery('textarea#excludes').val();
+      excludes = excludes.split('\n').filter(url => !/^\s*$/.test(url)).join('\n');
+
       jQuery.ajax({
         url: ajaxurl,
         method: "POST",
         data: {
             action: 'wp_pwa_save_excludes',
-            wp_pwa_excludes: jQuery('textarea#excludes').val()
+            wp_pwa_excludes: excludes
         },
         success: function (response) {
           if (response.hasOwnProperty('status') && response.status == 'ok' ) {
