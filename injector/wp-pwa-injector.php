@@ -63,7 +63,7 @@ if (is_paged()) {
 if (isset($_GET['siteId'])) {
   $siteId = $_GET['siteId'];
 } elseif (isset($settings['wp_pwa_siteid']) && $settings['wp_pwa_siteid'] !== '' ) {
-  $siteId = $settings["wp_pwa_siteid"];
+  $siteId = $settings['wp_pwa_siteid'];
 }
 
 if (isset($_GET['env']) && ($_GET['env'] === 'pre' || $_GET['env'] === 'prod')) {
@@ -77,14 +77,14 @@ if (isset($_GET['ssr'])) {
 } elseif (isset($_GET['server'])) {
   $ssr = $_GET['server'];
 } elseif (isset($settings['wp_pwa_ssr'])) {
-  $ssr = $settings["wp_pwa_ssr"];
+  $ssr = $settings['wp_pwa_ssr'];
 }
 if (isset($_GET['static'])) {
   $static = $_GET['static'];
 } elseif (isset($_GET['server'])) {
   $static = $_GET['server'];
 } elseif (isset($settings['wp_pwa_static'])) {
-  $static = $settings["wp_pwa_static"];
+  $static = $settings['wp_pwa_static'];
 }
 
 if (isset($_GET['force']) && $_GET['force'] === 'true' ){
