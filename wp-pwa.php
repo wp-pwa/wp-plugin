@@ -424,7 +424,11 @@ class wp_pwa
 	}
 
 	function save_excludes_ajax() {
-		$wp_pwa_excludes = $your_array = explode("\n", $_POST['wp_pwa_excludes']);
+		if ($_POST['wp_pwa_excludes'] === '') {
+			$wp_pwa_excludes = array();
+		} else {
+			$wp_pwa_excludes = explode("\n", $_POST['wp_pwa_excludes']);
+		}
 
 		$settings = get_option('wp_pwa_settings');
 		$settings['wp_pwa_excludes'] = $wp_pwa_excludes;
