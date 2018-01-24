@@ -3,7 +3,6 @@
 // Copy on header.php, just after <head> the following code:
 // if (isset($GLOBALS['wp_pwa_path'])) { require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] .'/injector/wp-pwa-injector.php'); }
 
-global $wp;
 $siteId = null;
 $listType = null;
 $listId = null;
@@ -19,7 +18,10 @@ $force = false;
 $exclusion = false;
 $dev = 'false';
 $break = false;
-$url = home_url($wp->request);
+$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http')
+  . '://'
+  . $_SERVER[HTTP_HOST]
+  . $_SERVER[REQUEST_URI];
 $settings = get_option('wp_pwa_settings');
 
 $pwaStatus = $settings['wp_pwa_status'];
