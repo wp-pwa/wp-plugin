@@ -47,6 +47,7 @@ class wp_pwa
 		add_action('wp_ajax_wp_pwa_change_status',array($this,'change_status_ajax'));
 		add_action('wp_ajax_wp_pwa_change_siteid',array($this,'change_siteid_ajax'));
 		add_action('wp_ajax_wp_pwa_change_advanced_settings',array($this,'change_advanced_settings_ajax'));
+		add_action('wp_ajax_wp_pwa_save_excludes',array($this,'save_excludes_ajax'));
 
 		add_action('plugins_loaded', array($this,'wp_rest_api_plugin_is_installed'));
 		add_action('plugins_loaded', array($this,'wp_rest_api_plugin_is_active'));
@@ -443,6 +444,23 @@ class wp_pwa
 		));
 	}
 
+	function save_excludes_ajax() {
+		if ($_POST['wp_pwa_excludes'] === '') {
+			$wp_pwa_excludes = array();
+		} else {
+			$wp_pwa_excludes = explode("\n", $_POST['wp_pwa_excludes']);
+		}
+
+		$settings = get_option('wp_pwa_settings');
+		$settings['wp_pwa_excludes'] = $wp_pwa_excludes;
+
+		update_option('wp_pwa_settings', $settings);
+
+		wp_send_json( array(
+			'status' => 'ok',
+		));
+	}
+
 	//Checks if the rest-api plugin is installed
 	public function wp_rest_api_plugin_is_installed() {
 		if ( ! function_exists( 'get_plugins' ) ) {
@@ -586,13 +604,20 @@ function wp_pwa_activation() {
 		$wp_pwa_force_frontpage = false;
 	}
 
+	if (isset($settings['wp_pwa_excludes'])) {
+		$wp_pwa_excludes = $settings['wp_pwa_excludes'];
+	} else {
+		$wp_pwa_excludes = array();
+	}
+
 	$defaults = array("synced_with_wp_pwa" => $synced_with_wp_pwa,
 										"wp_pwa_status" => $wp_pwa_status,
 										"wp_pwa_siteid" => $siteId,
 										"wp_pwa_env" => $wp_pwa_env,
 										"wp_pwa_ssr" => $wp_pwa_ssr,
 										"wp_pwa_static" => $wp_pwa_static,
-										"wp_pwa_force_frontpage" => $wp_pwa_force_frontpage);
+										"wp_pwa_force_frontpage" => $wp_pwa_force_frontpage,
+										"wp_pwa_excludes" => $wp_pwa_excludes);
 
 	if($settings === false){
 		add_option('wp_pwa_settings',$defaults , '','yes');
