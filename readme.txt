@@ -4,7 +4,7 @@ Tags: html5, pwa, webapp, progressive web app
 Donate link:
 Requires at least: 4.4
 Tested up to: 4.8.2
-Stable tag: 1.0.13
+Stable tag: 1.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -25,6 +25,11 @@ The simplest way to create Progressive Web Apps with WordPress. No coding skills
 == Screenshots ==
 
 == Changelog ==
+= 1.1.0 =
+* Add excludes (use regexp to exclude urls from using WP PWA)
+* Send the current url to the WP PWA server to retrieve <head> fields
+* Add media ids to galleries
+
 = 1.0.13 =
 * Remove html from unminified injector
 

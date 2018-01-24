@@ -268,6 +268,8 @@
 				<div id="wp-pwa-advanced-settings-lateral" style="text-align: right;" <?php echo ($synced_with_wp_pwa?'':'style="display:none;"');?>>
 					<p>
 						<hr>
+						<a class="open-excludes" href="#" style="font-size: 10px; text-decoration: underline;">PWA Excludes</a>
+						<span style="font-size: 10px; margin: 0 5px 0 5px;"> </span>
 						<a class="open-advanced-settings" href="#" style="font-size: 10px; text-decoration: underline;">Advanced settings</a>
 					</p>
 				</div>
@@ -319,6 +321,42 @@
 					</table>
 					<p>
 						<a href="#" id="change-siteid"class="button button-lg">Change</a>
+					</p>
+			  </div>
+		 </article>
+		 <article id="lateral-excludes" class="message is-warning" style="display:none;">
+			 <div class="message-header">
+					<nav class="level">
+						<div class="level-left">
+							<strong>Exclude URLs in the PWA</strong>
+						</div>
+						<div class="level-right">
+							<a href="#" class="close-excludes" style="color:inherit"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+						</div>
+					</nav>
+			  </div>
+			  <div class="message-body">
+					<p><strong>Important:</strong> Add only one URL per line.</p>
+					<br>
+					<p>
+						<?php
+							$wp_pwa_excludes = $settings['wp_pwa_excludes'];
+
+							$excludes_output = '';
+							for( $i=0; $i<count($wp_pwa_excludes); $i++ ) {
+								$excludes_output .= $wp_pwa_excludes[$i];
+
+								if($i + 1 < (count($wp_pwa_excludes))){
+									$excludes_output .= "\n";
+								}
+							}
+						?>
+						<textarea id="excludes" class="textarea"><?php echo $excludes_output; ?></textarea>
+					</p>
+					<p><em>* You can use regular expressions.</em></p>
+					<br>
+					<p>
+						<a href="#" id="save-excludes"class="button button-lg">Save</a>
 					</p>
 			  </div>
 		 </article>
