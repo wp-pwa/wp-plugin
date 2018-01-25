@@ -68,9 +68,9 @@
     document.write(unescape(html));
 
     var query = '?siteId=' + window['wp-pwa'].siteId
-      + '&static=' + window['wp-pwa'].static
+      + '&static=' + encodeURIComponent(window['wp-pwa'].static)
       + '&env=' + window['wp-pwa'].env
-      + '&initialUrl=' + (window['wp-pwa'].initialUrl || window.location.href);
+      + '&initialUrl=' + encodeURIComponent(window['wp-pwa'].initialUrl || window.location.href);
     if (window['wp-pwa'].listType) query += '&listType=' + window['wp-pwa'].listType;
     if (window['wp-pwa'].listId) query += '&listId=' + window['wp-pwa'].listId;
     if (window['wp-pwa'].page) query += '&page=' + window['wp-pwa'].page;

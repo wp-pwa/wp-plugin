@@ -74,15 +74,15 @@ if (isset($_GET['env']) && ($_GET['env'] === 'pre' || $_GET['env'] === 'prod')) 
   $env = $settings['wp_pwa_env'];
 }
 
-if (isset($_GET['ssr'])) {
-  $ssr = $_GET['ssr'];
+if (isset($_GET['ssrUrl'])) {
+  $ssr = $_GET['ssrUrl'];
 } elseif (isset($_GET['server'])) {
   $ssr = $_GET['server'];
 } elseif (isset($settings['wp_pwa_ssr'])) {
   $ssr = $settings['wp_pwa_ssr'];
 }
-if (isset($_GET['static'])) {
-  $static = $_GET['static'];
+if (isset($_GET['staticUrl'])) {
+  $static = $_GET['staticUrl'];
 } elseif (isset($_GET['server'])) {
   $static = $_GET['server'];
 } elseif (isset($settings['wp_pwa_static'])) {
@@ -93,8 +93,8 @@ if (isset($_GET['force']) && $_GET['force'] === 'true' ){
   $force = true;
 }
 
-if (isset($_GET['force']) || isset($_GET['server']) || isset($_GET['static']) ||
-  isset($_GET['ssr']) || isset($_GET['env']) || isset($_GET['siteId'])) {
+if (isset($_GET['force']) || isset($_GET['server']) || isset($_GET['staticUrl']) ||
+  isset($_GET['ssrUrl']) || isset($_GET['env']) || isset($_GET['siteId'])) {
     $dev = 'true';
   }
 
