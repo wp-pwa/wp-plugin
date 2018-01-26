@@ -67,7 +67,10 @@
       '%3Chead%3E%0A%20%20%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%20%20@keyframes%20progress%20%7B%0A%20%20%20%20%20%20%20%20%20%20from%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%200%25%3B%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20to%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2080%25%3B%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%3C/style%3E%0A%20%20%20%20%3C/head%3E%0A%0A%20%20%20%20%3Cbody%20style%3D%22height%3A100%25%3Bbackground%3A%23FDFDFD%3Bdisplay%3Aflex%3Bjustify-content%3Acenter%3Balign-items%3Acenter%3Bmargin%3A0%3B%22%3E%0A%20%20%20%20%20%20%3Cdiv%20style%3D%22animation%3A6s%20ease-out%201s%201%20forwards%20progress%3Bheight%3A1px%3Bbackground%3A%23000%3B%22%3E%3C/div%3E%0A%20%20%20%20%3C/body%3E';
     document.write(unescape(html));
 
-    var query = '?siteId=' + window['wp-pwa'].siteId + '&static=' + window['wp-pwa'].static + '&env=' + window['wp-pwa'].env;
+    var query = '?siteId=' + window['wp-pwa'].siteId
+      + '&static=' + encodeURIComponent(window['wp-pwa'].static)
+      + '&env=' + window['wp-pwa'].env
+      + '&initialUrl=' + encodeURIComponent(window['wp-pwa'].initialUrl || window.location.href);
     if (window['wp-pwa'].listType) query += '&listType=' + window['wp-pwa'].listType;
     if (window['wp-pwa'].listId) query += '&listId=' + window['wp-pwa'].listId;
     if (window['wp-pwa'].page) query += '&page=' + window['wp-pwa'].page;
