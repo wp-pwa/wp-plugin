@@ -549,7 +549,7 @@ class wp_pwa
 			$permalink = get_permalink($singleId);
 			$permalink = preg_replace("(^https?://)", "", $permalink );
 
-			$query = 'siteId=' . $settings["wp_pwa_siteid"] . '&env=' . $settings['wp_pwa_env'] . '&singleType=post';
+			$query = 'siteId=' . $settings["wp_pwa_siteid"] . '&env=' . $settings['wp_pwa_env'] . '&singleType=post' . '&singleId=' . $singleId;
 
 			// https://amp.wp-pwa.com/www.example.com/final-post-permalink?QUERY
 			// {amp_server} {site_url} / permalink ?QUERY
