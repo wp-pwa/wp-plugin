@@ -541,6 +541,11 @@ class wp_pwa
 
 	//Injects the amp URL to the header
 	public function amp_add_canonical() {
+		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http')
+		  . '://'
+		  . $_SERVER[HTTP_HOST]
+		  . $_SERVER[REQUEST_URI];
+
 		$settings = get_option('wp_pwa_settings');
 
 		//posts
@@ -549,7 +554,7 @@ class wp_pwa
 			$permalink = get_permalink($singleId);
 			$permalink = preg_replace("(^https?://)", "", $permalink );
 
-			$query = 'siteId=' . $settings["wp_pwa_siteid"] . '&env=' . $settings['wp_pwa_env'] . '&singleType=post' . '&singleId=' . $singleId;
+			$query = 'siteId=' . $settings["wp_pwa_siteid"] . '&env=' . $settings['wp_pwa_env'] . '&singleType=post' . '&singleId=' . $singleId . '&initialUrl=' . $url;
 
 			// https://amp.wp-pwa.com/www.example.com/final-post-permalink?QUERY
 			// {amp_server} {site_url} / permalink ?QUERY
