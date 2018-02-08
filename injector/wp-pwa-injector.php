@@ -32,8 +32,10 @@ if (($forceFrontpage === true && is_front_page()) || is_home()) {
   $listType = 'latest';
   $listId = 'post';
 } elseif (is_page() || is_single()) {
-  $singleType = get_queried_object()->post_type;
-  $singleId = get_queried_object()->ID;
+  if (get_queried_object()->post_type !== 'attachment') {
+    $singleType = get_queried_object()->post_type;
+    $singleId = get_queried_object()->ID;
+  }
 } elseif (is_post_type_archive()) {
   $queriedObject = get_queried_object();
   if ((isset($queriedObject->show_in_rest)) && (isset($queriedObject->rest_base)) &&
