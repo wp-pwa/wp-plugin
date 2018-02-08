@@ -18,6 +18,12 @@
 		$wp_pwa_status = 'disabled';
 	}
 
+	if (isset($settings["wp_pwa_amp"])) {
+		$wp_pwa_amp = $settings["wp_pwa_amp"];
+	} else {
+		$wp_pwa_amp = 'disabled';
+	}
+
 	/* step & progress */
 	$progress = 0;
 	$step = 0;
@@ -213,6 +219,9 @@
 						 	<span id="wp-pwa-status-enabled" class="icon is" <?php echo (($wp_pwa_status!='disabled')?'style="color:#97cd76;"':'style="display:none;color:#97cd76"');?>>
 								<i class="fa fa-check-circle" aria-hidden="true"></i>
 							</span>
+							<span id="wp-pwa-status-saving" class="icon is" style="display:none;color:#808080">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</span>
 							<span id="wp-pwa-status-disabled" class="icon" <?php echo (($wp_pwa_status=='disabled')?'style="color:#ed6c63;"':'style="display:none;color:#ed6c63"');?>>
 								<i class="fa fa-times-circle" aria-hidden="true"></i>
 							</span>
@@ -224,11 +233,47 @@
 								<select id="wp-pwa-status">
 									<?php
 										$options = array(array('mobile','Enabled'), array('disabled','Disabled')); // [value, Label]
-										$status = $settings['wp_pwa_status'];
 										$output = '';
 										for( $i=0; $i<count($options); $i++ ) {
 											$output .= '<option value="' . $options[$i][0] . '"'
-											. ( $status == $options[$i][0] ? 'selected="selected"' : '' ) . '>'
+											. ( $wp_pwa_status == $options[$i][0] ? 'selected="selected"' : '' ) . '>'
+											. $options[$i][1]
+											. '</option>';
+										}
+										echo $output;
+									?>
+								</select>
+							</div>
+					 </div>
+			 	</div>
+			 </nav>
+		 </div>
+		 <div id="wp-pwa-amp-box" class="box" <?php echo (($step==4)?'':'style="display:none;"');?>>
+			 <nav class="level">
+				 <div class="level-left">
+					 <p class="title is-5">
+						 	Google AMP
+						 	<span id="wp-pwa-amp-enabled" class="icon is" <?php echo (($wp_pwa_amp!='disabled')?'style="color:#97cd76;"':'style="display:none;color:#97cd76"');?>>
+								<i class="fa fa-check-circle" aria-hidden="true"></i>
+							</span>
+						 	<span id="wp-pwa-amp-saving" class="icon is" style="display:none;color:#808080">
+								<i class="fa fa-clock-o" aria-hidden="true"></i>
+							</span>
+							<span id="wp-pwa-amp-disabled" class="icon" <?php echo (($wp_pwa_amp=='disabled')?'style="color:#ed6c63;"':'style="display:none;color:#ed6c63"');?>>
+								<i class="fa fa-times-circle" aria-hidden="true"></i>
+							</span>
+					 </p>
+				 </div>
+				 <div class="level-right">
+					 <div class="control">
+						<div class="select">
+								<select id="wp-pwa-amp">
+									<?php
+										$options = array(array('posts','Enabled'), array('disabled','Disabled')); // [value, Label]
+										$output = '';
+										for( $i=0; $i<count($options); $i++ ) {
+											$output .= '<option value="' . $options[$i][0] . '"'
+											. ( $wp_pwa_amp == $options[$i][0] ? 'selected="selected"' : '' ) . '>'
 											. $options[$i][1]
 											. '</option>';
 										}
@@ -434,6 +479,18 @@
 													<input type="text" id="wp-pwa-static" value="<?php echo $settings['wp_pwa_static']; ?>"/>
 													<br />
 													<span class="description">Static URL</span>
+											</label>
+									</fieldset>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">AMP Server</th>
+							<td>
+									<fieldset>
+											<label>
+													<input type="text" id="wp-pwa-amp-server" value="<?php echo $settings['wp_pwa_amp_server']; ?>"/>
+													<br />
+													<span class="description">AMP Server</span>
 											</label>
 									</fieldset>
 							</td>

@@ -4,7 +4,7 @@ Tags: html5, pwa, webapp, progressive web app
 Donate link:
 Requires at least: 4.4
 Tested up to: 4.8.2
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -25,7 +25,12 @@ The simplest way to create Progressive Web Apps with WordPress. No coding skills
 == Screenshots ==
 
 == Changelog ==
-= 1.1.0 =
+= 1.2.0 =
+* Don't inject attachments
+* Add system and device to the query
+* Add AMP enabler
+
+= 1.1.1 =
 * Change ssr and static queries to ssrUrl and staticUrl (static was causing problems with WP)
 * Encode urls (intialUrl and static) before sending them to the server
 
