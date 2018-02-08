@@ -45,6 +45,7 @@ class wp_pwa
 
 		add_action('wp_ajax_sync_with_wp_pwa',array($this,'sync_with_wp_pwa'));
 		add_action('wp_ajax_wp_pwa_change_status',array($this,'change_status_ajax'));
+		add_action('wp_ajax_wp_pwa_change_amp',array($this,'change_amp_ajax'));
 		add_action('wp_ajax_wp_pwa_change_siteid',array($this,'change_siteid_ajax'));
 		add_action('wp_ajax_wp_pwa_change_advanced_settings',array($this,'change_advanced_settings_ajax'));
 		add_action('wp_ajax_wp_pwa_save_excludes',array($this,'save_excludes_ajax'));
@@ -56,9 +57,8 @@ class wp_pwa
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_wp_pwa_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_wp_pwa_styles' ) );
 
-
-
 		add_action( 'rest_api_init', array($this,'rest_routes'));
+		add_action( 'wp_head', array($this,'amp_add_canonical'));
 
 		// filters
 		add_filter( 'wp_get_attachment_link', array( $this, 'add_data_to_images' ), 10, 2 );
@@ -401,6 +401,21 @@ class wp_pwa
 		));
 	}
 
+	function change_amp_ajax() {
+		flush_rewrite_rules();
+
+		$amp = $_POST['amp'];
+
+		$settings = get_option('wp_pwa_settings');
+		$settings['wp_pwa_amp'] = $amp;
+
+		update_option('wp_pwa_settings', $settings);
+
+		wp_send_json( array(
+			'status' => 'ok',
+		));
+	}
+
 	function change_siteid_ajax() {
 		flush_rewrite_rules();
 
@@ -429,12 +444,14 @@ class wp_pwa
 		$wp_pwa_env = $_POST['wp_pwa_env'];
 		$wp_pwa_ssr = $_POST['wp_pwa_ssr'];
 		$wp_pwa_static = $_POST['wp_pwa_static'];
+		$wp_pwa_amp_server = $_POST['wp_pwa_amp_server'];
 		$wp_pwa_force_frontpage = ($_POST['wp_pwa_force_frontpage'] === 'true');
 
 		$settings = get_option('wp_pwa_settings');
 		$settings['wp_pwa_env'] = $wp_pwa_env;
 		$settings['wp_pwa_ssr'] = $wp_pwa_ssr;
 		$settings['wp_pwa_static'] = $wp_pwa_static;
+		$settings['wp_pwa_amp_server'] = $wp_pwa_amp_server;
 		$settings['wp_pwa_force_frontpage'] =$wp_pwa_force_frontpage;
 
 		update_option('wp_pwa_settings', $settings);
@@ -521,6 +538,34 @@ class wp_pwa
 			return false;
 		}
 	}
+
+	//Injects the amp URL to the header
+	public function amp_add_canonical() {
+		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http')
+		  . '://'
+		  . $_SERVER[HTTP_HOST]
+		  . $_SERVER[REQUEST_URI];
+
+		$settings = get_option('wp_pwa_settings');
+
+		//posts
+		if ( ($settings['wp_pwa_amp'] !== 'disabled') && (is_single())) {
+			$singleId = get_queried_object_id();
+			$permalink = get_permalink($singleId);
+			$permalink = preg_replace("(^https?://)", "", $permalink );
+
+			$query = 'siteId=' . $settings["wp_pwa_siteid"] . '&env=' . $settings['wp_pwa_env'] . '&singleType=post' . '&singleId=' . $singleId . '&initialUrl=' . $url;
+
+			// https://amp.wp-pwa.com/www.example.com/final-post-permalink?QUERY
+			// {amp_server} {site_url} / permalink ?QUERY
+			$amp_url = $settings['wp_pwa_amp_server'] . '/'. $permalink . '?' . $query;
+
+			printf( '<link rel="amphtml" href="%s" />', $amp_url );
+			printf("\n");
+		} else {
+			return;
+		}
+	}
 }
 
 /*
@@ -605,6 +650,18 @@ function wp_pwa_activation() {
 		$wp_pwa_force_frontpage = false;
 	}
 
+	if (isset($settings['wp_pwa_amp'])) {
+		$wp_pwa_amp = $settings['wp_pwa_amp'];
+	} else {
+		$wp_pwa_amp = 'disabled';
+	}
+
+	if (isset($settings['wp_pwa_amp_server'])) {
+		$wp_pwa_amp_server = $settings['wp_pwa_amp_server'];
+	} else {
+		$wp_pwa_amp_server = 'https://amp.wp-pwa.com';
+	}
+
 	if (isset($settings['wp_pwa_excludes'])) {
 		$wp_pwa_excludes = $settings['wp_pwa_excludes'];
 	} else {
@@ -617,8 +674,11 @@ function wp_pwa_activation() {
 										"wp_pwa_env" => $wp_pwa_env,
 										"wp_pwa_ssr" => $wp_pwa_ssr,
 										"wp_pwa_static" => $wp_pwa_static,
+										"wp_pwa_excludes" => $wp_pwa_excludes,
 										"wp_pwa_force_frontpage" => $wp_pwa_force_frontpage,
-										"wp_pwa_excludes" => $wp_pwa_excludes);
+										"wp_pwa_amp" => $wp_pwa_amp,
+										"wp_pwa_amp_server" => $wp_pwa_amp_server
+	);
 
 	if($settings === false){
 		add_option('wp_pwa_settings',$defaults , '','yes');
