@@ -2,8 +2,8 @@
 (function(document, window, navigator) {
   var isIphone = /ip(hone|od).*?OS (?![1-8]_|X)/i; // from iOS 9
   var isIpad = /ipad.*?OS (?![1-8]_|X)/i; // from iOS 9
-  var isAndroidMobile = /android (?![1-3]\.)(?!4\.[0-3]).* mobile/i; // from Android 4.4
-  var isAndroidTablet = /android (?![1-3]\.)(?!4\.[0-3]).* (?!mobile)/i; // from Android 4.4
+  var isAndroidMobile = /android (?![1-3]\.)(?!4\.[0-3])(.*mobile)/i; // from Android 4.4
+  var isAndroidTablet = /android (?![1-3]\.)(?!4\.[0-3])(?!.*mobile)/i; // from Android 4.4
 
   window['wp-pwa'].ssr = window['wp-pwa'].ssr.replace(/\/$/g, '') + '/';
   window['wp-pwa'].static = window['wp-pwa'].static.replace(/\/$/g, '') + '/';
