@@ -23,8 +23,8 @@ $url = (isset($_SERVER['HTTPS']) ? 'https' : 'http')
   . '://'
   . $_SERVER[HTTP_HOST]
   . $_SERVER[REQUEST_URI];
-$settings = get_option('wp_pwa_settings');
 $initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
+$settings = get_option('wp_pwa_settings');
 
 $pwaStatus = $settings['wp_pwa_status'];
 $forceFrontpage = $settings['wp_pwa_force_frontpage'];
