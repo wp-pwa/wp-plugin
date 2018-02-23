@@ -2,8 +2,8 @@
 (function(document, window, navigator) {
   var isIphone = /ip(hone|od).*?OS (?![1-8]_|X)/i; // from iOS 9
   var isIpad = /ipad.*?OS (?![1-8]_|X)/i; // from iOS 9
-  var isAndroidMobile = /android (?![1-3]\.)(?!4\.[0-3]).* mobile/i; // from Android 4.4
-  var isAndroidTablet = /android (?![1-3]\.)(?!4\.[0-3]).* (?!mobile)/i; // from Android 4.4
+  var isAndroidMobile = /android (?![1-3]\.)(?!4\.[0-3])(.*mobile)/i; // from Android 4.4
+  var isAndroidTablet = /android (?![1-3]\.)(?!4\.[0-3])(?!.*mobile)/i; // from Android 4.4
 
   window['wp-pwa'].ssr = window['wp-pwa'].ssr.replace(/\/$/g, '') + '/';
   window['wp-pwa'].static = window['wp-pwa'].static.replace(/\/$/g, '') + '/';
@@ -13,23 +13,6 @@
   };
   var isTablet = function(ua) {
     return isIpad.test(ua) || isAndroidTablet.test(ua);
-  };
-
-  var getSystem = function() {
-    if (navigator && navigator.userAgent) {
-      if (isAndroidMobile.test(navigator.userAgent) || isAndroidTablet.test(navigator.userAgent))
-        return 'android';
-      if (isIphone.test(navigator.userAgent) || isIpad.test(navigator.userAgent)) return 'ios';
-    }
-    return 'null';
-  };
-
-  var getDevice = function() {
-    if (navigator && navigator.userAgent) {
-      if (isMobile(navigator.userAgent)) return 'mobile';
-      if (isTablet(navigator.userAgent)) return 'tablet';
-    }
-    return 'null';
   };
 
   var setCookie = function(name, value, minutes) {
@@ -86,9 +69,8 @@
     var query = '?siteId=' + window['wp-pwa'].siteId
       + '&static=' + encodeURIComponent(window['wp-pwa'].static)
       + '&env=' + window['wp-pwa'].env
-      + '&system=' + getSystem()
-      + '&device=' + getDevice()
-      + '&initialUrl=' + encodeURIComponent(window['wp-pwa'].initialUrl || window.location.href);
+      + '&device=' + (isTablet((navigator && navigator.userAgent)) ? 'tablet' : 'mobile')
+      + '&initialUrl=' + encodeURIComponent(window['wp-pwa'].initialUrl || window.location.origin + window.location.pathname);
     if (window['wp-pwa'].listType) query += '&listType=' + window['wp-pwa'].listType;
     if (window['wp-pwa'].listId) query += '&listId=' + window['wp-pwa'].listId;
     if (window['wp-pwa'].page) query += '&page=' + window['wp-pwa'].page;
