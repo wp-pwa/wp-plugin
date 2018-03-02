@@ -576,8 +576,6 @@ class wp_pwa
 
 			printf( '<link rel="amphtml" href="%s" />', $amp_url );
 			printf("\n");
-		} else {
-			return;
 		}
 	}
 }
