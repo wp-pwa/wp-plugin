@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.2.2
+Version: 1.2.3
 Author: WordPress PWA
 Author URI:
 License: GPL v3
@@ -15,7 +15,7 @@ if( !class_exists('wp_pwa') ):
 class wp_pwa
 {
 	// vars
-	public $plugin_version = '1.2.2';
+	public $plugin_version = '1.2.3';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -541,32 +541,41 @@ class wp_pwa
 
 	//Injects the amp URL to the header
 	public function amp_add_canonical() {
-		$prettyPermalinks = get_option('permalink_structure') !== '';
-		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http')
-		  . '://'
-		  . $_SERVER[HTTP_HOST]
-		  . $_SERVER[REQUEST_URI];
-		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http')
-		  . '://'
-		  . $_SERVER[HTTP_HOST]
-		  . $_SERVER[REQUEST_URI];
-		$initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
 
 		$settings = get_option('wp_pwa_settings');
+		$prettyPermalinks = get_option('permalink_structure') !== '';
+		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER[HTTP_HOST]
+			. $_SERVER[REQUEST_URI];
+		$initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
+		$ampServer = $settings['wp_pwa_amp_server'];
+		$ampForced = false;
+		$dev = 'false';
+
+		if (isset($_GET['amp']) && $_GET['amp'] === 'true') {
+			$ampForced = true;
+			$dev = 'true';
+		}
+		if (isset($_GET['ampUrl'])) {
+			$ampServer = $_GET['ampUrl'];
+			$dev = 'true';
+		}
+		if (isset($_GET['dev'])) $dev = $_GET['dev'];
 
 		//posts
-		if ( ($settings['wp_pwa_amp'] !== 'disabled') && (is_single())) {
+		if ($ampForced || (($settings['wp_pwa_amp'] !== 'disabled') && (is_single()))) {
 			$singleId = get_queried_object_id();
 			$permalink = get_permalink($singleId);
 			$path = parse_url($permalink, PHP_URL_PATH);
-			$query = 'siteId=' . $settings["wp_pwa_siteid"] . '&env=' . $settings['wp_pwa_env']
-				. '&singleType=post' . '&singleId=' . $singleId . '&initialUrl=' . $initialUrl;
-			$amp_url = $settings['wp_pwa_amp_server'] . $path . '?' . $query;
+			$query = '?siteId=' . $settings["wp_pwa_siteid"]
+				. '&env=' . $settings['wp_pwa_env']
+				. '&dev=' . $dev
+				. '&singleType=post'
+				. '&singleId=' . $singleId
+				. '&initialUrl=' . $initialUrl;
+			$amp_url = $ampServer . $path . $query;
 
 			printf( '<link rel="amphtml" href="%s" />', $amp_url );
 			printf("\n");
-		} else {
-			return;
 		}
 	}
 }

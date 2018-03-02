@@ -14,14 +14,12 @@ $perPage = get_option('posts_per_page');
 $ssr = 'https://ssr.wp-pwa.com';
 $static = 'https://static.wp-pwa.com';
 $inject = false;
-$force = false;
+$pwa = false;
 $exclusion = false;
 $dev = 'false';
 $break = false;
 $prettyPermalinks = get_option('permalink_structure') !== '';
-$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http')
-  . '://'
-  . $_SERVER[HTTP_HOST]
+$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER[HTTP_HOST]
   . $_SERVER[REQUEST_URI];
 $initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
 $settings = get_option('wp_pwa_settings');
@@ -93,20 +91,22 @@ if (isset($_GET['staticUrl'])) {
   $static = $settings['wp_pwa_static'];
 }
 
-if (isset($_GET['force']) && $_GET['force'] === 'true' ){
-  $force = true;
+if (isset($_GET['pwa']) && $_GET['pwa'] === 'true' ){
+  $pwa = true;
 }
 
-if (isset($_GET['force']) || isset($_GET['server']) || isset($_GET['staticUrl']) ||
+if (isset($_GET['pwa']) || isset($_GET['server']) || isset($_GET['staticUrl']) ||
   isset($_GET['ssrUrl']) || isset($_GET['env']) || isset($_GET['siteId'])) {
     $dev = 'true';
   }
-
+if (isset($_GET['dev'])) {
+  $dev = $_GET['dev'];
+}
 if (isset($_GET['break']) && ($_GET['break'] === 'true')) {
   $break = true;
 }
 
-if (sizeof($excludes) !== 0 && $force === false) {
+if (sizeof($excludes) !== 0 && $pwa === false) {
   foreach ($excludes as $regex) {
     $output = array();
     $regex = str_replace('/', '\/', $regex);
@@ -118,11 +118,13 @@ if (sizeof($excludes) !== 0 && $force === false) {
 }
 
 if ($siteId && ($listType || $singleType)) {
-  if ($force || ($pwaStatus === 'mobile' && $exclusion === false)) {
+  if ($pwa || ($pwaStatus === 'mobile' && $exclusion === false)) {
     $inject = true;
   }
 }
 ?>
+
+
 
 <?php if ($inject) { ?>
   <script type='text/javascript'>window['wp-pwa'] = { siteId: '<?php echo $siteId; ?>',<?php if ($listType) echo ' listType: \'' . $listType . '\',' ?><?php if ($listId) echo ' listId: \'' . $listId . '\',' ?><?php if ($singleType) echo ' singleType: \'' . $singleType . '\',' ?><?php if ($singleId) echo ' singleId: \'' . $singleId . '\',' ?><?php if ($page) echo ' page: \'' . $page . '\',' ?> env: '<?php echo $env; ?>', dev: <?php echo $dev; ?>, perPage: '<?php echo $perPage; ?>', ssr: '<?php echo $ssr; ?>', initialUrl: '<?php echo $initialUrl; ?>', static: '<?php echo $static; ?>'<?php if ($break) echo ', break: true' ?><?php if (sizeof($excludes) !== 0) echo ', excludes: ["' . str_replace('\\\\', '\\', implode('", "', $excludes)) . '"]' ?> };
