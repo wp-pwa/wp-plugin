@@ -38,7 +38,8 @@ class wp_pwa
 	function __construct()
 	{
 		// actions
-		add_action('init', array($this, 'init'), 1);
+		add_action('init', array($this, 'init'), 2);
+		add_action('init', array($this, 'redirects'), 1);
 		add_action('admin_menu', array($this, 'wp_pwa_admin_actions')); //add the admin page
 		add_action('admin_init', array($this,'wp_pwa_register_settings')); //register the settings
 		add_action('admin_notices',array($this,'wp_pwa_admin_notices')); //Display the validation errors and update messages
@@ -539,20 +540,15 @@ class wp_pwa
 		}
 	}
 
-	//Injects the amp URL to the header
-	public function amp_add_canonical() {
-
+	function get_amp_url() {
 		$settings = get_option('wp_pwa_settings');
 		$prettyPermalinks = get_option('permalink_structure') !== '';
 		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER[HTTP_HOST]
 			. $_SERVER[REQUEST_URI];
 		$initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
 		$ampServer = $settings['wp_pwa_amp_server'];
-		$ampForced = false;
 		$dev = 'false';
-
 		if (isset($_GET['amp']) && $_GET['amp'] === 'true') {
-			$ampForced = true;
 			$dev = 'true';
 		}
 		if (isset($_GET['ampUrl'])) {
@@ -561,19 +557,38 @@ class wp_pwa
 		}
 		if (isset($_GET['dev'])) $dev = $_GET['dev'];
 
+		$singleId = get_queried_object_id();
+		$permalink = get_permalink($singleId);
+		$path = parse_url($permalink, PHP_URL_PATH);
+		$query = '?siteId=' . $settings["wp_pwa_siteid"]
+			. '&env=' . $settings['wp_pwa_env']
+			. '&dev=' . $dev
+			. '&singleType=post'
+			. '&singleId=' . $singleId
+			. '&initialUrl=' . $initialUrl;
+		return $ampServer . $path . $query;
+	}
+
+	function redirects() {
+		if (isset($_GET['ampRedirect']) && $_GET['ampRedirect'] === 'true') {
+			$amp_url = $this->get_amp_url();
+			if (wp_redirect($amp_url, 301)) {
+	    	exit();
+			}
+		}
+	}
+
+	//Injects the amp URL to the header
+	public function amp_add_canonical() {
+		$settings = get_option('wp_pwa_settings');
+		$ampForced = false;
+		if (isset($_GET['amp']) && $_GET['amp'] === 'true') {
+			$ampForced = true;
+			$dev = 'true';
+		}
 		//posts
 		if ($ampForced || (($settings['wp_pwa_amp'] !== 'disabled') && (is_single()))) {
-			$singleId = get_queried_object_id();
-			$permalink = get_permalink($singleId);
-			$path = parse_url($permalink, PHP_URL_PATH);
-			$query = '?siteId=' . $settings["wp_pwa_siteid"]
-				. '&env=' . $settings['wp_pwa_env']
-				. '&dev=' . $dev
-				. '&singleType=post'
-				. '&singleId=' . $singleId
-				. '&initialUrl=' . $initialUrl;
-			$amp_url = $ampServer . $path . $query;
-
+			$amp_url = $this->get_amp_url();
 			printf( '<link rel="amphtml" href="%s" />', $amp_url );
 			printf("\n");
 		}
