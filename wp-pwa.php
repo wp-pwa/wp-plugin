@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.2.3
+Version: 1.2.4
 Author: WordPress PWA
 Author URI:
 License: GPL v3
@@ -15,7 +15,7 @@ if( !class_exists('wp_pwa') ):
 class wp_pwa
 {
 	// vars
-	public $plugin_version = '1.2.3';
+	public $plugin_version = '1.2.4';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -224,13 +224,15 @@ class wp_pwa
 	}
 
 	function get_site_info() {
-		$homepage_title = get_bloginfo( 'name' );
-		$homepage_metadesc = get_bloginfo( 'description' );
+		$homepage_title = get_bloginfo('name');
+		$homepage_metadesc = get_bloginfo('description');
+		$homepage_url = get_bloginfo('url');
 		$per_page = get_option('posts_per_page');
 
 		$site_info = array(
 			'homepage_title' => $homepage_title,
 			'homepage_metadesc' => $homepage_metadesc,
+			'homepage_url' => $homepage_url,
 			'per_page' => $per_page
 		);
 
@@ -241,7 +243,8 @@ class wp_pwa
 		return array(
 			'home' => array(
 				'title' => $site_info['homepage_title'],
-				'description' => $site_info['homepage_metadesc']
+				'description' => $site_info['homepage_metadesc'],
+				'url' => $site_info['homepage_url']
 			),
 			'perPage' => $site_info['per_page']
 		);
@@ -250,7 +253,7 @@ class wp_pwa
 	/*
 	*	@param \WP_REST_Request $request Full details about the request
 	*/
-	function discover_url( $request ) {
+	function discover_url($request) {
 		$first_folder = $request['first_folder'];
 		$last_folder = $request['last_folder'];
 
