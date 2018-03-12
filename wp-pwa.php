@@ -550,6 +550,7 @@ class wp_pwa
 		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER[HTTP_HOST]
 			. $_SERVER[REQUEST_URI];
 		$initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
+		$wp_pwa_amp = $settings['wp_pwa_amp'];
 		$ampServer = $settings['wp_pwa_amp_server'];
 		$ampForced = false;
 		$dev = 'false';
@@ -565,7 +566,7 @@ class wp_pwa
 		if (isset($_GET['dev'])) $dev = $_GET['dev'];
 
 		//posts
-		if ($ampForced || (($settings['wp_pwa_amp'] !== 'disabled') && (is_single()))) {
+		if ($ampForced || (isset($wp_pwa_amp) && ($wp_pwa_amp !== 'disabled') && (is_single()))) {
 			$singleId = get_queried_object_id();
 			$permalink = get_permalink($singleId);
 			$path = parse_url($permalink, PHP_URL_PATH);
