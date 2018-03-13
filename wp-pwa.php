@@ -83,14 +83,41 @@ class wp_pwa
 			'methods' => 'GET',
 			'callback' => array( $this,'get_site_info'))
 		);
+		register_rest_route( 'wp/v2', '/latest/', array(
+			'methods' => 'GET',
+			'callback' => array( $this,'latest_general_endpoint'))
+		);
+	}
+
+	function latest_general_endpoint($data) {
+		$params = $data->get_params();
+		foreach($params as $params_cpt => $params_id){
+  		if (post_type_exists($params_cpt)) {
+				$cpt = $params_cpt;
+			}
+		}
+		if (isset($cpt)) {
+			$cpt_object = get_post_type_object($cpt);
+			return array(array(
+				id => $cpt,
+				link => get_post_type_archive_link($cpt),
+				count => intval(wp_count_posts($cpt)->publish),
+				name => $cpt_object->label,
+				slug => $cpt_object->name,
+			 taxonomy => 'latest',
+			 parent => 0,
+			 meta => array(),
+			));
+		}
+		return array();
 	}
 
 	function register_latest_on_custom_post_types($post_type) {
 		register_rest_field( $post_type,
 			'latest',
 			array(
-				'get_callback'    => array( $this, 'wp_api_get_latest' ),
-				'schema'          => null,
+				'get_callback' => array( $this, 'wp_api_get_latest' ),
+				'schema' => null,
 			)
 		);
 	}
