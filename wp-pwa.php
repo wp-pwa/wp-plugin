@@ -58,6 +58,8 @@ class wp_pwa
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_wp_pwa_styles' ) );
 
 		add_action( 'rest_api_init', array($this,'rest_routes'));
+		add_action('registered_post_type', array($this, 'register_latest_on_custom_post_types'));
+
 		add_action( 'wp_head', array($this,'amp_add_canonical'));
 
 		// filters
@@ -81,6 +83,20 @@ class wp_pwa
 			'methods' => 'GET',
 			'callback' => array( $this,'get_site_info'))
 		);
+	}
+
+	function register_latest_on_custom_post_types($post_type) {
+		register_rest_field( $post_type,
+			'latest',
+			array(
+				'get_callback'    => array( $this, 'wp_api_get_latest' ),
+				'schema'          => null,
+			)
+		);
+	}
+
+	function wp_api_get_latest($p, $field_name, $request) {
+		return [$p['type']];
 	}
 
 	// Adds attribute data-attachment-id="X" to the gallery images
