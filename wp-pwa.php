@@ -58,6 +58,8 @@ class wp_pwa
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_wp_pwa_styles' ) );
 
 		add_action( 'rest_api_init', array($this,'rest_routes'));
+		add_action('registered_post_type', array($this, 'register_latest_on_custom_post_types'));
+
 		add_action( 'wp_head', array($this,'amp_add_canonical'));
 
 		// filters
@@ -80,6 +82,36 @@ class wp_pwa
 		register_rest_route( 'wp-pwa/v1', '/site-info/', array(
 			'methods' => 'GET',
 			'callback' => array( $this,'get_site_info'))
+		);
+	}
+
+	function add_frontity_field($p, $field_name, $request) {
+		$cpt = $p['type'];
+		$cpt_object = get_post_type_object($cpt);
+		return array(
+			latest => [$p['type']],
+			_embedded => array(
+				'wp:term' => array(array(array(
+					id => $cpt,
+					link => get_post_type_archive_link($cpt),
+					count => intval(wp_count_posts($cpt)->publish),
+					name => $cpt_object->label,
+					slug => $cpt_object->name,
+					taxonomy => 'latest',
+					parent => 0,
+					meta => array(),
+				))),
+			)
+		);
+	}
+
+	function register_latest_on_custom_post_types($post_type) {
+		register_rest_field($post_type,
+			'frontity',
+			array(
+				'get_callback' => array($this, 'add_frontity_field'),
+				'schema' => null,
+			)
 		);
 	}
 
