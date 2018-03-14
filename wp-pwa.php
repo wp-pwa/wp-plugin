@@ -59,7 +59,6 @@ class wp_pwa
 
 		add_action( 'rest_api_init', array($this,'rest_routes'));
 		add_action('registered_post_type', array($this, 'register_latest_on_custom_post_types'));
-		add_filter('rest_prepare_post', array($this, 'add_latest_to_links_on_custom_post_types'));
 
 		add_action( 'wp_head', array($this,'amp_add_canonical'));
 
@@ -84,67 +83,51 @@ class wp_pwa
 			'methods' => 'GET',
 			'callback' => array( $this,'get_site_info'))
 		);
-		register_rest_route( 'wp/v2', '/latest/', array(
-			'methods' => 'GET',
-			'callback' => array( $this,'latest_general_endpoint'))
+	}
+
+	function add_frontity_field($p, $field_name, $request) {
+		$cpt = $p['type'];
+		$cpt_object = get_post_type_object($cpt);
+		return array(
+			_embedded => array(
+				'wp:term' => array(array(array(
+					id => $cpt,
+					link => get_post_type_archive_link($cpt),
+					count => intval(wp_count_posts($cpt)->publish),
+					name => $cpt_object->label,
+					slug => $cpt_object->name,
+					taxonomy => 'latest',
+					parent => 0,
+					meta => array(),
+				))),
+			)
 		);
 	}
 
-	function latest_general_endpoint($data) {
-		$params = $data->get_params();
-		foreach($params as $params_cpt => $params_id){
-  		if (post_type_exists($params_cpt)) {
-				$cpt = $params_cpt;
-			}
-		}
-		if (isset($cpt)) {
-			$cpt_object = get_post_type_object($cpt);
-			return array(array(
-				id => $cpt,
-				link => get_post_type_archive_link($cpt),
-				count => intval(wp_count_posts($cpt)->publish),
-				name => $cpt_object->label,
-				slug => $cpt_object->name,
-			 taxonomy => 'latest',
-			 parent => 0,
-			 meta => array(),
-			));
-		}
-		return array();
+	function add_latest_field($p, $field_name, $request) {
+		return [$p['type']];
 	}
 
 	function register_latest_on_custom_post_types($post_type) {
-		register_rest_field( $post_type,
+		register_rest_field($post_type,
 			'latest',
 			array(
-				'get_callback' => array( $this, 'wp_api_get_latest' ),
+				'get_callback' => array($this, 'add_latest_field'),
+				'schema' => null,
+			)
+		);
+		register_rest_field($post_type,
+			'_frontity',
+			array(
+				'get_callback' => array($this, 'add_frontity_field'),
 				'schema' => null,
 			)
 		);
 	}
 
-	function add_latest_to_links_on_custom_post_types($data) {
-		// var_dump($data);
-		$data->data['_links']['mything'] = array(
-			href => "https://demo.worona.test/aaa/wp-json/wp/v2/posts/60"
-		);
-	 	return $data;
-	}
-
 	function dt_use_raw_post_content( $data, $post, $request ) {
 	    $data->data['content']['plaintext'] = $post->post_content;
 	    return $data;
-	}
-
-	function wp_api_add_latest_to_links($p, $field_name, $request) {
-		// var_dump($p);
-		return array(
-			self => 'asfads'
-		);
-	}
-
-	function wp_api_get_latest($p, $field_name, $request) {
-		return [$p['type']];
 	}
 
 	// Adds attribute data-attachment-id="X" to the gallery images
