@@ -89,6 +89,7 @@ class wp_pwa
 		$cpt = $p['type'];
 		$cpt_object = get_post_type_object($cpt);
 		return array(
+			latest => [$p['type']],
 			_embedded => array(
 				'wp:term' => array(array(array(
 					id => $cpt,
@@ -104,30 +105,14 @@ class wp_pwa
 		);
 	}
 
-	function add_latest_field($p, $field_name, $request) {
-		return [$p['type']];
-	}
-
 	function register_latest_on_custom_post_types($post_type) {
 		register_rest_field($post_type,
-			'latest',
-			array(
-				'get_callback' => array($this, 'add_latest_field'),
-				'schema' => null,
-			)
-		);
-		register_rest_field($post_type,
-			'_frontity',
+			'frontity',
 			array(
 				'get_callback' => array($this, 'add_frontity_field'),
 				'schema' => null,
 			)
 		);
-	}
-
-	function dt_use_raw_post_content( $data, $post, $request ) {
-	    $data->data['content']['plaintext'] = $post->post_content;
-	    return $data;
 	}
 
 	// Adds attribute data-attachment-id="X" to the gallery images
