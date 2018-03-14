@@ -59,6 +59,7 @@ class wp_pwa
 
 		add_action( 'rest_api_init', array($this,'rest_routes'));
 		add_action('registered_post_type', array($this, 'register_latest_on_custom_post_types'));
+		add_filter('rest_prepare_post', array($this, 'add_latest_to_links_on_custom_post_types'));
 
 		add_action( 'wp_head', array($this,'amp_add_canonical'));
 
@@ -119,6 +120,26 @@ class wp_pwa
 				'get_callback' => array( $this, 'wp_api_get_latest' ),
 				'schema' => null,
 			)
+		);
+	}
+
+	function add_latest_to_links_on_custom_post_types($data) {
+		// var_dump($data);
+		$data->data['_links']['mything'] = array(
+			href => "https://demo.worona.test/aaa/wp-json/wp/v2/posts/60"
+		);
+	 	return $data;
+	}
+
+	function dt_use_raw_post_content( $data, $post, $request ) {
+	    $data->data['content']['plaintext'] = $post->post_content;
+	    return $data;
+	}
+
+	function wp_api_add_latest_to_links($p, $field_name, $request) {
+		// var_dump($p);
+		return array(
+			self => 'asfads'
 		);
 	}
 
