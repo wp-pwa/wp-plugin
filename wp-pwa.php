@@ -99,13 +99,28 @@ class wp_pwa
 	function purify_html($data) {
 		require_once(plugin_dir_path(__FILE__) . '/libs/htmlpurifier/library/HTMLPurifier.auto.php');
 		$config = HTMLPurifier_Config::createDefault();
-		$purifier = new HTMLPurifier();
-
 		$upload = wp_upload_dir();
+
 		$htmlpurifier_dir = $upload['basedir'] . DS . 'frontity' . DS . 'htmlpurifier';
+
 		if (is_dir($htmlpurifier_dir)) {
 			$config->set('Cache', 'SerializerPath', $htmlpurifier_dir);
+		} else {
+			$config->set('Core', 'DefinitionCache', null);
 		}
+
+		// Rule: <iframe> allowed.
+		$config->set('HTML', 'SafeIframe', true);
+		$config->set('URI', 'SafeIframeRegexp', '/.+/');
+
+		// Rule: <center> not allowed.
+		$config->set('HTML', 'ForbiddenElements', array('center'));
+
+		// Rule: remove empty elements.
+		$config->set('AutoFormat', 'RemoveEmpty', true);
+		$config->set('AutoFormat', 'RemoveEmpty.RemoveNbsp', true);
+
+		$purifier = new HTMLPurifier($config);
 
 		$clean_html = $purifier->purify($data->data['content']['rendered']);
     $data->data['content']['rendered'] = $clean_html;
