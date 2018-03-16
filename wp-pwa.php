@@ -92,7 +92,65 @@ class wp_pwa
 			'methods' => 'GET',
 			'callback' => array( $this,'get_site_info'))
 		);
+		register_rest_route( 'wp/v2', '/latest/', array(
+      'methods' => 'GET',
+      'callback' => array( $this,'latest_general_endpoint'))
+    );
+		register_rest_route( 'wp/v2', '/latest/(?P<id>\w+)', array(
+      'methods' => 'GET',
+      'callback' => array( $this,'latest_individual_endpoint'),
+			'args' => array(
+	      'id' => array(
+	        'validate_callback' => function($param, $request, $key) {
+	          return post_type_exists($param);
+	        }
+	      )
+			)
+    ));
 	}
+
+	function get_latest_from_cpt($cpt) {
+		if (post_type_exists($cpt)) {
+			$cpt_object = get_post_type_object($cpt);
+      return array(array(
+        id => $cpt,
+        link => get_post_type_archive_link($cpt),
+        count => intval(wp_count_posts($cpt)->publish),
+        name => $cpt_object->label,
+        slug => $cpt_object->name,
+       taxonomy => 'latest',
+       parent => 0,
+       meta => array(),
+      ));
+		}
+    return array();
+	}
+
+	function latest_individual_endpoint($data) {
+		$cpt = $data->get_url_params()['id'];
+		return $this->get_latest_from_cpt($cpt);
+  }
+
+	function latest_general_endpoint($data) {
+    $params = $data->get_params();
+    foreach($params as $params_cpt => $params_id){
+      if (post_type_exists($params_cpt)) {
+        $cpt = $params_cpt;
+      }
+    }
+		if (!isset($cpt)) {
+			$cpts = get_post_types();
+			$result = array();
+			foreach($cpts as $cpt){
+	      $cpt_object = get_post_type_object($cpt);
+				if ($cpt_object->show_in_rest) {
+					$result[$cpt] = $this->get_latest_from_cpt($cpt);
+				}
+	    }
+			return $result;
+		}
+		return $this->get_latest_from_cpt($cpt);
+  }
 
 	function purify_html($data) {
 		require_once(plugin_dir_path(__FILE__) . '/libs/html5purifier.php');
@@ -124,6 +182,8 @@ class wp_pwa
 			)
 		);
 	}
+
+
 
 	function register_latest_on_custom_post_types($post_type) {
 		register_rest_field($post_type,
