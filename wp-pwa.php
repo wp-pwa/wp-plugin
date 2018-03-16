@@ -77,7 +77,16 @@ class wp_pwa
 
 	function add_latest_to_custom_post_types($post_type) {
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'));
+		register_rest_field($post_type, 'latest',
+      array(
+        'get_callback' => array( $this, 'wp_api_get_latest' ),
+        'schema' => null,
+      )
+    );
+  }
 
+	function wp_api_get_latest($p) {
+    return [$p['type']];
   }
 
 	function rest_routes() {
