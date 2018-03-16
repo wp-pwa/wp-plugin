@@ -10,6 +10,16 @@ License: GPL v3
 Copyright: Worona Labs SL
 */
 
+// Define the directory seperator if it isn't already
+if( !defined('DS') ) {
+	if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+		define('DS', '\\');
+	}
+	else {
+		define('DS', '/');
+	}
+}
+
 if( !class_exists('wp_pwa') ):
 
 class wp_pwa
@@ -52,36 +62,48 @@ class wp_pwa
 		add_action('plugins_loaded', array($this,'wp_rest_api_plugin_is_active'));
 		add_action('init', array($this,'allow_origin'));
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_wp_pwa_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_wp_pwa_styles' ) );
+		add_action('admin_enqueue_scripts', array( $this, 'register_wp_pwa_scripts') );
+		add_action('admin_enqueue_scripts', array( $this, 'register_wp_pwa_styles') );
 
-		add_action( 'rest_api_init', array($this,'rest_routes'));
+		add_action('rest_api_init', array($this,'rest_routes'));
 		add_action('registered_post_type', array($this, 'register_latest_on_custom_post_types'));
+		add_filter('rest_prepare_post', array($this, 'purify_html'));
 
-		add_action( 'wp_head', array($this,'amp_add_canonical'));
+		add_action('wp_head', array($this,'amp_add_canonical'));
 
 		// filters
-		add_filter( 'wp_get_attachment_link', array( $this, 'add_data_to_images' ), 10, 2 );
+		add_filter('wp_get_attachment_link', array( $this, 'add_data_to_images'), 10, 2 );
 	}
 
 	function rest_routes() {
-		register_rest_route( 'wp-pwa/v1', '/siteid/', array(
+		register_rest_route('wp-pwa/v1', '/siteid/', array(
 			'methods' => 'GET',
 			'callback' => array( $this,'get_wp_pwa_site_id'))
 		);
-		register_rest_route( 'wp-pwa/v1', '/discover/', array(
+		register_rest_route('wp-pwa/v1', '/discover/', array(
 			'methods' => 'GET',
 			'callback' => array( $this,'discover_url'))
 		);
-		register_rest_route( 'wp-pwa/v1', '/plugin-version/', array(
+		register_rest_route('wp-pwa/v1', '/plugin-version/', array(
 			'methods' => 'GET',
 			'callback' => array( $this,'get_wp_pwa_plugin_version'))
 		);
-		register_rest_route( 'wp-pwa/v1', '/site-info/', array(
+		register_rest_route('wp-pwa/v1', '/site-info/', array(
 			'methods' => 'GET',
 			'callback' => array( $this,'get_site_info'))
 		);
 	}
+
+	function purify_html($data) {
+		require_once(plugin_dir_path(__FILE__) . '/libs/html5purifier.php');
+
+		$purifier = load_html5purifier();
+
+		$clean_html = $purifier->purify($data->data['content']['rendered']);
+    $data->data['content']['rendered'] = $clean_html;
+
+		return $data;
+  }
 
 	function add_frontity_field($p, $field_name, $request) {
 		$cpt = $p['type'];
@@ -127,7 +149,7 @@ class wp_pwa
 			$html
 		);
 
-		$html = apply_filters( 'jp_carousel_add_data_to_images', $html, $attachment_id );
+		$html = apply_filters('jp_carousel_add_data_to_images', $html, $attachment_id );
 
 		return $html;
 	}
@@ -186,7 +208,7 @@ class wp_pwa
 	* Register and enqueue scripts.
 	*/
 	public function register_wp_pwa_scripts($hook) {
-		wp_register_script('wp_pwa_admin_js',plugin_dir_url(__FILE__) . 'admin/js/wp-pwa-admin.js', array( 'jquery' ), $this->plugin_version, true);
+		wp_register_script('wp_pwa_admin_js',plugin_dir_url(__FILE__) . 'admin/js/wp-pwa-admin.js', array('jquery'), $this->plugin_version, true);
 		wp_enqueue_script('wp_pwa_admin_js');
 	}
 
@@ -234,7 +256,7 @@ class wp_pwa
 
 	function render_wp_pwa_admin() {
 		wp_enqueue_style('bulma-css');
-	  include( 'admin/wp-pwa-admin-page.php');
+	  include('admin/wp-pwa-admin-page.php');
 	}
 
 	function get_wp_pwa_site_id() {
@@ -360,7 +382,7 @@ class wp_pwa
 			}
 		}
 
-		if ( $post_type !== '' ) {
+		if ( $post_type !== '') {
 			$args = array(
 				'name'        => $last_folder,
 				'numberposts' => 1,
@@ -385,7 +407,7 @@ class wp_pwa
 			}
 		}
 
-		if ( $taxonomy === '' ) {
+		if ( $taxonomy === '') {
 			return array('Error' => $first_folder . ' not supported');
 		}
 
@@ -514,7 +536,7 @@ class wp_pwa
 
 	//Checks if the rest-api plugin is installed
 	public function wp_rest_api_plugin_is_installed() {
-		if ( ! function_exists( 'get_plugins' ) ) {
+		if ( ! function_exists('get_plugins') ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 		$plugins = get_plugins();
@@ -524,7 +546,7 @@ class wp_pwa
 
 	//Checks if the rest-api plugin is active
 	public function wp_rest_api_plugin_is_active() {
-		$this->rest_api_active = class_exists( 'WP_REST_Controller' );
+		$this->rest_api_active = class_exists('WP_REST_Controller');
 	}
 
 	//Generates the url to 'auto-activate' the rest-api plugin
@@ -551,7 +573,7 @@ class wp_pwa
 	//Checks if the json posts endpoint is responding correctly
 	function wp_rest_api_endpoint_works() {
 		$rest_api_url = get_site_url() . '/wp-json/wp/v2/posts';
-		$args = array('timeout' => 10, 'httpversion' => '1.1' );
+		$args = array('timeout' => 10, 'httpversion' => '1.1');
 
 		$response = wp_remote_get( $rest_api_url, $args );
 
@@ -608,7 +630,7 @@ class wp_pwa
 				. '&initialUrl=' . $initialUrl;
 			$amp_url = $ampServer . $path . $query;
 
-			printf( '<link rel="amphtml" href="%s" />', $amp_url );
+			printf('<link rel="amphtml" href="%s" />', $amp_url );
 			printf("\n");
 		}
 	}
@@ -732,6 +754,21 @@ function wp_pwa_activation() {
 		update_option('wp_pwa_settings',$defaults);
 	}
 	flush_rewrite_rules();
+
+	$upload = wp_upload_dir();
+	$upload_base = $upload['basedir'];
+	$frontity_dir = $upload_base . DS . 'frontity';
+	if (!is_dir($frontity_dir)) {
+		mkdir($frontity_dir, 0755);
+		if (is_dir($frontity_dir)) {
+			file_put_contents($frontity_dir . DS . 'index.php', "<?php\r\n// Silence is golden\r\n?>");
+			$htmlpurifier_dir = $frontity_dir . DS . 'htmlpurifier';
+			mkdir($htmlpurifier_dir, 0755);
+			if (is_dir($htmlpurifier_dir)) {
+				file_put_contents($htmlpurifier_dir . DS . 'index.php', "<?php\r\n// Silence is golden\r\n?>");
+			}
+		}
+	}
 }
 
 register_activation_hook( __FILE__, 'wp_pwa_activation');
