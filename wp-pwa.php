@@ -20,8 +20,6 @@ class wp_pwa
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
 
-
-
 	/*
 	*  Constructor
 	*
@@ -99,8 +97,8 @@ class wp_pwa
 					slug => $cpt_object->name,
 					taxonomy => 'latest',
 					parent => 0,
-					meta => array(),
-				))),
+					meta => array()
+				)))
 			)
 		);
 	}

@@ -70,7 +70,7 @@
       + '&static=' + encodeURIComponent(window['wp-pwa'].static)
       + '&env=' + window['wp-pwa'].env
       + '&device=' + (isTablet((navigator && navigator.userAgent)) ? 'tablet' : 'mobile')
-      + '&initialUrl=' + encodeURIComponent(window['wp-pwa'].initialUrl || window.location.origin + window.location.pathname);
+      + '&initialUri=' + encodeURIComponent(window['wp-pwa'].initialUri || window.location.pathname);
     if (window['wp-pwa'].listType) query += '&listType=' + window['wp-pwa'].listType;
     if (window['wp-pwa'].listId) query += '&listId=' + window['wp-pwa'].listId;
     if (window['wp-pwa'].page) query += '&page=' + window['wp-pwa'].page;

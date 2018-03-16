@@ -19,9 +19,7 @@ $exclusion = false;
 $dev = 'false';
 $break = false;
 $prettyPermalinks = get_option('permalink_structure') !== '';
-$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER[HTTP_HOST]
-  . $_SERVER[REQUEST_URI];
-$initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
+$initialUri = $prettyPermalinks ? strtok($_SERVER['REQUEST_URI'], '?') : $_SERVER['REQUEST_URI'];
 $settings = get_option('wp_pwa_settings');
 
 $pwaStatus = $settings['wp_pwa_status'];
@@ -127,7 +125,7 @@ if ($siteId && ($listType || $singleType)) {
 
 
 <?php if ($inject) { ?>
-  <script type='text/javascript'>window['wp-pwa'] = { siteId: '<?php echo $siteId; ?>',<?php if ($listType) echo ' listType: \'' . $listType . '\',' ?><?php if ($listId) echo ' listId: \'' . $listId . '\',' ?><?php if ($singleType) echo ' singleType: \'' . $singleType . '\',' ?><?php if ($singleId) echo ' singleId: \'' . $singleId . '\',' ?><?php if ($page) echo ' page: \'' . $page . '\',' ?> env: '<?php echo $env; ?>', dev: <?php echo $dev; ?>, perPage: '<?php echo $perPage; ?>', ssr: '<?php echo $ssr; ?>', initialUrl: '<?php echo $initialUrl; ?>', static: '<?php echo $static; ?>'<?php if ($break) echo ', break: true' ?><?php if (sizeof($excludes) !== 0) echo ', excludes: ["' . str_replace('\\\\', '\\', implode('", "', $excludes)) . '"]' ?> };
+  <script type='text/javascript'>window['wp-pwa'] = { siteId: '<?php echo $siteId; ?>',<?php if ($listType) echo ' listType: \'' . $listType . '\',' ?><?php if ($listId) echo ' listId: \'' . $listId . '\',' ?><?php if ($singleType) echo ' singleType: \'' . $singleType . '\',' ?><?php if ($singleId) echo ' singleId: \'' . $singleId . '\',' ?><?php if ($page) echo ' page: \'' . $page . '\',' ?> env: '<?php echo $env; ?>', dev: <?php echo $dev; ?>, perPage: '<?php echo $perPage; ?>', ssr: '<?php echo $ssr; ?>', initialUri: '<?php echo $initialUri; ?>', static: '<?php echo $static; ?>'<?php if ($break) echo ', break: true' ?><?php if (sizeof($excludes) !== 0) echo ', excludes: ["' . str_replace('\\\\', '\\', implode('", "', $excludes)) . '"]' ?> };
   <?php if ($break) {
     echo 'debugger;';
     require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.js');
