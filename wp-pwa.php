@@ -67,13 +67,13 @@ class wp_pwa
 
 		add_action('rest_api_init', array($this,'rest_routes'));
 		add_action('registered_post_type', array($this, 'register_latest_on_custom_post_types'));
-		add_filter('rest_prepare_post', array($this, 'purify_html'));
-		add_filter( 'rest_prepare_post', array($this, 'add_latest_to_links'));
 
 		add_action('wp_head', array($this,'amp_add_canonical'));
 
 		// filters
 		add_filter('wp_get_attachment_link', array( $this, 'add_data_to_images'), 10, 2 );
+		add_filter('rest_prepare_post', array($this, 'purify_html'));
+		add_filter('rest_prepare_post', array($this, 'add_latest_to_links'));
 	}
 
 	function rest_routes() {
@@ -102,7 +102,7 @@ class wp_pwa
       'callback' => array( $this,'latest_individual_endpoint'),
 			'args' => array(
 	      'id' => array(
-	        'validate_callback' => function($param, $request, $key) {
+	        'validate_callback' => function($param) {
 	          return post_type_exists($param);
 	        }
 	      )
