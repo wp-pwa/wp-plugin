@@ -68,6 +68,7 @@ class wp_pwa
 		add_action('rest_api_init', array($this,'rest_routes'));
 		add_action('registered_post_type', array($this, 'register_latest_on_custom_post_types'));
 		add_filter('rest_prepare_post', array($this, 'purify_html'));
+		add_filter( 'rest_prepare_post', array($this, 'add_latest_to_links'));
 
 		add_action('wp_head', array($this,'amp_add_canonical'));
 
@@ -118,9 +119,7 @@ class wp_pwa
         count => intval(wp_count_posts($cpt)->publish),
         name => $cpt_object->label,
         slug => $cpt_object->name,
-       taxonomy => 'latest',
-       parent => 0,
-       meta => array(),
+       	taxonomy => 'latest'
       );
 		}
     return array();
@@ -151,6 +150,19 @@ class wp_pwa
 		}
 		return array($this->get_latest_from_cpt($cpt));
   }
+
+	function add_latest_to_links($data) {
+		$type = $data->data['type'];
+		$id = $data->data['id'];
+	  $data->add_links(array(
+			'https://api.w.org/term' => array(
+				'href' => rest_url('wp/v2/latest?' . $type . '=' . $id),
+				'taxonomy' => 'latest',
+	      'embeddable' => true,
+	    )
+		));
+		return $data;
+	}
 
 	function purify_html($data) {
 		require_once(plugin_dir_path(__FILE__) . '/libs/html5purifier.php');
