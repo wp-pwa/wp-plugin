@@ -112,7 +112,7 @@ class wp_pwa
 	function get_latest_from_cpt($cpt) {
 		if (post_type_exists($cpt)) {
 			$cpt_object = get_post_type_object($cpt);
-      return array(array(
+      return array(
         id => $cpt,
         link => get_post_type_archive_link($cpt),
         count => intval(wp_count_posts($cpt)->publish),
@@ -121,7 +121,7 @@ class wp_pwa
        taxonomy => 'latest',
        parent => 0,
        meta => array(),
-      ));
+      );
 		}
     return array();
 	}
@@ -144,12 +144,12 @@ class wp_pwa
 			foreach($cpts as $cpt){
 	      $cpt_object = get_post_type_object($cpt);
 				if ($cpt_object->show_in_rest) {
-					$result[$cpt] = $this->get_latest_from_cpt($cpt);
+					$result[] = $this->get_latest_from_cpt($cpt);
 				}
 	    }
 			return $result;
 		}
-		return $this->get_latest_from_cpt($cpt);
+		return array($this->get_latest_from_cpt($cpt));
   }
 
 	function purify_html($data) {
