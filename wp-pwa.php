@@ -126,7 +126,7 @@ class wp_pwa
 	function get_latest_from_cpt($cpt) {
 		if (post_type_exists($cpt)) {
 			$cpt_object = get_post_type_object($cpt);
-      return array(
+      $data = array(
         id => $cpt,
         link => get_post_type_archive_link($cpt),
         count => intval(wp_count_posts($cpt)->publish),
@@ -134,6 +134,8 @@ class wp_pwa
         slug => $cpt_object->name,
        	taxonomy => 'latest'
       );
+			$data = apply_filters('rest_prepare_latest', $data);
+			return $data;
 		}
     return array();
 	}
