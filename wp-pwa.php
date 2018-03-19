@@ -66,14 +66,28 @@ class wp_pwa
 		add_action('admin_enqueue_scripts', array( $this, 'register_wp_pwa_styles') );
 
 		add_action('rest_api_init', array($this,'rest_routes'));
-		add_action('registered_post_type', array($this, 'register_latest_on_custom_post_types'));
-		add_filter('rest_prepare_post', array($this, 'purify_html'));
+		add_action('registered_post_type', array($this, 'add_latest_to_custom_post_types'));
 
 		add_action('wp_head', array($this,'amp_add_canonical'));
 
 		// filters
 		add_filter('wp_get_attachment_link', array( $this, 'add_data_to_images'), 10, 2 );
+		add_filter('rest_prepare_post', array($this, 'purify_html'));
 	}
+
+	function add_latest_to_custom_post_types($post_type) {
+		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'));
+		register_rest_field($post_type, 'latest',
+      array(
+        'get_callback' => array( $this, 'wp_api_get_latest' ),
+        'schema' => null,
+      )
+    );
+  }
+
+	function wp_api_get_latest($p) {
+    return [$p['type']];
+  }
 
 	function rest_routes() {
 		register_rest_route('wp-pwa/v1', '/siteid/', array(
@@ -92,6 +106,77 @@ class wp_pwa
 			'methods' => 'GET',
 			'callback' => array( $this,'get_site_info'))
 		);
+		register_rest_route( 'wp/v2', '/latest/', array(
+      'methods' => 'GET',
+      'callback' => array( $this,'latest_general_endpoint'))
+    );
+		register_rest_route( 'wp/v2', '/latest/(?P<id>\w+)', array(
+      'methods' => 'GET',
+      'callback' => array( $this,'latest_individual_endpoint'),
+			'args' => array(
+	      'id' => array(
+	        'validate_callback' => function($param) {
+	          return post_type_exists($param);
+	        }
+	      )
+			)
+    ));
+	}
+
+	function get_latest_from_cpt($cpt) {
+		if (post_type_exists($cpt)) {
+			$cpt_object = get_post_type_object($cpt);
+      $data = array(
+        id => $cpt,
+        link => get_post_type_archive_link($cpt),
+        count => intval(wp_count_posts($cpt)->publish),
+        name => $cpt_object->label,
+        slug => $cpt_object->name,
+       	taxonomy => 'latest'
+      );
+			$data = apply_filters('rest_prepare_latest', $data);
+			return $data;
+		}
+    return array();
+	}
+
+	function latest_individual_endpoint($data) {
+		$cpt = $data->get_url_params()['id'];
+		return $this->get_latest_from_cpt($cpt);
+  }
+
+	function latest_general_endpoint($data) {
+    $params = $data->get_params();
+    foreach($params as $params_cpt => $params_id){
+      if (post_type_exists($params_cpt)) {
+        $cpt = $params_cpt;
+      }
+    }
+		if (!isset($cpt)) {
+			$cpts = get_post_types();
+			$result = array();
+			foreach($cpts as $cpt){
+	      $cpt_object = get_post_type_object($cpt);
+				if ($cpt_object->show_in_rest) {
+					$result[] = $this->get_latest_from_cpt($cpt);
+				}
+	    }
+			return $result;
+		}
+		return array($this->get_latest_from_cpt($cpt));
+  }
+
+	function add_latest_to_links($data) {
+		$type = $data->data['type'];
+		$id = $data->data['id'];
+	  $data->add_links(array(
+			'https://api.w.org/term' => array(
+				'href' => rest_url('wp/v2/latest?' . $type . '=' . $id),
+				'taxonomy' => 'latest',
+	      'embeddable' => true,
+	    )
+		));
+		return $data;
 	}
 
 	function purify_html($data) {
@@ -104,36 +189,6 @@ class wp_pwa
 
 		return $data;
   }
-
-	function add_frontity_field($p, $field_name, $request) {
-		$cpt = $p['type'];
-		$cpt_object = get_post_type_object($cpt);
-		return array(
-			latest => [$p['type']],
-			_embedded => array(
-				'wp:term' => array(array(array(
-					id => $cpt,
-					link => get_post_type_archive_link($cpt),
-					count => intval(wp_count_posts($cpt)->publish),
-					name => $cpt_object->label,
-					slug => $cpt_object->name,
-					taxonomy => 'latest',
-					parent => 0,
-					meta => array()
-				)))
-			)
-		);
-	}
-
-	function register_latest_on_custom_post_types($post_type) {
-		register_rest_field($post_type,
-			'frontity',
-			array(
-				'get_callback' => array($this, 'add_frontity_field'),
-				'schema' => null,
-			)
-		);
-	}
 
 	// Adds attribute data-attachment-id="X" to the gallery images
 	function add_data_to_images( $html, $attachment_id ) {
