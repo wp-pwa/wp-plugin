@@ -27,6 +27,7 @@ function load_html5purifier() {
 	// Rule: remove empty elements.
 	$config->set('AutoFormat', 'RemoveEmpty', true);
   $config->set('AutoFormat', 'RemoveEmpty.RemoveNbsp', true);
+  $config->set('AutoFormat', 'AutoParagraph', true);
 
   // Set some HTML5 properties
   $config->set('HTML.DefinitionID', 'html5-definitions'); // unqiue id
