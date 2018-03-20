@@ -4,19 +4,20 @@ function load_html5purifier() {
   require_once(plugin_dir_path(__FILE__) . '/htmlpurifier/library/HTMLPurifier.auto.php');
 
   $config = HTMLPurifier_Config::createDefault();
-  
+
   $upload = wp_upload_dir();
   $htmlpurifier_dir = $upload['basedir'] . DS . 'frontity' . DS . 'htmlpurifier';
-  
+
   if (is_dir($htmlpurifier_dir)) {
     $config->set('Cache', 'SerializerPath', $htmlpurifier_dir);
 	} else {
     $config->set('Core', 'DefinitionCache', null);
   }
-  
   $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+
   $config->set('CSS.AllowTricky', true);
-  
+  $config->set('HTML.EnableAttrID', true);
+
   // Rule: <iframe> allowed.
   $config->set('HTML.SafeIframe', true);
   $config->set('URI.SafeIframeRegexp', '/.+/');
@@ -82,6 +83,7 @@ function load_html5purifier() {
     $def->addAttribute('tr', 'width', 'Text');
     $def->addAttribute('tr', 'height', 'Text');
     $def->addAttribute('tr', 'border', 'Text');
+    $def->addAttribute('img', 'data-attachment-id', 'Text');
   }
 
   return new HTMLPurifier($config);
