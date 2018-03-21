@@ -30,6 +30,8 @@ class wp_pwa
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
 
+
+
 	/*
 	*  Constructor
 	*
