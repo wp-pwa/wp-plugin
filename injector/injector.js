@@ -90,14 +90,14 @@
             platform: 'browser',
             body: {
               message: {
-                body: 'Error loading the injector on: ' + window.location.href + '. Error: ' + error,
+                body: 'Injector "' + error + '" on: ' + window.location.href,
                 error: error
               },
             },
           },
         })
       );
-      console.error('Error loading the injector on: ' + window.location.href + '. Error: ' + error);
+      console.error('Injector "' + error + '" on: ' + window.location.href);
     };
 
     var loadWorona = function() {
