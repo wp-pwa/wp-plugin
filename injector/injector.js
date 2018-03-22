@@ -2,8 +2,8 @@
 (function(document, window, navigator) {
   var isIphone = /ip(hone|od).*?OS (?![1-8]_|X)/i; // from iOS 9
   var isIpad = /ipad.*?OS (?![1-8]_|X)/i; // from iOS 9
-  var isAndroidMobile = /android (?![1-3]\.)(?!4\.[0-3])(.*mobile)/i; // from Android 4.4
-  var isAndroidTablet = /android (?![1-3]\.)(?!4\.[0-3])(?!.*mobile)/i; // from Android 4.4
+  var isAndroidMobile = /android.+chrome\/(?![123]\d\.)(.+mobile)/i; // from Chrome 40
+  var isAndroidTablet = /android.+chrome\/(?![123]\d\.)(?!.+mobile)/i; // from Chrome 40
 
   window['wp-pwa'].ssr = window['wp-pwa'].ssr.replace(/\/$/g, '') + '/';
   window['wp-pwa'].static = window['wp-pwa'].static.replace(/\/$/g, '') + '/';
@@ -79,35 +79,50 @@
     if (window['wp-pwa'].dev === false) query += '&dev=false';
     if (window['wp-pwa'].dev === true) query += '&dev=true';
 
+    var injectorFailed = function(xhr, error) {
+      var rollbarXhr = new XMLHttpRequest();
+      rollbarXhr.open('POST', 'https://api.rollbar.com/api/1/item/', true);
+      rollbarXhr.send(
+        JSON.stringify({
+          access_token: 'd64fbebfade643439dad144ccb8c3635',
+          data: {
+            environment: 'injector',
+            platform: 'browser',
+            body: {
+              message: {
+                body: 'Error loading the injector on: ' + window.location.href + '. Error: ' + error,
+                error: error
+              },
+            },
+          },
+        })
+      );
+      console.error('Error loading the injector on: ' + window.location.href + '. Error: ' + error);
+    };
+
     var loadWorona = function() {
       var xhr = new XMLHttpRequest();
+      xhr.timeout = 10000;
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             loadHtml(xhr.responseText);
-          } else {
-            var rollbarXhr = new XMLHttpRequest();
-            rollbarXhr.open('POST', 'https://api.rollbar.com/api/1/item/', true);
-            rollbarXhr.send(
-              JSON.stringify({
-                access_token: 'd64fbebfade643439dad144ccb8c3635',
-                data: {
-                  environment: 'injector',
-                  platform: 'browser',
-                  body: {
-                    message: {
-                      body: 'Error loading the injector on: ' + window.location.href,
-                      error: xhr.statusText,
-                    },
-                  },
-                },
-              })
-            );
-            console.error('Error loading the injector on: ' + window.location.href, xhr.statusText);
+          }
+          else {
             setCookie('wppwaInjectorFailed', 'true', 1);
             window.location.reload(true);
           }
         }
+      };
+      xhr.ontimeout = function () {
+        injectorFailed(xhr, 'timeout');
+        setCookie('wppwaInjectorFailed', 'true', 1);
+        window.location.reload(true);
+      };
+      xhr.onerror = function() {
+        injectorFailed(xhr, 'network error');
+        setCookie('wppwaInjectorFailed', 'true', 1);
+        window.location.reload(true);
       };
       xhr.open('GET', window['wp-pwa'].ssr + query, true);
       xhr.send();
