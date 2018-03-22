@@ -23,7 +23,7 @@ function load_html5purifier() {
   $config->set('URI.SafeIframeRegexp', '/.+/');
 
   // Rule: <center> not allowed.
-	$config->set('HTML', 'ForbiddenElements', array('center'));
+	$config->set('HTML', 'ForbiddenElements', array('center', 'font'));
 
 	// Rule: remove empty elements.
 	$config->set('AutoFormat', 'RemoveEmpty', true);
