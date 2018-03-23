@@ -58,7 +58,7 @@ function load_html5purifier() {
       'preload' => 'Enum#auto,metadata,none',
       'controls' => 'Bool',
     ));
-    $def->addElement('source', 'Block', 'Flow', 'Common', array(
+    $def->addElement('source', 'Block', 'Empty', 'Common', array(
       'src' => 'URI',
       'type' => 'Text',
     ));
