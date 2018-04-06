@@ -136,6 +136,7 @@ class wp_pwa
         slug => $cpt_object->name,
        	taxonomy => 'latest'
       );
+			if ($cpt === 'post') $data['name'] = get_bloginfo('name');
 			$data = apply_filters('rest_prepare_latest', $data);
 			return $data;
 		}
