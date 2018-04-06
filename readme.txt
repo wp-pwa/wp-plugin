@@ -25,7 +25,7 @@ The simplest way to create Progressive Web Apps with WordPress. No coding skills
 == Screenshots ==
 
 == Changelog ==
-= 1.3.2 =
+= 1.4.0 =
 * Migrate to new type and id
 
 = 1.3.2 =
