@@ -4,7 +4,7 @@ Tags: html5, pwa, webapp, progressive web app
 Donate link:
 Requires at least: 4.4
 Tested up to: 4.8.2
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -25,6 +25,12 @@ The simplest way to create Progressive Web Apps with WordPress. No coding skills
 == Screenshots ==
 
 == Changelog ==
+= 1.3.2 =
+* Don't use Htmlpurifier if it returns an empty string (happens in some servers)
+* Fix bug removing source tags
+* Filter font tag
+* Improve injector error message
+
 = 1.3.1 =
 * Go back to initialUrl
 * Support from Chrome >= 40 on Android
