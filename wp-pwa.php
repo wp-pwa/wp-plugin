@@ -187,8 +187,11 @@ class wp_pwa
 		$purifier = load_html5purifier();
 
 		$clean_html = $purifier->purify($data->data['content']['rendered']);
-    $data->data['content']['rendered'] = $clean_html;
 
+		if (!empty($clean_html)) {
+			$data->data['content']['rendered'] = $clean_html;
+		}
+	
 		return $data;
   }
 
