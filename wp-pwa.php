@@ -172,9 +172,14 @@ class wp_pwa
 	function add_latest_to_links($data) {
 		$type = $data->data['type'];
 		$id = $data->data['id'];
+		$terms_url = add_query_arg(
+			$type,
+			$id,
+			rest_url('wp/v2/latest')
+		);
 	  $data->add_links(array(
 			'https://api.w.org/term' => array(
-				'href' => rest_url('wp/v2/latest?' . $type . '=' . $id),
+				'href' => $terms_url,
 				'taxonomy' => 'latest',
 	      'embeddable' => true,
 	    )
