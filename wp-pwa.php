@@ -88,7 +88,8 @@ class wp_pwa
   }
 
 	function wp_api_get_latest($p) {
-    return [$p['type']];
+		$types = apply_filters('add_custom_post_types_to_latest', array($p['type']));
+    return $types;
   }
 
 	function rest_routes() {
@@ -125,27 +126,34 @@ class wp_pwa
     ));
 	}
 
-	function get_latest_from_cpt($cpt) {
-		if (post_type_exists($cpt)) {
-			$cpt_object = get_post_type_object($cpt);
-      $data = array(
-        id => $cpt,
-        link => get_post_type_archive_link($cpt),
-        count => intval(wp_count_posts($cpt)->publish),
-        name => $cpt_object->label,
-        slug => $cpt_object->name,
-       	taxonomy => 'latest'
-      );
-			if ($cpt === 'post') $data['name'] = get_bloginfo('name');
-			$data = apply_filters('rest_prepare_latest', $data);
-			return $data;
+	function get_latest_from_cpt($cpts) {
+		$result = array();
+		foreach ($cpts as &$cpt) {
+			if (post_type_exists($cpt)) {
+				$cpt_object = get_post_type_object($cpt);
+				if ($cpt_object->show_in_rest) {
+					$data = array(
+		        id => $cpt,
+		        link => get_post_type_archive_link($cpt),
+		        count => intval(wp_count_posts($cpt)->publish),
+		        name => $cpt_object->label,
+		        slug => $cpt_object->name,
+		       	taxonomy => 'latest'
+		      );
+					if ($cpt === 'post') $data['name'] = get_bloginfo('name');
+					$result[] = apply_filters('rest_prepare_latest', $data);
+				}
+			}
 		}
-    return array();
+    return $result;
 	}
 
 	function latest_individual_endpoint($data) {
-		$cpt = $data->get_url_params()['id'];
-		return $this->get_latest_from_cpt($cpt);
+		$cpts = apply_filters(
+			'add_custom_post_types_to_latest',
+			array($cpt = $data->get_url_params()['id'])
+		);
+		return $this->get_latest_from_cpt($cpts);
   }
 
 	function latest_general_endpoint($data) {
@@ -156,17 +164,11 @@ class wp_pwa
       }
     }
 		if (!isset($cpt)) {
-			$cpts = get_post_types();
-			$result = array();
-			foreach($cpts as $cpt){
-	      $cpt_object = get_post_type_object($cpt);
-				if ($cpt_object->show_in_rest) {
-					$result[] = $this->get_latest_from_cpt($cpt);
-				}
-	    }
-			return $result;
+			$cpts = apply_filters('add_custom_post_types_to_latest', get_post_types());
+			return $this->get_latest_from_cpt($cpts);
 		}
-		return array($this->get_latest_from_cpt($cpt));
+		$cpts = apply_filters('add_custom_post_types_to_latest', array($cpt));
+		return $this->get_latest_from_cpt($cpts);
   }
 
 	function add_latest_to_links($data) {
