@@ -121,6 +121,9 @@ if ($siteId && $type && $id) {
   if ($pwa || ($pwaStatus === 'mobile' && $exclusion === false)) {
     $inject = true;
   }
+  if (isset($page) && $page >= 2) {
+    $inject = false;
+  }
 }
 ?>
 
