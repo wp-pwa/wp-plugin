@@ -659,8 +659,8 @@ class wp_pwa
 
 		$settings = get_option('wp_pwa_settings');
 		$prettyPermalinks = get_option('permalink_structure') !== '';
-		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER[HTTP_HOST]
-			. $_SERVER[REQUEST_URI];
+		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']
+			. $_SERVER['REQUEST_URI'];
 		$initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
 		$wp_pwa_amp = $settings['wp_pwa_amp'];
 		$ampServer = $settings['wp_pwa_amp_server'];
