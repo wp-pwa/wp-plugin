@@ -42,10 +42,6 @@ if (($forceFrontpage === true && is_front_page()) || is_home()) {
     $id = $queriedObject->name;
     $page = 1;
   }
-} elseif (is_tax()) {
-  $type = get_queried_object()->taxonomy;
-  $id = get_queried_object()->term_id;
-  $page = 1;
 } elseif (is_category()) {
   $type = 'category';
   $id = get_queried_object()->term_id;
