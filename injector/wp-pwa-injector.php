@@ -39,7 +39,7 @@ if (($forceFrontpage === true && is_front_page()) || is_home()) {
   if ((isset($queriedObject->show_in_rest)) && (isset($queriedObject->rest_base)) &&
   ($queriedObject->show_in_rest === true)) {
     $type = 'latest';
-    $id = $queriedObject->rest_base;
+    $id = $queriedObject->name;
     $page = 1;
   }
 } elseif (is_tax()) {
