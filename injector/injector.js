@@ -1,7 +1,7 @@
 // Uglify using "npx uglify-js injector.js --output injector.min.js --compress --mangle"
 (function(document, window, navigator) {
-  var isIphone = /ip(hone|od).*?OS (?![1-9]_|X)/i; // from iOS 10
-  var isIpad = /ipad.*?OS (?![1-9]_|X)/i; // from iOS 10
+  var isIphone = /ip(hone|od).*?OS (?![1-8]_|X)/i; // from iOS 9
+  var isIpad = /ipad.*?OS (?![1-8]_|X)/i; // from iOS 9
   var isAndroidMobile = /android.+chrome\/(?![123]\d\.)(.+mobile)/i; // from Chrome 40
   var isAndroidTablet = /android.+chrome\/(?![123]\d\.)(?!.+mobile)/i; // from Chrome 40
 
