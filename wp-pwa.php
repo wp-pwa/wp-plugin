@@ -68,16 +68,15 @@ class wp_pwa
 		add_action('admin_enqueue_scripts', array( $this, 'register_wp_pwa_styles') );
 
 		add_action('rest_api_init', array($this,'rest_routes'));
-		add_action('registered_post_type', array($this, 'add_latest_to_custom_post_types'));
+		add_action('registered_post_type', array($this, 'add_custom_post_types_filters'));
 
 		add_action('wp_head', array($this,'amp_add_canonical'));
 
-		// filters
 		add_filter('wp_get_attachment_link', array( $this, 'add_data_to_images'), 10, 2 );
-		add_filter('rest_prepare_post', array($this, 'purify_html'));
 	}
 
-	function add_latest_to_custom_post_types($post_type) {
+	function add_custom_post_types_filters($post_type) {
+		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'));
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'));
 		register_rest_field($post_type, 'latest',
       array(
