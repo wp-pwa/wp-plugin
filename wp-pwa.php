@@ -71,13 +71,12 @@ class wp_pwa
 		add_action('registered_post_type', array($this, 'add_custom_post_types_filters'));
 
 		add_action('wp_head', array($this,'amp_add_canonical'));
-
-		add_filter('wp_get_attachment_link', array( $this, 'add_data_to_images'), 10, 2 );
 	}
 
 	function add_custom_post_types_filters($post_type) {
 		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'));
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'));
+		add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids'));
 		register_rest_field($post_type, 'latest',
       array(
         'get_callback' => array( $this, 'wp_api_get_latest' ),
@@ -188,6 +187,37 @@ class wp_pwa
 		return $data;
 	}
 
+	function add_image_ids($data) {
+		global $wpdb;
+		require_once('libs/simple_html_dom.php');
+		$dom = new simple_html_dom();
+		$dom->load($data->data['content']['rendered']);
+		$imgIds = [];
+		foreach($dom->find('img') as $image) {
+			$filename = basename($image->src);
+			$id = $wpdb->get_var("SELECT post_id FROM {$wpdb->prefix}postmeta WHERE meta_value LIKE '%{$filename}%'");
+			$image->setAttribute('data-attachment-id', $id);
+			if ($id) $imgIds[] = intval($id);
+		}
+		if (sizeof($imgIds) > 0) {
+			$media_url = add_query_arg(
+				'include',
+				join(',', $imgIds),
+				rest_url('wp/v2/media')
+			);
+			$data->add_links(array(
+				'wp:contentmedia' => array(
+					'href' => $media_url,
+		      'embeddable' => true,
+		    )
+			));
+			$html = $dom->save();
+			if ($html) $data->data['content']['rendered'] = $html;
+		}
+		$data->data['content_media'] = $imgIds;
+		return $data;
+	}
+
 	function purify_html($data) {
 		require_once(plugin_dir_path(__FILE__) . '/libs/html5purifier.php');
 
@@ -201,25 +231,6 @@ class wp_pwa
 
 		return $data;
   }
-
-	// Adds attribute data-attachment-id="X" to the gallery images
-	function add_data_to_images( $html, $attachment_id ) {
-
-		$attachment_id   = intval( $attachment_id );
-
-		$html = str_replace(
-			'<img ',
-			sprintf(
-				'<img data-attachment-id="%1$d" ',
-				$attachment_id
-			),
-			$html
-		);
-
-		$html = apply_filters('jp_carousel_add_data_to_images', $html, $attachment_id );
-
-		return $html;
-	}
 
 	/*
 	*  init
