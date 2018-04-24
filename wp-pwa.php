@@ -74,9 +74,9 @@ class wp_pwa
 	}
 
 	function add_custom_post_types_filters($post_type) {
-		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'));
-		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'));
-		add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids'));
+		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html', 9));
+		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links', 10));
+		add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids', 10));
 		register_rest_field($post_type, 'latest',
       array(
         'get_callback' => array( $this, 'wp_api_get_latest' ),
