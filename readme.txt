@@ -4,7 +4,7 @@ Tags: html5, pwa, webapp, progressive web app
 Donate link:
 Requires at least: 4.4
 Tested up to: 4.8.2
-Stable tag: 1.3.3
+Stable tag: 1.4.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -25,8 +25,25 @@ The simplest way to create Progressive Web Apps with WordPress. No coding skills
 == Screenshots ==
 
 == Changelog ==
-= 1.3.3 =
-* Don't use constants in $_SERVER
+= 1.4.5 =
+* Fix bug on latest version of Chrome where document.body doesn't exist after document.write
+
+= 1.4.4 =
+* Do the purify first, then add the img ids
+
+= 1.4.3 =
+* Remove unnecessary files of htmlpurifier
+
+= 1.4.2 =
+* Use purifier in all cpt
+* Add ids to all images in content, then embed the media objects in the REST API
+* Remove support for pages > 1 and custom taxomonies for the moment
+
+= 1.4.1 =
+* Add filter to add cpt to latest
+
+= 1.4.0 =
+* Migrate to new type and id
 
 = 1.3.2 =
 * Don't use Htmlpurifier if it returns an empty string (happens in some servers)

@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.3.3
+Version: 1.4.5
 Author: WordPress PWA
 Author URI:
 License: GPL v3
@@ -25,7 +25,7 @@ if( !class_exists('wp_pwa') ):
 class wp_pwa
 {
 	// vars
-	public $plugin_version = '1.3.3';
+	public $plugin_version = '1.4.5';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -68,17 +68,15 @@ class wp_pwa
 		add_action('admin_enqueue_scripts', array( $this, 'register_wp_pwa_styles') );
 
 		add_action('rest_api_init', array($this,'rest_routes'));
-		add_action('registered_post_type', array($this, 'add_latest_to_custom_post_types'));
+		add_action('registered_post_type', array($this, 'add_custom_post_types_filters'));
 
 		add_action('wp_head', array($this,'amp_add_canonical'));
-
-		// filters
-		add_filter('wp_get_attachment_link', array( $this, 'add_data_to_images'), 10, 2 );
-		add_filter('rest_prepare_post', array($this, 'purify_html'));
 	}
 
-	function add_latest_to_custom_post_types($post_type) {
-		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'));
+	function add_custom_post_types_filters($post_type) {
+		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9);
+		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'), 10);
+		add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids'), 10);
 		register_rest_field($post_type, 'latest',
       array(
         'get_callback' => array( $this, 'wp_api_get_latest' ),
@@ -88,7 +86,8 @@ class wp_pwa
   }
 
 	function wp_api_get_latest($p) {
-    return [$p['type']];
+		$types = apply_filters('add_custom_post_types_to_latest', array($p['type']));
+    return $types;
   }
 
 	function rest_routes() {
@@ -125,26 +124,34 @@ class wp_pwa
     ));
 	}
 
-	function get_latest_from_cpt($cpt) {
-		if (post_type_exists($cpt)) {
-			$cpt_object = get_post_type_object($cpt);
-      $data = array(
-        id => $cpt,
-        link => get_post_type_archive_link($cpt),
-        count => intval(wp_count_posts($cpt)->publish),
-        name => $cpt_object->label,
-        slug => $cpt_object->name,
-       	taxonomy => 'latest'
-      );
-			$data = apply_filters('rest_prepare_latest', $data);
-			return $data;
+	function get_latest_from_cpt($cpts) {
+		$result = array();
+		foreach ($cpts as &$cpt) {
+			if (post_type_exists($cpt)) {
+				$cpt_object = get_post_type_object($cpt);
+				if ($cpt_object->show_in_rest) {
+					$data = array(
+		        id => $cpt,
+		        link => get_post_type_archive_link($cpt),
+		        count => intval(wp_count_posts($cpt)->publish),
+		        name => $cpt_object->label,
+		        slug => $cpt_object->name,
+		       	taxonomy => 'latest'
+		      );
+					if ($cpt === 'post') $data['name'] = get_bloginfo('name');
+					$result[] = apply_filters('rest_prepare_latest', $data);
+				}
+			}
 		}
-    return array();
+    return $result;
 	}
 
 	function latest_individual_endpoint($data) {
-		$cpt = $data->get_url_params()['id'];
-		return $this->get_latest_from_cpt($cpt);
+		$cpts = apply_filters(
+			'add_custom_post_types_to_latest',
+			array($cpt = $data->get_url_params()['id'])
+		);
+		return $this->get_latest_from_cpt($cpts);
   }
 
 	function latest_general_endpoint($data) {
@@ -155,29 +162,59 @@ class wp_pwa
       }
     }
 		if (!isset($cpt)) {
-			$cpts = get_post_types();
-			$result = array();
-			foreach($cpts as $cpt){
-	      $cpt_object = get_post_type_object($cpt);
-				if ($cpt_object->show_in_rest) {
-					$result[] = $this->get_latest_from_cpt($cpt);
-				}
-	    }
-			return $result;
+			$cpts = apply_filters('add_custom_post_types_to_latest', get_post_types());
+			return $this->get_latest_from_cpt($cpts);
 		}
-		return array($this->get_latest_from_cpt($cpt));
+		$cpts = apply_filters('add_custom_post_types_to_latest', array($cpt));
+		return $this->get_latest_from_cpt($cpts);
   }
 
 	function add_latest_to_links($data) {
 		$type = $data->data['type'];
 		$id = $data->data['id'];
+		$terms_url = add_query_arg(
+			$type,
+			$id,
+			rest_url('wp/v2/latest')
+		);
 	  $data->add_links(array(
 			'https://api.w.org/term' => array(
-				'href' => rest_url('wp/v2/latest?' . $type . '=' . $id),
+				'href' => $terms_url,
 				'taxonomy' => 'latest',
 	      'embeddable' => true,
 	    )
 		));
+		return $data;
+	}
+
+	function add_image_ids($data) {
+		global $wpdb;
+		require_once('libs/simple_html_dom.php');
+		$dom = new simple_html_dom();
+		$dom->load($data->data['content']['rendered']);
+		$imgIds = [];
+		foreach($dom->find('img') as $image) {
+			$filename = basename($image->src);
+			$id = $wpdb->get_var("SELECT post_id FROM {$wpdb->prefix}postmeta WHERE meta_value LIKE '%{$filename}%'");
+			$image->setAttribute('data-attachment-id', $id);
+			if ($id) $imgIds[] = intval($id);
+		}
+		if (sizeof($imgIds) > 0) {
+			$media_url = add_query_arg(
+				'include',
+				join(',', $imgIds),
+				rest_url('wp/v2/media')
+			);
+			$data->add_links(array(
+				'wp:contentmedia' => array(
+					'href' => $media_url,
+		      'embeddable' => true,
+		    )
+			));
+			$html = $dom->save();
+			if ($html) $data->data['content']['rendered'] = $html;
+		}
+		$data->data['content_media'] = $imgIds;
 		return $data;
 	}
 
@@ -194,25 +231,6 @@ class wp_pwa
 
 		return $data;
   }
-
-	// Adds attribute data-attachment-id="X" to the gallery images
-	function add_data_to_images( $html, $attachment_id ) {
-
-		$attachment_id   = intval( $attachment_id );
-
-		$html = str_replace(
-			'<img ',
-			sprintf(
-				'<img data-attachment-id="%1$d" ',
-				$attachment_id
-			),
-			$html
-		);
-
-		$html = apply_filters('jp_carousel_add_data_to_images', $html, $attachment_id );
-
-		return $html;
-	}
 
 	/*
 	*  init

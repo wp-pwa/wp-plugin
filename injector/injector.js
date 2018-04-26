@@ -50,7 +50,7 @@
     var newDoc = document.open('text/html', 'replace');
     newDoc.write(html);
     newDoc.close();
-    document.body.scrollTop = 0;
+    if (document && document.body && document.body.scrollTop) document.body.scrollTop = 0;
   };
 
   if (readCookie('wppwaClassicVersion')) {
@@ -67,17 +67,15 @@
     document.write(unescape(html));
 
     var query = '?siteId=' + window['wp-pwa'].siteId
+      + '&type=' + window['wp-pwa'].type
+      + '&id=' + window['wp-pwa'].id
+      + '&dev=' + window['wp-pwa'].dev
       + '&static=' + encodeURIComponent(window['wp-pwa'].static)
       + '&env=' + window['wp-pwa'].env
+      + '&perPage=' + window['wp-pwa'].perPage
       + '&device=' + (isTablet((navigator && navigator.userAgent)) ? 'tablet' : 'mobile')
       + '&initialUrl=' + encodeURIComponent(window['wp-pwa'].initialUrl || window.location.origin + window.location.pathname);
-    if (window['wp-pwa'].listType) query += '&listType=' + window['wp-pwa'].listType;
-    if (window['wp-pwa'].listId) query += '&listId=' + window['wp-pwa'].listId;
     if (window['wp-pwa'].page) query += '&page=' + window['wp-pwa'].page;
-    if (window['wp-pwa'].singleType) query += '&singleType=' + window['wp-pwa'].singleType;
-    if (window['wp-pwa'].singleId) query += '&singleId=' + window['wp-pwa'].singleId;
-    if (window['wp-pwa'].dev === false) query += '&dev=false';
-    if (window['wp-pwa'].dev === true) query += '&dev=true';
 
     var injectorFailed = function(xhr, error) {
       var rollbarXhr = new XMLHttpRequest();
