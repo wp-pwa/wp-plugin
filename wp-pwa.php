@@ -200,9 +200,10 @@ class wp_pwa
 			if ($id) $imgIds[] = intval($id);
 		}
 		if (sizeof($imgIds) > 0) {
-			$media_url = add_query_arg(
-				'include',
-				join(',', $imgIds),
+			$media_url = add_query_arg(array(
+				'include' => join(',', $imgIds),
+				'per_page' => sizeof($imgIds),
+			),
 				rest_url('wp/v2/media')
 			);
 			$data->add_links(array(
