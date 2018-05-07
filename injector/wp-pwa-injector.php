@@ -57,7 +57,11 @@ if (($forceFrontpage === true && is_front_page()) || is_home()) {
 }
 
 if (is_paged()) {
-  $page = get_query_var('paged');
+  if (is_front_page() && get_option('page_on_front') !== '0') {
+    $page = get_query_var('page');
+  } else {
+    $page = get_query_var('paged');
+  }
 }
 
 if (isset($_GET['siteId'])) {
