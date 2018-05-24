@@ -1,5 +1,7 @@
 // Uglify using "npx uglify-js injector.js --output injector.min.js --compress --mangle"
 (function(document, window, navigator) {
+  var cookieExpire = 3; // seconds
+
   var isIphone = /ip(hone|od).*?OS (?![1-8]_|X)/i; // from iOS 9
   var isIpad = /ipad.*?OS (?![1-8]_|X)/i; // from iOS 9
   var isAndroidMobile = /android.+chrome\/(?![123]\d\.)(.+mobile)/i; // from Chrome 40
@@ -19,7 +21,7 @@
     var expires = '';
     if (seconds) {
       var d = new Date();
-      d.setTime(d.getTime() + seconds / 60 * 60 * 1000);
+      d.setTime(d.getTime() + seconds * 1000);
       expires = 'expires=' + d.toUTCString() + ';';
     }
     document.cookie = name + '=' + value + ';' + expires + 'path=/';
@@ -108,19 +110,19 @@
             loadHtml(xhr.responseText);
           }
           else {
-            setCookie('wppwaInjectorFailed', 'true', 5);
+            setCookie('wppwaInjectorFailed', 'true', cookieExpire);
             window.location.reload(true);
           }
         }
       };
       xhr.ontimeout = function () {
         injectorFailed(xhr, 'timeout');
-        setCookie('wppwaInjectorFailed', 'true', 1);
+        setCookie('wppwaInjectorFailed', 'true', cookieExpire);
         window.location.reload(true);
       };
       xhr.onerror = function() {
         injectorFailed(xhr, 'network error');
-        setCookie('wppwaInjectorFailed', 'true', 1);
+        setCookie('wppwaInjectorFailed', 'true', cookieExpire);
         window.location.reload(true);
       };
       xhr.open('GET', window['wp-pwa'].dynamicUrl + query, true);
