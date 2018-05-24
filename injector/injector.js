@@ -71,6 +71,7 @@
       + '&id=' + window['wp-pwa'].id
       + '&dev=' + window['wp-pwa'].dev
       + '&staticUrl=' + encodeURIComponent(window['wp-pwa'].staticUrl)
+      + '&dynamicUrl=' + encodeURIComponent(window['wp-pwa'].dynamicUrl)
       + '&env=' + window['wp-pwa'].env
       + '&perPage=' + window['wp-pwa'].perPage
       + '&device=' + (isTablet((navigator && navigator.userAgent)) ? 'tablet' : 'mobile')
