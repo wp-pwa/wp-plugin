@@ -15,11 +15,11 @@
     return isIpad.test(ua) || isAndroidTablet.test(ua);
   };
 
-  var setCookie = function(name, value, minutes) {
+  var setCookie = function(name, value, seconds) {
     var expires = '';
-    if (minutes) {
+    if (seconds) {
       var d = new Date();
-      d.setTime(d.getTime() + minutes * 60 * 1000);
+      d.setTime(d.getTime() + seconds / 60 * 60 * 1000);
       expires = 'expires=' + d.toUTCString() + ';';
     }
     document.cookie = name + '=' + value + ';' + expires + 'path=/';
@@ -108,7 +108,7 @@
             loadHtml(xhr.responseText);
           }
           else {
-            setCookie('wppwaInjectorFailed', 'true', 1);
+            setCookie('wppwaInjectorFailed', 'true', 5);
             window.location.reload(true);
           }
         }
