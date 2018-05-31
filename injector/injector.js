@@ -50,7 +50,6 @@
     var newDoc = document.open('text/html', 'replace');
     newDoc.write(html);
     newDoc.close();
-    if (document && document.body && document.body.scrollTop) document.body.scrollTop = 0;
   };
 
   if (readCookie('wppwaClassicVersion')) {
