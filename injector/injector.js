@@ -1,6 +1,7 @@
 // Uglify using "npx uglify-js injector.js --output injector.min.js --compress --mangle"
 (function(document, window, navigator) {
   var cookieExpire = 3; // seconds
+  var timeout = 30000 // miliseconds
 
   var isIphone = /ip(hone|od).*?OS (?![1-8]_|X)/i; // from iOS 9
   var isIpad = /ipad.*?OS (?![1-8]_|X)/i; // from iOS 9
@@ -103,7 +104,7 @@
 
     var loadWorona = function() {
       var xhr = new XMLHttpRequest();
-      xhr.timeout = 10000;
+      xhr.timeout = timeout;
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
