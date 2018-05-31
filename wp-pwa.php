@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.4.7
+Version: 1.4.8
 Author: WordPress PWA
 Author URI:
 License: GPL v3
@@ -25,7 +25,7 @@ if( !class_exists('wp_pwa') ):
 class wp_pwa
 {
 	// vars
-	public $plugin_version = '1.4.7';
+	public $plugin_version = '1.4.8';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -187,6 +187,39 @@ class wp_pwa
 		return $data;
 	}
 
+	function get_attachment_id( $url ) {
+		$attachment_id = 0;
+		$dir = wp_upload_dir();
+		if ( false !== strpos( $url, $dir['baseurl'] . '/' ) ) { // Is URL in uploads directory?
+			$file = basename( $url );
+			$query_args = array(
+				'post_type'   => 'attachment',
+				'post_status' => 'inherit',
+				'fields'      => 'ids',
+				'meta_query'  => array(
+					array(
+						'value'   => $file,
+						'compare' => 'LIKE',
+						'key'     => '_wp_attachment_metadata',
+					),
+				)
+			);
+			$query = new WP_Query( $query_args );
+			if ( $query->have_posts() ) {
+				foreach ( $query->posts as $post_id ) {
+					$meta = wp_get_attachment_metadata( $post_id );
+					$original_file       = basename( $meta['file'] );
+					$cropped_image_files = wp_list_pluck( $meta['sizes'], 'file' );
+					if ( $original_file === $file || in_array( $file, $cropped_image_files ) ) {
+						$attachment_id = $post_id;
+						break;
+					}
+				}
+			}
+		}
+		return $attachment_id;
+	}
+
 	function add_image_ids($data) {
 		global $wpdb;
 		require_once('libs/simple_html_dom.php');
@@ -194,10 +227,11 @@ class wp_pwa
 		$dom->load($data->data['content']['rendered']);
 		$imgIds = [];
 		foreach($dom->find('img') as $image) {
-			$filename = basename($image->src);
-			$id = $wpdb->get_var("SELECT post_id FROM {$wpdb->prefix}postmeta WHERE meta_value LIKE '%{$filename}%'");
-			$image->setAttribute('data-attachment-id', $id);
-			if ($id) $imgIds[] = intval($id);
+			$id = $this->get_attachment_id($image->src);
+			if ($id !== 0) {
+				$image->setAttribute('data-attachment-id', $id);
+				$imgIds[] = intval($id);
+			}
 		}
 		if (sizeof($imgIds) > 0) {
 			$media_url = add_query_arg(array(
