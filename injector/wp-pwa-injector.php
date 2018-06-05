@@ -15,6 +15,7 @@ $pwa = false;
 $exclusion = false;
 $dev = 'false';
 $break = false;
+$pluginUrl = plugins_url($GLOBALS['wp_pwa_path']);
 $prettyPermalinks = get_option('permalink_structure') !== '';
 $url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']
   . $_SERVER['REQUEST_URI'];
@@ -128,7 +129,7 @@ if ($siteId && $type && $id) {
 ?>
 
 <?php if ($inject) { ?>
-  <script type='text/javascript'>window['wp-pwa']={siteId:'<?php echo $siteId; ?>',type:'<?php echo $type; ?>',id:'<?php echo $id; ?>',<?php if ($page) echo 'page:\'' . $page . '\',' ?>env:'<?php echo $env; ?>',dev:'<?php echo $dev; ?>',perPage:'<?php echo $perPage; ?>',dynamicUrl:'<?php echo $dynamicUrl; ?>',initialUrl:'<?php echo $initialUrl; ?>',staticUrl:'<?php echo $staticUrl; ?>'<?php if ($break) echo ',break:true' ?><?php if (sizeof($excludes) !== 0) echo ',excludes:["' . str_replace('\\\\', '\\', implode('", "', $excludes)) . '"]' ?>};
+  <script type='text/javascript'>window['wp-pwa']={siteId:'<?php echo $siteId; ?>',type:'<?php echo $type; ?>',id:'<?php echo $id; ?>',<?php if ($page) echo 'page:\'' . $page . '\',' ?>env:'<?php echo $env; ?>',dev:'<?php echo $dev; ?>',perPage:'<?php echo $perPage; ?>',dynamicUrl:'<?php echo $dynamicUrl; ?>',initialUrl:'<?php echo $initialUrl; ?>',staticUrl:'<?php echo $staticUrl; ?>',pluginUrl:'<?php echo $pluginUrl; ?>'<?php if ($break) echo ',break:true' ?><?php if (sizeof($excludes) !== 0) echo ',excludes:["' . str_replace('\\\\', '\\', implode('", "', $excludes)) . '"]' ?>};
   <?php if ($break) {
     echo 'debugger;';
     require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.js');
