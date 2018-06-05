@@ -222,7 +222,7 @@ class wp_pwa
 
 	function add_image_ids($data) {
 		global $wpdb;
-		require_once('libs/simple_html_dom.php');
+		if(!class_exists('simple_html_dom')) { require_once('libs/simple_html_dom.php'); }
 		$dom = new simple_html_dom();
 		$dom->load($data->data['content']['rendered']);
 		$imgIds = [];
