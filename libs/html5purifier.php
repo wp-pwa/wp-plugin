@@ -18,6 +18,10 @@ function load_html5purifier() {
   $config->set('CSS.AllowTricky', true);
   $config->set('HTML.EnableAttrID', true);
 
+  // Don't resize big images
+  $config->set('CSS.MaxImgLength', null);
+  $config->set('HTML.MaxImgLength', null);
+
   // Rule: <iframe> allowed.
   $config->set('HTML.SafeIframe', true);
   $config->set('URI.SafeIframeRegexp', '/.+/');
