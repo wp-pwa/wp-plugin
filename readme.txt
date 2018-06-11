@@ -12,7 +12,7 @@ The simplest way to create Progressive Web Apps with WordPress. No coding skills
 
 == Description ==
 
-WordPress PWA (or Frontity) is a plugin that turns any publisher's site into a Progressive Web App (PWA).
+WordPress PWA (or **[Frontity](https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description)**) is a plugin that turns any publisher's site into a Progressive Web App (PWA).
 
 Our PWAs use the mobile web to deliver user experiences that are fast and highly engaging. They support Google AMP, can be accessed instantly from any device, and are frictionless to use.
 
