@@ -76,6 +76,7 @@
       + '&dynamicUrl=' + encodeURIComponent(window['wp-pwa'].dynamicUrl)
       + '&env=' + window['wp-pwa'].env
       + '&perPage=' + window['wp-pwa'].perPage
+      + '&gmtOffset=' + window['wp-pwa'].gmtOffset
       + '&device=' + (isTablet((navigator && navigator.userAgent)) ? 'tablet' : 'mobile')
       + '&initialUrl=' + encodeURIComponent(window['wp-pwa'].initialUrl || window.location.origin + window.location.pathname);
     if (window['wp-pwa'].page) query += '&page=' + window['wp-pwa'].page;
