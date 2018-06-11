@@ -48,7 +48,7 @@ You have to be a Frontity user. If you are interested in Frontity, you can reque
 
 = Can I see a demo? =
 
-Sure! Visit [blog.frontity.com](https://blog.frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description) from a mobile browser. Yo can also take a look to this **[video](https://youtu.be/W9X2R-6lhEc)**
+Sure! Visit [blog.frontity.com](https://blog.frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description) from a mobile browser. You can also take a look at this **[video](https://youtu.be/W9X2R-6lhEc)**
 
 == Screenshots ==
 
