@@ -8,13 +8,14 @@ $id = null;
 $page = null;
 $env = 'prod';
 $perPage = get_option('posts_per_page');
-$ssr = 'https://ssr.wp-pwa.com';
-$static = 'https://static.wp-pwa.com';
+$dynamicUrl = 'https://ssr.wp-pwa.com';
+$staticUrl = 'https://static.wp-pwa.com';
 $inject = false;
 $pwa = false;
 $exclusion = false;
 $dev = 'false';
 $break = false;
+$pluginUrl = plugins_url($GLOBALS['wp_pwa_path']);
 $prettyPermalinks = get_option('permalink_structure') !== '';
 $url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']
   . $_SERVER['REQUEST_URI'];
@@ -76,19 +77,19 @@ if (isset($_GET['env']) && ($_GET['env'] === 'pre' || $_GET['env'] === 'prod')) 
   $env = $settings['wp_pwa_env'];
 }
 
-if (isset($_GET['ssrUrl'])) {
-  $ssr = $_GET['ssrUrl'];
+if (isset($_GET['dynamicUrl'])) {
+  $dynamicUrl = $_GET['dynamicUrl'];
 } elseif (isset($_GET['server'])) {
-  $ssr = $_GET['server'];
+  $dynamicUrl = $_GET['server'];
 } elseif (isset($settings['wp_pwa_ssr'])) {
-  $ssr = $settings['wp_pwa_ssr'];
+  $dynamicUrl = $settings['wp_pwa_ssr'];
 }
 if (isset($_GET['staticUrl'])) {
-  $static = $_GET['staticUrl'];
+  $staticUrl = $_GET['staticUrl'];
 } elseif (isset($_GET['server'])) {
-  $static = $_GET['server'];
+  $staticUrl = $_GET['server'];
 } elseif (isset($settings['wp_pwa_static'])) {
-  $static = $settings['wp_pwa_static'];
+  $staticUrl = $settings['wp_pwa_static'];
 }
 
 if (isset($_GET['pwa']) && $_GET['pwa'] === 'true' ){
@@ -96,7 +97,7 @@ if (isset($_GET['pwa']) && $_GET['pwa'] === 'true' ){
 }
 
 if (isset($_GET['pwa']) || isset($_GET['server']) || isset($_GET['staticUrl']) ||
-  isset($_GET['ssrUrl']) || isset($_GET['env']) || isset($_GET['siteId'])) {
+  isset($_GET['dynamicUrl']) || isset($_GET['env']) || isset($_GET['siteId'])) {
     $dev = 'true';
   }
 if (isset($_GET['dev'])) {
@@ -128,7 +129,7 @@ if ($siteId && $type && $id) {
 ?>
 
 <?php if ($inject) { ?>
-  <script type='text/javascript'>window['wp-pwa']={siteId:'<?php echo $siteId; ?>',type:'<?php echo $type; ?>',id:'<?php echo $id; ?>',<?php if ($page) echo 'page:\'' . $page . '\',' ?>env:'<?php echo $env; ?>',dev:'<?php echo $dev; ?>',perPage:'<?php echo $perPage; ?>',ssr:'<?php echo $ssr; ?>',initialUrl:'<?php echo $initialUrl; ?>',static:'<?php echo $static; ?>'<?php if ($break) echo ',break:true' ?><?php if (sizeof($excludes) !== 0) echo ',excludes:["' . str_replace('\\\\', '\\', implode('", "', $excludes)) . '"]' ?>};
+  <script type='text/javascript'>window['wp-pwa']={siteId:'<?php echo $siteId; ?>',type:'<?php echo $type; ?>',id:'<?php echo $id; ?>',<?php if ($page) echo 'page:\'' . $page . '\',' ?>env:'<?php echo $env; ?>',dev:'<?php echo $dev; ?>',perPage:'<?php echo $perPage; ?>',dynamicUrl:'<?php echo $dynamicUrl; ?>',initialUrl:'<?php echo $initialUrl; ?>',staticUrl:'<?php echo $staticUrl; ?>',pluginUrl:'<?php echo $pluginUrl; ?>'<?php if ($break) echo ',break:true' ?><?php if (sizeof($excludes) !== 0) echo ',excludes:["' . str_replace('\\\\', '\\', implode('", "', $excludes)) . '"]' ?>};
   <?php if ($break) {
     echo 'debugger;';
     require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.js');
