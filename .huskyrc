@@ -1,6 +1,6 @@
 {
   "hooks": {
-    "pre-commit": "npm run readme-to-markdown",
+    "pre-commit": "npm run grunt",
     "commit-msg": "commitlint --env HUSKY_GIT_PARAMS"
   }
 }

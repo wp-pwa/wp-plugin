@@ -7,12 +7,18 @@ module.exports = function(grunt) {
           "README.md": "readme.txt"
         }
       }
+    },
+    uglify: {
+      injector: {
+        src: "injector/injector.js",
+        dest: "injector/injector.min.js"
+      }
     }
   })
 
-  // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks("grunt-wp-readme-to-markdown")
+  grunt.loadNpmTasks("grunt-contrib-uglify")
 
   // Default task(s).
-  grunt.registerTask("default", ["wp_readme_to_markdown"])
+  grunt.registerTask("default", ["wp_readme_to_markdown", "uglify"])
 }

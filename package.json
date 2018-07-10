@@ -4,7 +4,7 @@
   "description": "WordPress plugin to inject and configure » Frontity",
   "main": "index.js",
   "scripts": {
-    "readme-to-markdown": "grunt"
+    "grunt": "grunt"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,8 @@
     "@commitlint/config-conventional": "^7.0.1",
     "grunt": "^1.0.3",
     "grunt-cli": "^1.2.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^3.3.0",
     "grunt-wp-readme-to-markdown": "^2.0.1",
     "husky": "^1.0.0-rc.13"
   }
