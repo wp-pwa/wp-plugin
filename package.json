@@ -1,6 +1,7 @@
 {
   "name": "frontity-wp-plugin",
   "version": "1.4.10",
+  "private": true,
   "description": "WordPress plugin to inject and configure » Frontity",
   "main": "index.js",
   "scripts": {
