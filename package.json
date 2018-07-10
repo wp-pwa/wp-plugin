@@ -7,7 +7,7 @@
   "scripts": {
     "grunt": "grunt",
     "cz": "git-cz",
-    "semantic-release": "semantic-release"
+    "semantic-release": "env-cmd .env.local semantic-release"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "@semantic-release/npm": "^3.3.4",
     "commitizen": "^2.10.1",
     "cz-conventional-changelog": "^2.1.0",
+    "env-cmd": "^8.0.2",
     "grunt": "^1.0.3",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-jshint": "^1.1.0",
