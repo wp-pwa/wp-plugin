@@ -1,7 +1,6 @@
 {
   "verifyConditions": [
     "@semantic-release/changelog",
-    "@semantic-release/github",
     "@semantic-release/git"
   ],
   "prepare": [
@@ -9,15 +8,8 @@
     "@semantic-release/npm",
     "@semantic-release/git"
   ],
-  "publish": ["@semantic-release/github"],
-  "success": [
-    {
-      "path": "@semantic-release/github",
-      "successComment":
-        ":tada: This issue has been resolved in version ${nextRelease.version} :tada:\n\nThe release is available on [GitHub release](<github_release_url>)"
-    }
-  ],
-  "fail": ["@semantic-release/github"],
+  "publish": [],
+  "fail": [],
   "branch": "master",
   "npmPublish": false
 }
