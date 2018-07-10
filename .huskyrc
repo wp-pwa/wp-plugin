@@ -1,0 +1,6 @@
+{
+  "hooks": {
+    "pre-commit": "npm run readme-to-markdown",
+    "commit-msg": "commitlint --env HUSKY_GIT_PARAMS"
+  }
+}

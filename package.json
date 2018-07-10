@@ -22,8 +22,11 @@
   },
   "homepage": "https://github.com/frontity/wp-plugin#readme",
   "devDependencies": {
+    "@commitlint/cli": "^7.0.0",
+    "@commitlint/config-conventional": "^7.0.1",
     "grunt": "^1.0.3",
     "grunt-cli": "^1.2.0",
-    "grunt-wp-readme-to-markdown": "^2.0.1"
+    "grunt-wp-readme-to-markdown": "^2.0.1",
+    "husky": "^1.0.0-rc.13"
   }
 }
