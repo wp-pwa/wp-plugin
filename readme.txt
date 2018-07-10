@@ -16,7 +16,7 @@ WordPress PWA (or **[Frontity](https://frontity.com/?utm_source=plugin-repositor
 
 Our PWAs use the mobile web to deliver user experiences that are fast and highly engaging. They support Google AMP, can be accessed instantly from any device, and are frictionless to use.
 
-We aim to help publishers boost their traffic and maximize their ad revenue by making use of the latest mobile technologies. 
+We aim to help publishers boost their traffic and maximize their ad revenue by making use of the latest mobile technologies.
 
 <strong>IMPORTANT</strong>
 The access to our platform is currently limited to publishers / WordPress blogs with certain volume of traffic. You can request a demo at [frontity.com/#request-demo](https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description#request-demo).
@@ -32,7 +32,7 @@ The access to our platform is currently limited to publishers / WordPress blogs 
 **From the WordPress Plugin Directory:**
 
 - Click the “Download” button to get a .zip file.
-- Once the download is completed, go to your WordPress Control Panel > Plugins > Add new. 
+- Once the download is completed, go to your WordPress Control Panel > Plugins > Add new.
 - Upload the previous .zip file.
 - Activate the plugin after its installation.
 
@@ -49,8 +49,6 @@ You have to be a Frontity user. If you are interested in Frontity, you can reque
 = Can I see a demo? =
 
 Sure! Visit [blog.frontity.com](https://blog.frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description) from a mobile browser. You can also take a look at this **[video](https://youtu.be/W9X2R-6lhEc)**
-
-== Screenshots ==
 
 == Changelog ==
 = 1.4.10 =
@@ -175,5 +173,3 @@ Sure! Visit [blog.frontity.com](https://blog.frontity.com/?utm_source=plugin-rep
 
 = 1.0.0 =
 * First release of the plugin.
-
-== Upgrade Notice ==

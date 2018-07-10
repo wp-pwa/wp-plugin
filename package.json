@@ -1,0 +1,29 @@
+{
+  "name": "frontity-wp-plugin",
+  "version": "1.4.10",
+  "description": "WordPress plugin to inject and configure » Frontity",
+  "main": "index.js",
+  "scripts": {
+    "readme-to-markdown": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontity/wp-plugin.git"
+  },
+  "keywords": [
+    "frontity",
+    "wordpress",
+    "plugi"
+  ],
+  "author": "luis@frontity.com",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/frontity/wp-plugin/issues"
+  },
+  "homepage": "https://github.com/frontity/wp-plugin#readme",
+  "devDependencies": {
+    "grunt": "^1.0.3",
+    "grunt-cli": "^1.2.0",
+    "grunt-wp-readme-to-markdown": "^2.0.1"
+  }
+}
