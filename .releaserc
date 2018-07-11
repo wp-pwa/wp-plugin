@@ -6,10 +6,15 @@
   "prepare": [
     "@semantic-release/changelog",
     "@semantic-release/npm",
-    "@semantic-release/git"
+    {
+      "path": "@semantic-release/git",
+      "message": "chore(release): ${nextRelease.version}"
+    }
   ],
-  "publish": [],
-  "fail": [],
+  "success": "",
+  "publish": "",
+  "fail": "",
   "branch": "master",
-  "npmPublish": false
+  "npmPublish": false,
+  "noCi": true
 }
