@@ -4,7 +4,7 @@ Tags: html5, pwa, webapp, app, progressive web app
 Author URI: https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description
 Requires at least: 4.4
 Tested up to: 4.9.6
-Stable tag: 1.4.10
+Stable tag: 1.4.13
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -16,7 +16,7 @@ WordPress PWA (or **[Frontity](https://frontity.com/?utm_source=plugin-repositor
 
 Our PWAs use the mobile web to deliver user experiences that are fast and highly engaging. They support Google AMP, can be accessed instantly from any device, and are frictionless to use.
 
-We aim to help publishers boost their traffic and maximize their ad revenue by making use of the latest mobile technologies. 
+We aim to help publishers boost their traffic and maximize their ad revenue by making use of the latest mobile technologies.
 
 <strong>IMPORTANT</strong>
 The access to our platform is currently limited to publishers / WordPress blogs with certain volume of traffic. You can request a demo at [frontity.com/#request-demo](https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description#request-demo).
@@ -32,7 +32,7 @@ The access to our platform is currently limited to publishers / WordPress blogs 
 **From the WordPress Plugin Directory:**
 
 - Click the “Download” button to get a .zip file.
-- Once the download is completed, go to your WordPress Control Panel > Plugins > Add new. 
+- Once the download is completed, go to your WordPress Control Panel > Plugins > Add new.
 - Upload the previous .zip file.
 - Activate the plugin after its installation.
 
@@ -53,6 +53,10 @@ Sure! Visit [blog.frontity.com](https://blog.frontity.com/?utm_source=plugin-rep
 == Screenshots ==
 
 == Changelog ==
+= 1.4.13 =
+* Don't resize big images
+* Fix a couple of warnings in PHP 7.2.5
+
 = 1.4.10 =
 * Decode url images before searching in DB
 
