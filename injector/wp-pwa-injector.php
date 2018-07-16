@@ -20,10 +20,9 @@ $url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HO
   . $_SERVER['REQUEST_URI'];
 $initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
 $settings = get_option('wp_pwa_settings');
-
 $pwaStatus = $settings['wp_pwa_status'];
 $forceFrontpage = $settings['wp_pwa_force_frontpage'];
-$excludes = $settings['wp_pwa_excludes'];
+$excludes = isset($settings['wp_pwa_excludes']) ? $settings['wp_pwa_excludes'] : array();
 
 if (($forceFrontpage === true && is_front_page()) || is_home()) {
   $type = 'latest';
