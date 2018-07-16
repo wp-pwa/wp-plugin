@@ -131,12 +131,12 @@ class wp_pwa
 				$cpt_object = get_post_type_object($cpt);
 				if ($cpt_object->show_in_rest) {
 					$data = array(
-		        id => $cpt,
-		        link => get_post_type_archive_link($cpt),
-		        count => intval(wp_count_posts($cpt)->publish),
-		        name => $cpt_object->label,
-		        slug => $cpt_object->name,
-		       	taxonomy => 'latest'
+		        "id" => $cpt,
+		        "link" => get_post_type_archive_link($cpt),
+		        "count" => intval(wp_count_posts($cpt)->publish),
+		        "name" => $cpt_object->label,
+		        "slug" => $cpt_object->name,
+		       	"taxonomy" => 'latest'
 		      );
 					if ($cpt === 'post') $data['name'] = get_bloginfo('name');
 					$result[] = apply_filters('rest_prepare_latest', $data);
