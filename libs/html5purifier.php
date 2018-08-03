@@ -27,7 +27,7 @@ function load_html5purifier() {
   $config->set('URI.SafeIframeRegexp', '/.+/');
 
   // Rule: <center> not allowed.
-	$config->set('HTML', 'ForbiddenElements', array('center', 'font'));
+  $config->set('HTML', 'ForbiddenElements', array('font', 'center', 'br'));
 
 	// Rule: remove empty elements.
 	$config->set('AutoFormat', 'RemoveEmpty', true);
@@ -35,7 +35,7 @@ function load_html5purifier() {
   $config->set('AutoFormat', 'AutoParagraph', true);
 
   // Set some HTML5 properties
-  $config->set('HTML.DefinitionID', 'html5-definitions'); // unqiue id
+  $config->set('HTML.DefinitionID', 'html5-definitions'); // unique id
   $config->set('HTML.DefinitionRev', 1);
 
   if ($def = $config->maybeGetRawHTMLDefinition()) {
@@ -52,19 +52,38 @@ function load_html5purifier() {
     // http://developers.whatwg.org/grouping-content.html
     $def->addElement('figure', 'Block', 'Optional: (figcaption, Flow) | (Flow, figcaption) | Flow', 'Common');
     $def->addElement('figcaption', 'Inline', 'Flow', 'Common');
-    // http://developers.whatwg.org/the-video-element.html#the-video-element
-    $def->addElement('video', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common', array(
-      'src' => 'URI',
-      'type' => 'Text',
-      'width' => 'Length',
-      'height' => 'Length',
-      'poster' => 'URI',
-      'preload' => 'Enum#auto,metadata,none',
-      'controls' => 'Bool',
+    // https://html.spec.whatwg.org/dev/media.html#the-video-element
+    $def->addElement('video', 'Block', 'Flow', 'Common', array(
+        'controls' => 'Bool',
+        'height'   => 'Length',
+        'poster'   => 'URI',
+        'preload'  => 'Enum#auto,metadata,none',
+        'src'      => 'URI',
+        'width'    => 'Length',
     ));
-    $def->addElement('source', 'Block', 'Empty', 'Common', array(
-      'src' => 'URI',
-      'type' => 'Text',
+    $def->getAnonymousModule()->addElementToContentSet('video', 'Inline');
+    // https://html.spec.whatwg.org/dev/media.html#the-audio-element
+    $def->addElement('audio', 'Block', 'Flow', 'Common', array(
+        'controls' => 'Bool',
+        'preload'  => 'Enum#auto,metadata,none',
+        'src'      => 'URI',
+    ));
+    $def->getAnonymousModule()->addElementToContentSet('audio', 'Inline');
+    // https://html.spec.whatwg.org/dev/embedded-content.html#the-source-element
+    $def->addElement('source', false, 'Empty', 'Common', array(
+        'media'  => 'Text',
+        'sizes'  => 'Text',
+        'src'    => 'URI',
+        'srcset' => 'Text',
+        'type'   => 'Text',
+    ));
+    // https://html.spec.whatwg.org/dev/media.html#the-track-element
+    $def->addElement('track', false, 'Empty', 'Common', array(
+        'kind'    => 'Enum#captions,chapters,descriptions,metadata,subtitles',
+        'src'     => 'URI',
+        'srclang' => 'Text',
+        'label'   => 'Text',
+        'default' => 'Bool',
     ));
     // http://developers.whatwg.org/text-level-semantics.html
     $def->addElement('s',    'Inline', 'Inline', 'Common');
