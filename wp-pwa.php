@@ -130,9 +130,15 @@ class wp_pwa
 			if (post_type_exists($cpt)) {
 				$cpt_object = get_post_type_object($cpt);
 				if ($cpt_object->show_in_rest) {
+					if (get_option('show_on_front') === 'page' &&
+							get_option('wp_pwa_settings')['wp_pwa_force_frontpage']) {
+						$link = get_option('home');
+					} else {
+						$link = get_post_type_archive_link($cpt);
+					}
 					$data = array(
 		        "id" => $cpt,
-		        "link" => get_post_type_archive_link($cpt),
+		        "link" => $link,
 		        "count" => intval(wp_count_posts($cpt)->publish),
 		        "name" => $cpt_object->label,
 		        "slug" => $cpt_object->name,
