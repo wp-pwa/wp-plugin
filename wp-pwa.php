@@ -196,7 +196,8 @@ class wp_pwa
 	function get_attachment_id( $url ) {
 		$attachment_id = 0;
 		$dir = wp_upload_dir();
-		if ( false !== strpos( $url, $dir['baseurl'] . '/' ) ) { // Is URL in uploads directory?
+		$path = parse_url($dir['baseurl'])['path'];
+		if ( false !== strpos( $url, $path . '/' ) ) {
 			$file = basename( urldecode( $url ) );
 			$query_args = array(
 				'post_type'   => 'attachment',
