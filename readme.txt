@@ -4,7 +4,7 @@ Tags: html5, pwa, webapp, app, progressive web app
 Author URI: https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description
 Requires at least: 4.4
 Tested up to: 4.9.6
-Stable tag: 1.4.13
+Stable tag: 1.4.14
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -53,6 +53,14 @@ Sure! Visit [blog.frontity.com](https://blog.frontity.com/?utm_source=plugin-rep
 == Screenshots ==
 
 == Changelog ==
+= 1.4.14 =
+* add support for <audio>
+* fix home url if force frontpage is used
+* fix for local images not found in the db
+* switch to htmlpurifier-html5
+* add text field decoded and striped for title and support
+* add excludes to AMP (in the future we should have two fields)
+
 = 1.4.13 =
 * Don't resize big images
 * Fix a couple of warnings in PHP 7.2.5
