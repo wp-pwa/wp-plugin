@@ -261,9 +261,9 @@ class wp_pwa
 	}
 
 	function purify_html($data) {
-		require_once(plugin_dir_path(__FILE__) . '/libs/html5purifier.php');
+		require_once(plugin_dir_path(__FILE__) . '/libs/purifier.php');
 
-		$purifier = load_html5purifier();
+		$purifier = load_purifier();
 
 		$clean_html = $purifier->purify($data->data['content']['rendered']);
 
