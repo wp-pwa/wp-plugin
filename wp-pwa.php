@@ -726,6 +726,19 @@ class wp_pwa
 		$ampServer = $settings['wp_pwa_amp_server'];
 		$ampForced = false;
 		$dev = 'false';
+		$excludes = isset($settings['wp_pwa_excludes']) ? $settings['wp_pwa_excludes'] : array();
+		$exclusion = false;
+
+		if (sizeof($excludes) !== 0) {
+		  foreach ($excludes as $regex) {
+		    $output = array();
+		    $regex = str_replace('/', '\/', $regex);
+		    preg_match('/' . $regex . '/', $url, $output);
+		    if (sizeof($output) > 0) {
+		      $exclusion = true;
+		    }
+		  }
+		}
 
 		if (isset($_GET['amp']) && $_GET['amp'] === 'true') {
 			$ampForced = true;
@@ -738,7 +751,7 @@ class wp_pwa
 		if (isset($_GET['dev'])) $dev = $_GET['dev'];
 
 		//posts
-		if ($ampForced || (isset($wp_pwa_amp) && ($wp_pwa_amp !== 'disabled') && (is_single()))) {
+		if ($ampForced || (isset($wp_pwa_amp) && ($wp_pwa_amp !== 'disabled') && (is_single()) && $exclusion === false)) {
 			$singleId = get_queried_object_id();
 			$permalink = get_permalink($singleId);
 			$path = parse_url($permalink, PHP_URL_PATH);
