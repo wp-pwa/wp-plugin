@@ -261,14 +261,16 @@ class wp_pwa
 	}
 
 	function purify_html($data) {
+		$data->data['title']['text'] =
+			strip_tags(html_entity_decode($data->data['title']['rendered']));
+		$data->data['excerpt']['text'] =
+			strip_tags(html_entity_decode($data->data['excerpt']['rendered']));
+
 		require_once(plugin_dir_path(__FILE__) . '/libs/purifier.php');
-
 		$purifier = load_purifier();
-
-		$clean_html = $purifier->purify($data->data['content']['rendered']);
-
-		if (!empty($clean_html)) {
-			$data->data['content']['rendered'] = $clean_html;
+		$purifiedContent = $purifier->purify($data->data['content']['rendered']);
+		if (!empty($purifiedContent)) {
+			$data->data['content']['rendered'] = $purifiedContent;
 		}
 
 		return $data;
