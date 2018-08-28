@@ -71,8 +71,25 @@ class wp_pwa
 		add_action('registered_post_type', array($this, 'add_custom_post_types_filters'));
 
 		add_action('wp_head', array($this,'amp_add_canonical'));
+
+		add_filter('wp_get_attachment_link', array( $this, 'add_id_to_gallery_images'), 10, 2);
 	}
 
+	function add_id_to_gallery_images($html, $attachment_id) {
+		// var_dump($html);
+		$attachment_id = intval($attachment_id);
+		$html = str_replace(
+			'<img ',
+			sprintf(
+				'<img data-attachment-id="%1$d" ',
+				$attachment_id
+			),
+			$html
+		);
+		$html = apply_filters('jp_carousel_add_data_to_images', $html, $attachment_id);
+		return $html;
+	}
+	
 	function add_custom_post_types_filters($post_type) {
 		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9);
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'), 10);
