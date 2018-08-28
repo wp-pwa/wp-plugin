@@ -259,12 +259,12 @@ class wp_pwa
 			if ($dataAttachmentId) {
 				$imgIds[] = intval($dataAttachmentId);
 			} elseif ($wpImage && isset($wpImage[1])) {
-				$image->setAttribute('data-attachment-id-class', $wpImage[1]);
+				$image->setAttribute('data-attachment-id', $wpImage[1]);
 				$imgIds[] = intval($wpImage[1]);
 			} else {
 				$id = $this->get_attachment_id($image->src);
 				if ($id !== 0) {
-					$image->setAttribute('data-attachment-id-db', $id);
+					$image->setAttribute('data-attachment-id', $id);
 					$imgIds[] = intval($id);
 				}
 			}
