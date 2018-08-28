@@ -71,8 +71,24 @@ class wp_pwa
 		add_action('registered_post_type', array($this, 'add_custom_post_types_filters'));
 
 		add_action('wp_head', array($this,'amp_add_canonical'));
+
+		add_filter('wp_get_attachment_link', array( $this, 'add_id_to_gallery_images'), 10, 2);
 	}
 
+	function add_id_to_gallery_images($html, $attachment_id) {
+		$attachment_id = intval($attachment_id);
+		$html = str_replace(
+			'<img ',
+			sprintf(
+				'<img data-attachment-id="%1$d" ',
+				$attachment_id
+			),
+			$html
+		);
+		$html = apply_filters('jp_carousel_add_data_to_images', $html, $attachment_id);
+		return $html;
+	}
+	
 	function add_custom_post_types_filters($post_type) {
 		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9);
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'), 10);
@@ -193,12 +209,15 @@ class wp_pwa
 		return $data;
 	}
 
-	function get_attachment_id( $url ) {
+	function get_attachment_id($url) {
 		$attachment_id = 0;
 		$dir = wp_upload_dir();
-		$path = parse_url($dir['baseurl'])['path'];
-		if ( false !== strpos( $url, $path . '/' ) ) {
-			$file = basename( urldecode( $url ) );
+		$uploadsPath = parse_url($dir['baseurl'])['path'];
+		$isInUploadDirectory = strpos($url, $uploadsPath . '/') !== false;
+		$wpHost = parse_url($dir['baseurl'])['host'];
+		$isNotExternalDomain = strpos($url, $wpHost . '/') !== false;
+		if ($isInUploadDirectory && $isNotExternalDomain) {
+			$file = basename(urldecode($url));
 			$query_args = array(
 				'post_type'   => 'attachment',
 				'post_status' => 'inherit',
@@ -234,10 +253,20 @@ class wp_pwa
 		$dom->load($data->data['content']['rendered']);
 		$imgIds = [];
 		foreach($dom->find('img') as $image) {
-			$id = $this->get_attachment_id($image->src);
-			if ($id !== 0) {
-				$image->setAttribute('data-attachment-id', $id);
-				$imgIds[] = intval($id);
+			$dataAttachmentId = $image->getAttribute('data-attachment-id');
+			$class = $image->getAttribute('class');
+			preg_match('/\bwp-image-(\d+)\b/', $class, $wpImage);
+			if ($dataAttachmentId) {
+				$imgIds[] = intval($dataAttachmentId);
+			} elseif ($wpImage && isset($wpImage[1])) {
+				$image->setAttribute('data-attachment-id', $wpImage[1]);
+				$imgIds[] = intval($wpImage[1]);
+			} else {
+				$id = $this->get_attachment_id($image->src);
+				if ($id !== 0) {
+					$image->setAttribute('data-attachment-id', $id);
+					$imgIds[] = intval($id);
+				}
 			}
 		}
 		if (sizeof($imgIds) > 0) {
