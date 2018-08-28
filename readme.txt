@@ -4,7 +4,7 @@ Tags: html5, pwa, webapp, app, progressive web app
 Author URI: https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description
 Requires at least: 4.4
 Tested up to: 4.9.6
-Stable tag: 1.4.14
+Stable tag: 1.4.15
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -53,6 +53,9 @@ Sure! Visit [blog.frontity.com](https://blog.frontity.com/?utm_source=plugin-rep
 == Screenshots ==
 
 == Changelog ==
+= 1.4.15 =
+* use gallery function and classes to get image ids when possible
+
 = 1.4.14 =
 * add support for <audio>
 * fix home url if force frontpage is used
