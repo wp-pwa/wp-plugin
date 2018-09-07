@@ -328,9 +328,35 @@ class wp_pwa
 	*  @return	N/A
 	*/
 
+	function rrmdir($dir) {
+		if (is_dir($dir)) {
+		  $objects = scandir($dir);
+		  foreach ($objects as $object) {
+			if ($object != "." && $object != "..") {
+			  if (filetype($dir . DS . $object) == "dir"){
+				 rrmdir($dir . DS . $object);
+			  }else{ 
+				 unlink($dir . DS . $object);
+			  }
+			}
+		  }
+		  reset($objects);
+		  rmdir($dir);
+	   }
+	}
+
+	function reset_purifier_cache() {
+		$upload = wp_upload_dir();
+		$upload_base = $upload['basedir'];
+		$htmlpurifier_dir = $upload_base . DS . 'frontity'. DS . 'htmlpurifier';
+		$this->rrmdir($htmlpurifier_dir . DS . 'HTML');
+		$this->rrmdir($htmlpurifier_dir . DS . 'CSS');
+		$this->rrmdir($htmlpurifier_dir . DS . 'URI');
+	}
+
 	function init()
 	{
-		// requires
+		
 	}
 
 	//settings are being updated via AJAX, this validator is not used now
