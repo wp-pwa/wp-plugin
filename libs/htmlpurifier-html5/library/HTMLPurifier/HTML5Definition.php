@@ -106,6 +106,7 @@ class HTMLPurifier_HTML5Definition
         $def->addAttribute('img', 'srcset', 'Text');
         $def->addAttribute('img', 'sizes', 'Text');
         $def->addAttribute('img', 'data-attachment-id', 'Text');
+        $def->addAttribute('img', 'data-attachment-id-source', 'Text');
 
         // IFRAME
         $def->addAttribute('iframe', 'allowfullscreen', 'Bool');
