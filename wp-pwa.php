@@ -59,6 +59,7 @@ class wp_pwa
 		add_action('wp_ajax_wp_pwa_change_siteid',array($this,'change_siteid_ajax'));
 		add_action('wp_ajax_wp_pwa_change_advanced_settings',array($this,'change_advanced_settings_ajax'));
 		add_action('wp_ajax_wp_pwa_save_excludes',array($this,'save_excludes_ajax'));
+		add_action('wp_ajax_wp_pwa_purge_htmlpurifier_cache', array($this,'purge_htmlpurifier_cache'));
 
 		add_action('plugins_loaded', array($this,'wp_rest_api_plugin_is_installed'));
 		add_action('plugins_loaded', array($this,'wp_rest_api_plugin_is_active'));
@@ -345,14 +346,18 @@ class wp_pwa
 	   }
 	}
 
-	function reset_purifier_cache() {
+	function purge_htmlpurifier_cache() {
 		$upload = wp_upload_dir();
 		$upload_base = $upload['basedir'];
 		$htmlpurifier_dir = $upload_base . DS . 'frontity'. DS . 'htmlpurifier';
 		$this->rrmdir($htmlpurifier_dir . DS . 'HTML');
 		$this->rrmdir($htmlpurifier_dir . DS . 'CSS');
 		$this->rrmdir($htmlpurifier_dir . DS . 'URI');
-	}
+		wp_send_json( array(
+		  'status' => 'ok',
+		));
+	  }
+	
 
 	function init()
 	{
