@@ -507,6 +507,16 @@
 									</fieldset>
 							</td>
 						</tr>
+						<tr>
+							<th scope="row">HtmlPurifier</th>
+							<td>
+									<fieldset>
+											<label>
+													<input type="button" id="wp-pwa-purge-htmlpurifier-cache" value="Purge cache"/>
+											</label>
+									</fieldset>
+							</td>
+						</tr>
 					</table>
 					<p>
 						<a href="#" id="change-advanced-settings"class="button button-lg">Save changes</a>
