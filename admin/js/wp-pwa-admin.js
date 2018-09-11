@@ -299,6 +299,28 @@ jQuery(document).on('ready', function () {
       });
     });
 
+    jQuery('#wp-pwa-purge-htmlpurifier-cache').on('click', function(e) {
+      jQuery.ajax({
+        url: ajaxurl,
+        method: "POST",
+        data: {
+            action: 'wp_pwa_purge_htmlpurifier_cache',
+        },
+        success: function (response) {
+          if (response.hasOwnProperty('status') && response.status == 'ok' ) {
+            alert('HtmlPurifier cache purged successfully.');
+          } else if( response.hasOwnProperty('status') && response.status == 'error') {
+            alert('Something went wrong. Please repeat and if it doesn\'t work contact with support@frontity.com.');
+            console.log(response);
+          }
+        },
+        error: function (response) {
+          alert('Something went wrong. Please repeat and if it doesn\'t work contact with support@frontity.com.');
+          console.log(response);
+        }
+      });
+    });
+
     jQuery('#change-advanced-settings').on('click', function(e) {
       jQuery('#change-advanced-settings').addClass('is-loading');
       e.preventDefault();

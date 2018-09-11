@@ -1,12 +1,15 @@
 // Uglify using "npx uglify-js injector.js --output injector.min.js --compress --mangle"
 (function(document, window, navigator) {
+  var cookieExpire = 3; // seconds
+  var timeout = 30000 // miliseconds
+
   var isIphone = /ip(hone|od).*?OS (?![1-8]_|X)/i; // from iOS 9
   var isIpad = /ipad.*?OS (?![1-8]_|X)/i; // from iOS 9
   var isAndroidMobile = /android.+chrome\/(?![123]\d\.)(.+mobile)/i; // from Chrome 40
   var isAndroidTablet = /android.+chrome\/(?![123]\d\.)(?!.+mobile)/i; // from Chrome 40
 
-  window['wp-pwa'].ssr = window['wp-pwa'].ssr.replace(/\/$/g, '') + '/';
-  window['wp-pwa'].static = window['wp-pwa'].static.replace(/\/$/g, '') + '/';
+  window['wp-pwa'].dynamicUrl = window['wp-pwa'].dynamicUrl.replace(/\/$/g, '') + '/';
+  window['wp-pwa'].staticUrl = window['wp-pwa'].staticUrl.replace(/\/$/g, '') + '/';
 
   var isMobile = function(ua) {
     return isIphone.test(ua) || isAndroidMobile.test(ua);
@@ -15,11 +18,11 @@
     return isIpad.test(ua) || isAndroidTablet.test(ua);
   };
 
-  var setCookie = function(name, value, minutes) {
+  var setCookie = function(name, value, seconds) {
     var expires = '';
-    if (minutes) {
+    if (seconds) {
       var d = new Date();
-      d.setTime(d.getTime() + minutes * 60 * 1000);
+      d.setTime(d.getTime() + seconds * 1000);
       expires = 'expires=' + d.toUTCString() + ';';
     }
     document.cookie = name + '=' + value + ';' + expires + 'path=/';
@@ -56,20 +59,21 @@
     var options = {
       tag: 'script',
       id: 'wppwaClassic',
-      src: window['wp-pwa'].ssr + 'dynamic/wp-org-connection-app-extension-worona/go-back-to-wppwa.js',
+      src: window['wp-pwa'].dynamicUrl + 'dynamic/wp-org-connection-app-extension-worona/go-back-to-wppwa.js',
     };
     loadScript(options);
-  } else if (!readCookie('wppwaInjectorFailed') && navigator && isMobile(navigator.userAgent)) {
+  } else if (!readCookie('wppwaInjectorFailed') && navigator && (isMobile(navigator.userAgent) || isTablet(navigator.userAgent))) {
     window.stop();
     var html =
-      '%3Chead%3E%0A%20%20%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%20%20@keyframes%20progress%20%7B%0A%20%20%20%20%20%20%20%20%20%20from%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%200%25%3B%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20to%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2080%25%3B%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%3C/style%3E%0A%20%20%20%20%3C/head%3E%0A%0A%20%20%20%20%3Cbody%20style%3D%22height%3A100%25%3Bbackground%3A%23FDFDFD%3Bdisplay%3Aflex%3Bjustify-content%3Acenter%3Balign-items%3Acenter%3Bmargin%3A0%3B%22%3E%0A%20%20%20%20%20%20%3Cdiv%20style%3D%22animation%3A6s%20ease-out%201s%201%20forwards%20progress%3Bheight%3A1px%3Bbackground%3A%23000%3B%22%3E%3C/div%3E%0A%20%20%20%20%3C/body%3E';
-    document.write(unescape(html));
+      '%3Chead%3E%0A%20%20%3Clink%20rel%3D%22manifest%22%20href%3D%22%23%23dynamicUrl%23%23dynamic/wordcamp-theme/%23%23siteId%23%23/manifest.json%22%7D%20/%3E%0A%20%20%3Cstyle%3E%0A%20%20%20%20@keyframes%20progress%20%7B%0A%20%20%20%20%20%20from%20%7B%0A%20%20%20%20%20%20%20%20width%3A%200%25%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20to%20%7B%0A%20%20%20%20%20%20%20%20width%3A%2080%25%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%3C/style%3E%0A%3C/head%3E%0A%0A%3Cbody%20style%3D%22height%3A100%25%3Bbackground%3A%23FDFDFD%3Bdisplay%3Aflex%3Bjustify-content%3Acenter%3Balign-items%3Acenter%3Bmargin%3A0%3B%22%3E%0A%20%20%3Cdiv%20style%3D%22animation%3A6s%20ease-out%201s%201%20forwards%20progress%3Bheight%3A1px%3Bbackground%3A%23000%3B%22%3E%3C/div%3E%0A%3C/body%3E';
+    document.write(unescape(html).replace('##dynamicUrl##', window['wp-pwa'].dynamicUrl).replace('##siteId##', window['wp-pwa'].siteId));
 
     var query = '?siteId=' + window['wp-pwa'].siteId
       + '&type=' + window['wp-pwa'].type
       + '&id=' + window['wp-pwa'].id
       + '&dev=' + window['wp-pwa'].dev
-      + '&static=' + encodeURIComponent(window['wp-pwa'].static)
+      + '&staticUrl=' + encodeURIComponent(window['wp-pwa'].staticUrl)
+      + '&dynamicUrl=' + encodeURIComponent(window['wp-pwa'].dynamicUrl)
       + '&env=' + window['wp-pwa'].env
       + '&perPage=' + window['wp-pwa'].perPage
       + '&device=' + (isTablet((navigator && navigator.userAgent)) ? 'tablet' : 'mobile')
@@ -99,29 +103,29 @@
 
     var loadWorona = function() {
       var xhr = new XMLHttpRequest();
-      xhr.timeout = 10000;
+      xhr.timeout = timeout;
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             loadHtml(xhr.responseText);
           }
           else {
-            setCookie('wppwaInjectorFailed', 'true', 1);
+            setCookie('wppwaInjectorFailed', 'true', cookieExpire);
             window.location.reload(true);
           }
         }
       };
       xhr.ontimeout = function () {
         injectorFailed(xhr, 'timeout');
-        setCookie('wppwaInjectorFailed', 'true', 1);
+        setCookie('wppwaInjectorFailed', 'true', cookieExpire);
         window.location.reload(true);
       };
       xhr.onerror = function() {
         injectorFailed(xhr, 'network error');
-        setCookie('wppwaInjectorFailed', 'true', 1);
+        setCookie('wppwaInjectorFailed', 'true', cookieExpire);
         window.location.reload(true);
       };
-      xhr.open('GET', window['wp-pwa'].ssr + query, true);
+      xhr.open('GET', window['wp-pwa'].dynamicUrl + query, true);
       xhr.send();
     };
     loadWorona();

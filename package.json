@@ -1,10 +1,14 @@
 {
   "name": "frontity-wp-plugin",
-  "version": "1.4.13",
+  "version": "1.4.15",
   "private": true,
   "description": "WordPress plugin to inject and configure » Frontity",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "grunt": "grunt",
+    "cz": "git-cz",
+    "semantic-release": "env-cmd .env.local semantic-release"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/frontity/wp-plugin.git"
@@ -20,5 +24,23 @@
     "url": "https://github.com/frontity/wp-plugin/issues"
   },
   "homepage": "https://github.com/frontity/wp-plugin#readme",
-  "devDependencies": {}
+  "devDependencies": {
+    "@commitlint/cli": "^7.0.0",
+    "@commitlint/config-conventional": "^7.0.1",
+    "@semantic-release/changelog": "^2.1.1",
+    "@semantic-release/git": "^6.0.1",
+    "@semantic-release/github": "^4.3.0",
+    "@semantic-release/npm": "^3.3.4",
+    "commitizen": "^2.10.1",
+    "cz-conventional-changelog": "^2.1.0",
+    "env-cmd": "^8.0.2",
+    "grunt": "^1.0.3",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^3.3.0",
+    "grunt-wp-readme-to-markdown": "^2.0.1",
+    "husky": "^1.0.0-rc.13",
+    "semantic-release": "^15.6.3",
+    "semantic-release-cli": "^4.0.6"
+  }
 }
