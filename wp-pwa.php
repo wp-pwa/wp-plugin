@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.4.10
+Version: 1.4.15
 Author: WordPress PWA
 Author URI:
 License: GPL v3
@@ -25,7 +25,7 @@ if( !class_exists('wp_pwa') ):
 class wp_pwa
 {
 	// vars
-	public $plugin_version = '1.4.10';
+	public $plugin_version = '1.4.15';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -59,6 +59,7 @@ class wp_pwa
 		add_action('wp_ajax_wp_pwa_change_siteid',array($this,'change_siteid_ajax'));
 		add_action('wp_ajax_wp_pwa_change_advanced_settings',array($this,'change_advanced_settings_ajax'));
 		add_action('wp_ajax_wp_pwa_save_excludes',array($this,'save_excludes_ajax'));
+		add_action('wp_ajax_wp_pwa_purge_htmlpurifier_cache', array($this,'purge_htmlpurifier_cache'));
 
 		add_action('plugins_loaded', array($this,'wp_rest_api_plugin_is_installed'));
 		add_action('plugins_loaded', array($this,'wp_rest_api_plugin_is_active'));
@@ -71,8 +72,31 @@ class wp_pwa
 		add_action('registered_post_type', array($this, 'add_custom_post_types_filters'));
 
 		add_action('wp_head', array($this,'amp_add_canonical'));
+
+		add_filter('wp_get_attachment_link', array( $this, 'add_id_to_gallery_images'), 10, 2);
+		add_filter('wp_get_attachment_image_attributes', array( $this, 'add_id_to_gallery_image_attributes'), 10, 2);
 	}
 
+	function add_id_to_gallery_image_attributes($attrs, $attachment) {
+		$attrs['data-attachment-id'] = $attachment->ID;
+		$attrs['data-attachment-id-source'] = 'image-attributes-hook';
+		return $attrs;
+	}
+
+	function add_id_to_gallery_images($html, $attachment_id) {
+		$attachment_id = intval($attachment_id);
+		$html = str_replace(
+			'<img ',
+			sprintf(
+				'<img data-attachment-id="%1$d" data-attachment-id-source="attachment-link-hook"',
+				$attachment_id
+			),
+			$html
+		);
+		$html = apply_filters('jp_carousel_add_data_to_images', $html, $attachment_id);
+		return $html;
+	}
+	
 	function add_custom_post_types_filters($post_type) {
 		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9);
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'), 10);
@@ -130,13 +154,19 @@ class wp_pwa
 			if (post_type_exists($cpt)) {
 				$cpt_object = get_post_type_object($cpt);
 				if ($cpt_object->show_in_rest) {
+					if (get_option('show_on_front') === 'page' &&
+							get_option('wp_pwa_settings')['wp_pwa_force_frontpage']) {
+						$link = get_option('home');
+					} else {
+						$link = get_post_type_archive_link($cpt);
+					}
 					$data = array(
-		        id => $cpt,
-		        link => get_post_type_archive_link($cpt),
-		        count => intval(wp_count_posts($cpt)->publish),
-		        name => $cpt_object->label,
-		        slug => $cpt_object->name,
-		       	taxonomy => 'latest'
+		        "id" => $cpt,
+		        "link" => $link,
+		        "count" => intval(wp_count_posts($cpt)->publish),
+		        "name" => $cpt_object->label,
+		        "slug" => $cpt_object->name,
+		       	"taxonomy" => 'latest'
 		      );
 					if ($cpt === 'post') $data['name'] = get_bloginfo('name');
 					$result[] = apply_filters('rest_prepare_latest', $data);
@@ -187,11 +217,15 @@ class wp_pwa
 		return $data;
 	}
 
-	function get_attachment_id( $url ) {
+	function get_attachment_id($url) {
 		$attachment_id = 0;
 		$dir = wp_upload_dir();
-		if ( false !== strpos( $url, $dir['baseurl'] . '/' ) ) { // Is URL in uploads directory?
-			$file = basename( urldecode( $url ) );
+		$uploadsPath = parse_url($dir['baseurl'])['path'];
+		$isInUploadDirectory = strpos($url, $uploadsPath . '/') !== false;
+		$wpHost = parse_url($dir['baseurl'])['host'];
+		$isNotExternalDomain = strpos($url, $wpHost . '/') !== false;
+		if ($isInUploadDirectory && $isNotExternalDomain) {
+			$file = basename(urldecode($url));
 			$query_args = array(
 				'post_type'   => 'attachment',
 				'post_status' => 'inherit',
@@ -227,10 +261,22 @@ class wp_pwa
 		$dom->load($data->data['content']['rendered']);
 		$imgIds = [];
 		foreach($dom->find('img') as $image) {
-			$id = $this->get_attachment_id($image->src);
-			if ($id !== 0) {
-				$image->setAttribute('data-attachment-id', $id);
-				$imgIds[] = intval($id);
+			$dataAttachmentId = $image->getAttribute('data-attachment-id');
+			$class = $image->getAttribute('class');
+			preg_match('/\bwp-image-(\d+)\b/', $class, $wpImage);
+			if ($dataAttachmentId) {
+				$imgIds[] = intval($dataAttachmentId);
+			} elseif ($wpImage && isset($wpImage[1])) {
+				$image->setAttribute('data-attachment-id', $wpImage[1]);
+				$image->setAttribute('data-attachment-id-source', 'wp-image-class');
+				$imgIds[] = intval($wpImage[1]);
+			} else {
+				$id = $this->get_attachment_id($image->src);
+				if ($id !== 0) {
+					$image->setAttribute('data-attachment-id', $id);
+					$image->setAttribute('data-attachment-id-source', 'wp-query');
+					$imgIds[] = intval($id);
+				}
 			}
 		}
 		if (sizeof($imgIds) > 0) {
@@ -254,14 +300,16 @@ class wp_pwa
 	}
 
 	function purify_html($data) {
-		require_once(plugin_dir_path(__FILE__) . '/libs/html5purifier.php');
+		$data->data['title']['text'] =
+			strip_tags(html_entity_decode($data->data['title']['rendered']));
+		$data->data['excerpt']['text'] =
+			strip_tags(html_entity_decode($data->data['excerpt']['rendered']));
 
-		$purifier = load_html5purifier();
-
-		$clean_html = $purifier->purify($data->data['content']['rendered']);
-
-		if (!empty($clean_html)) {
-			$data->data['content']['rendered'] = $clean_html;
+		require_once(plugin_dir_path(__FILE__) . '/libs/purifier.php');
+		$purifier = load_purifier();
+		$purifiedContent = $purifier->purify($data->data['content']['rendered']);
+		if (!empty($purifiedContent)) {
+			$data->data['content']['rendered'] = $purifiedContent;
 		}
 
 		return $data;
@@ -281,9 +329,39 @@ class wp_pwa
 	*  @return	N/A
 	*/
 
+	function rrmdir($dir) {
+		if (is_dir($dir)) {
+		  $objects = scandir($dir);
+		  foreach ($objects as $object) {
+			if ($object != "." && $object != "..") {
+			  if (filetype($dir . DS . $object) == "dir"){
+				 rrmdir($dir . DS . $object);
+			  }else{ 
+				 unlink($dir . DS . $object);
+			  }
+			}
+		  }
+		  reset($objects);
+		  rmdir($dir);
+	   }
+	}
+
+	function purge_htmlpurifier_cache() {
+		$upload = wp_upload_dir();
+		$upload_base = $upload['basedir'];
+		$htmlpurifier_dir = $upload_base . DS . 'frontity'. DS . 'htmlpurifier';
+		$this->rrmdir($htmlpurifier_dir . DS . 'HTML');
+		$this->rrmdir($htmlpurifier_dir . DS . 'CSS');
+		$this->rrmdir($htmlpurifier_dir . DS . 'URI');
+		wp_send_json( array(
+		  'status' => 'ok',
+		));
+	  }
+	
+
 	function init()
 	{
-		// requires
+		
 	}
 
 	//settings are being updated via AJAX, this validator is not used now
@@ -719,6 +797,19 @@ class wp_pwa
 		$ampServer = $settings['wp_pwa_amp_server'];
 		$ampForced = false;
 		$dev = 'false';
+		$excludes = isset($settings['wp_pwa_excludes']) ? $settings['wp_pwa_excludes'] : array();
+		$exclusion = false;
+
+		if (sizeof($excludes) !== 0) {
+		  foreach ($excludes as $regex) {
+		    $output = array();
+		    $regex = str_replace('/', '\/', $regex);
+		    preg_match('/' . $regex . '/', $url, $output);
+		    if (sizeof($output) > 0) {
+		      $exclusion = true;
+		    }
+		  }
+		}
 
 		if (isset($_GET['amp']) && $_GET['amp'] === 'true') {
 			$ampForced = true;
@@ -731,7 +822,7 @@ class wp_pwa
 		if (isset($_GET['dev'])) $dev = $_GET['dev'];
 
 		//posts
-		if ($ampForced || (isset($wp_pwa_amp) && ($wp_pwa_amp !== 'disabled') && (is_single()))) {
+		if ($ampForced || (isset($wp_pwa_amp) && ($wp_pwa_amp !== 'disabled') && (is_single()) && $exclusion === false)) {
 			$singleId = get_queried_object_id();
 			$permalink = get_permalink($singleId);
 			$path = parse_url($permalink, PHP_URL_PATH);

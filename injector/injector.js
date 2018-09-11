@@ -8,8 +8,8 @@
   var isAndroidMobile = /android.+chrome\/(?![123]\d\.)(.+mobile)/i; // from Chrome 40
   var isAndroidTablet = /android.+chrome\/(?![123]\d\.)(?!.+mobile)/i; // from Chrome 40
 
-  window['wp-pwa'].dynamicUrl = window['wp-pwa'].dynamicUrl.replace(/\/$/g, '') + '/';
-  window['wp-pwa'].staticUrl = window['wp-pwa'].staticUrl.replace(/\/$/g, '') + '/';
+  window['wp-pwa'].ssr = window['wp-pwa'].ssr.replace(/\/$/g, '') + '/';
+  window['wp-pwa'].static = window['wp-pwa'].static.replace(/\/$/g, '') + '/';
 
   var isMobile = function(ua) {
     return isIphone.test(ua) || isAndroidMobile.test(ua);
@@ -59,21 +59,20 @@
     var options = {
       tag: 'script',
       id: 'wppwaClassic',
-      src: window['wp-pwa'].dynamicUrl + 'dynamic/wp-org-connection-app-extension-worona/go-back-to-wppwa.js',
+      src: window['wp-pwa'].ssr + 'dynamic/wp-org-connection-app-extension-worona/go-back-to-wppwa.js',
     };
     loadScript(options);
-  } else if (!readCookie('wppwaInjectorFailed') && navigator && (isMobile(navigator.userAgent) || isTablet(navigator.userAgent))) {
+  } else if (!readCookie('wppwaInjectorFailed') && navigator && (isMobile(navigator.userAgent))) {
     window.stop();
     var html =
-      '%3Chead%3E%0A%20%20%3Clink%20rel%3D%22manifest%22%20href%3D%22%23%23dynamicUrl%23%23dynamic/wordcamp-theme/%23%23siteId%23%23/manifest.json%22%7D%20/%3E%0A%20%20%3Cstyle%3E%0A%20%20%20%20@keyframes%20progress%20%7B%0A%20%20%20%20%20%20from%20%7B%0A%20%20%20%20%20%20%20%20width%3A%200%25%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20to%20%7B%0A%20%20%20%20%20%20%20%20width%3A%2080%25%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%3C/style%3E%0A%3C/head%3E%0A%0A%3Cbody%20style%3D%22height%3A100%25%3Bbackground%3A%23FDFDFD%3Bdisplay%3Aflex%3Bjustify-content%3Acenter%3Balign-items%3Acenter%3Bmargin%3A0%3B%22%3E%0A%20%20%3Cdiv%20style%3D%22animation%3A6s%20ease-out%201s%201%20forwards%20progress%3Bheight%3A1px%3Bbackground%3A%23000%3B%22%3E%3C/div%3E%0A%3C/body%3E';
-    document.write(unescape(html).replace('##dynamicUrl##', window['wp-pwa'].dynamicUrl).replace('##siteId##', window['wp-pwa'].siteId));
+    '%3Chead%3E%0A%20%20%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%20%20@keyframes%20progress%20%7B%0A%20%20%20%20%20%20%20%20%20%20from%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%200%25%3B%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20to%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2080%25%3B%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%3C/style%3E%0A%20%20%20%20%3C/head%3E%0A%0A%20%20%20%20%3Cbody%20style%3D%22height%3A100%25%3Bbackground%3A%23FDFDFD%3Bdisplay%3Aflex%3Bjustify-content%3Acenter%3Balign-items%3Acenter%3Bmargin%3A0%3B%22%3E%0A%20%20%20%20%20%20%3Cdiv%20style%3D%22animation%3A6s%20ease-out%201s%201%20forwards%20progress%3Bheight%3A1px%3Bbackground%3A%23000%3B%22%3E%3C/div%3E%0A%20%20%20%20%3C/body%3E';
+    document.write(unescape(html));
 
     var query = '?siteId=' + window['wp-pwa'].siteId
       + '&type=' + window['wp-pwa'].type
       + '&id=' + window['wp-pwa'].id
       + '&dev=' + window['wp-pwa'].dev
-      + '&staticUrl=' + encodeURIComponent(window['wp-pwa'].staticUrl)
-      + '&dynamicUrl=' + encodeURIComponent(window['wp-pwa'].dynamicUrl)
+      + '&static=' + encodeURIComponent(window['wp-pwa'].static)
       + '&env=' + window['wp-pwa'].env
       + '&perPage=' + window['wp-pwa'].perPage
       + '&device=' + (isTablet((navigator && navigator.userAgent)) ? 'tablet' : 'mobile')
@@ -125,7 +124,7 @@
         setCookie('wppwaInjectorFailed', 'true', cookieExpire);
         window.location.reload(true);
       };
-      xhr.open('GET', window['wp-pwa'].dynamicUrl + query, true);
+      xhr.open('GET', window['wp-pwa'].ssr + query, true);
       xhr.send();
     };
     loadWorona();
