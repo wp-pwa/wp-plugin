@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/frontity/wp-plugin/compare/v1.5.0...v1.5.1) (2018-09-11)
+
+
+### Bug Fixes
+
+* **version:** update version in php files and use trunk ([150ddf6](https://github.com/frontity/wp-plugin/commit/150ddf6))
+
 # [1.5.0](https://github.com/frontity/wp-plugin/compare/v1.4.15...v1.5.0) (2018-09-11)
 
 
