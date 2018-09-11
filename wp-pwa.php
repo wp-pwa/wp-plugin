@@ -59,6 +59,13 @@ class wp_pwa
     add_action('wp_head', array($this,'amp_add_canonical'));
 
     add_filter('wp_get_attachment_link', array( $this, 'add_id_to_gallery_images'), 10, 2);
+    add_filter('wp_get_attachment_image_attributes', array( $this, 'add_id_to_gallery_image_attributes'), 10, 2);
+	}
+
+	function add_id_to_gallery_image_attributes($attrs, $attachment) {
+		$attrs['data-attachment-id'] = $attachment->ID;
+		$attrs['data-attachment-id-source'] = 'image-attributes-hook';
+		return $attrs;
   }
 
   function add_id_to_gallery_images($html, $attachment_id) {
@@ -66,7 +73,7 @@ class wp_pwa
     $html = str_replace(
       '<img ',
       sprintf(
-        '<img data-attachment-id="%1$d" ',
+        '<img data-attachment-id="%1$d" data-attachment-id-source="attachment-link-hook"',
         $attachment_id
       ),
       $html
@@ -246,11 +253,13 @@ class wp_pwa
         $imgIds[] = intval($dataAttachmentId);
       } elseif ($wpImage && isset($wpImage[1])) {
         $image->setAttribute('data-attachment-id', $wpImage[1]);
+        $image->setAttribute('data-attachment-id-source', 'wp-image-class');
         $imgIds[] = intval($wpImage[1]);
       } else {
         $id = $this->get_attachment_id($image->src);
         if ($id !== 0) {
           $image->setAttribute('data-attachment-id', $id);
+          $image->setAttribute('data-attachment-id-source', 'wp-query');
           $imgIds[] = intval($id);
         }
       }
