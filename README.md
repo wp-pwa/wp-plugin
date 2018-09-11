@@ -4,7 +4,7 @@
 **Author URI:** https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description  
 **Requires at least:** 4.4  
 **Tested up to:** 4.9.6  
-**Stable tag:** 1.4.10  
+**Stable tag:** 1.4.15  
 **License:** GPLv3  
 **License URI:** http://www.gnu.org/licenses/gpl.html  
 
