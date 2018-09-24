@@ -59,6 +59,7 @@ class wp_pwa
 		add_action('wp_ajax_wp_pwa_change_siteid',array($this,'change_siteid_ajax'));
 		add_action('wp_ajax_wp_pwa_change_advanced_settings',array($this,'change_advanced_settings_ajax'));
 		add_action('wp_ajax_wp_pwa_save_excludes',array($this,'save_excludes_ajax'));
+		add_action('wp_ajax_wp_pwa_save_api_fields',array($this,'save_api_fields_ajax'));
 		add_action('wp_ajax_wp_pwa_purge_htmlpurifier_cache', array($this,'purge_htmlpurifier_cache'));
 
 		add_action('plugins_loaded', array($this,'wp_rest_api_plugin_is_installed'));
@@ -725,6 +726,24 @@ class wp_pwa
 		));
 	}
 
+	function save_api_fields_ajax() {
+		if ($_POST['wp_pwa_api_fields'] === '') {
+			$wp_pwa_api_fields = array();
+		} else {
+			$apiFields = stripslashes($_POST['wp_pwa_api_fields']);
+			$wp_pwa_api_fields = explode("\n", $apiFields);
+		}
+
+		$settings = get_option('wp_pwa_settings');
+		$settings['wp_pwa_api_fields'] = $wp_pwa_api_fields;
+
+		update_option('wp_pwa_settings', $settings);
+
+		wp_send_json( array(
+			'status' => 'ok',
+		));
+	}
+
 	//Checks if the rest-api plugin is installed
 	public function wp_rest_api_plugin_is_installed() {
 		if ( ! function_exists('get_plugins') ) {
@@ -863,6 +882,10 @@ function wp_pwa()
 	if( !isset($wp_pwa) )
 	{
 		$wp_pwa = new wp_pwa();
+	}
+	
+	if (class_exists( 'WP_REST_Controller')){
+		require_once('libs/class-rest-api-filter-fields.php');
 	}
 
 	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path( __FILE__ ));

@@ -313,6 +313,8 @@
 				<div id="wp-pwa-advanced-settings-lateral" style="text-align: right;" <?php echo ($synced_with_wp_pwa?'':'style="display:none;"');?>>
 					<p>
 						<hr>
+						<a class="open-api-fields" href="#" style="font-size: 10px; text-decoration: underline;">WP API Fields</a>
+						<span style="font-size: 10px; margin: 0 5px 0 5px;"> </span>
 						<a class="open-excludes" href="#" style="font-size: 10px; text-decoration: underline;">PWA Excludes</a>
 						<span style="font-size: 10px; margin: 0 5px 0 5px;"> </span>
 						<a class="open-advanced-settings" href="#" style="font-size: 10px; text-decoration: underline;">Advanced settings</a>
@@ -402,6 +404,42 @@
 					<br>
 					<p>
 						<a href="#" id="save-excludes"class="button button-lg">Save</a>
+					</p>
+			  </div>
+		 </article>
+		 <article id="lateral-api-fields" class="message is-warning" style="display:none;">
+			 <div class="message-header">
+					<nav class="level">
+						<div class="level-left">
+							<strong>Whitelist WP API fields</strong>
+						</div>
+						<div class="level-right">
+							<a href="#" class="close-api-fields" style="color:inherit"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+						</div>
+					</nav>
+			  </div>
+			  <div class="message-body">
+					<p><strong>Important:</strong> Add only one field per line.</p>
+					<br>
+					<p>
+						<?php
+							$wp_pwa_api_fields = $settings['wp_pwa_api_fields'];
+
+							$excludes_output = '';
+							for( $i=0; $i<count($wp_pwa_api_fields); $i++ ) {
+								$api_fields_output .= $wp_pwa_api_fields[$i];
+
+								if($i + 1 < (count($wp_pwa_api_fields))){
+									$api_fields_output .= "\n";
+								}
+							}
+						?>
+						<textarea id="api-fields" class="textarea"><?php echo $api_fields_output; ?></textarea>
+					</p>
+					<p><em>* Delete all fields to deactivate the whitelisting.</em></p>
+					<br>
+					<p>
+						<a href="#" id="save-api-fields"class="button button-lg">Save</a>
 					</p>
 			  </div>
 		 </article>

@@ -52,10 +52,22 @@ jQuery(document).on('ready', function () {
       jQuery('#lateral-excludes').toggle();
     });
 
+    jQuery('.open-api-fields').on('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      jQuery('#lateral-api-fields').toggle();
+    });
+
     jQuery('.close-excludes').on('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
       jQuery('#lateral-excludes').hide();
+    });
+
+    jQuery('.close-api-fields').on('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      jQuery('#lateral-api-fields').hide();
     });
 
     jQuery('.open-advanced-settings').on('click', function (e) {
@@ -290,6 +302,34 @@ jQuery(document).on('ready', function () {
             jQuery('#save-excludes').removeClass('is-loading');
             jQuery('#lateral-excludes').hide();
 
+          }
+        },
+        error: function (response) {
+          console.log("ERROR: Excludes couldn't be saved");
+          jQuery('#save-excludes').removeClass('is-loading');
+        }
+      });
+    });
+
+    jQuery('#save-api-fields').on('click', function(e) {
+      jQuery('#save-api-fields').addClass('is-loading');
+      e.preventDefault();
+      e.stopPropagation();
+
+      var apiFields = jQuery('textarea#api-fields').val();
+      apiFields = apiFields.split('\n').filter(url => !/^\s*$/.test(url)).join('\n');
+
+      jQuery.ajax({
+        url: ajaxurl,
+        method: "POST",
+        data: {
+            action: 'wp_pwa_save_api_fields',
+            wp_pwa_api_fields: apiFields
+        },
+        success: function (response) {
+          if (response.hasOwnProperty('status') && response.status == 'ok' ) {
+            jQuery('#save-api-fields').removeClass('is-loading');
+            jQuery('#lateral-api-fields').hide();
           }
         },
         error: function (response) {
