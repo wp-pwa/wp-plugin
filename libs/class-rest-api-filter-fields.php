@@ -97,8 +97,6 @@ public function filter_magic( $response, $post, $request ){
   $filters = isset($settings['wp_pwa_api_fields']) ? $settings['wp_pwa_api_fields'] : array();  
 
   if(sizeof($filters) !== 0){
-
-    $filters[] = '_embedded';
     // Create a new array
     $filtered_data = array();
 
@@ -126,7 +124,7 @@ public function filter_magic( $response, $post, $request ){
     // Foreach property inside the data, check if the key is in the filter.
     foreach ($data as $key => $value) {
       // If the key is in the $filters array, add it to the $filtered_data
-      if (in_array($key, $singleFilters)) {
+      if (!in_array($key, $singleFilters)) {
         $filtered_data[$key] = $value;
       }
     }
@@ -137,7 +135,7 @@ public function filter_magic( $response, $post, $request ){
     foreach ($childFilters as $childFilter) {
       $val = $this->array_path_value($data,$childFilter);
       if($val != null){
-        $this->set_array_path_value($filtered_data,$childFilter,$val);
+        $this->unset_array_path_value($filtered_data,$childFilter,$val);
       }
     }
 
@@ -163,6 +161,20 @@ function singleValueFilterArray($var){
 // Function to filter the fields array
 function childValueFilterArray($var){
   return (strpos($var,'.') !=false);
+}
+
+function unset_array_path_value(&$array, $path) {
+  $path = explode('.', $path);
+  $temp = & $array;
+
+  foreach($path as $key) {
+      if(isset($temp[$key])){
+          if(!($key == end($path))) $temp = &$temp[$key];
+      } else {
+         return false; //invalid path
+      }
+  }
+  unset($temp[end($path)]);
 }
 
 // found on http://codeaid.net/php/get-values-of-multi-dimensional-arrays-using-xpath-notation

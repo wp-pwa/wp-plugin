@@ -411,7 +411,7 @@
 			 <div class="message-header">
 					<nav class="level">
 						<div class="level-left">
-							<strong>Whitelist WP API fields</strong>
+							<strong>Filter WP API fields</strong>
 						</div>
 						<div class="level-right">
 							<a href="#" class="close-api-fields" style="color:inherit"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
@@ -436,7 +436,7 @@
 						?>
 						<textarea id="api-fields" class="textarea"><?php echo $api_fields_output; ?></textarea>
 					</p>
-					<p><em>* Delete all fields to deactivate the whitelisting.</em></p>
+					<p><em>* Use dot notation for nested fields (i.e: title.rendered).</em></p>
 					<br>
 					<p>
 						<a href="#" id="save-api-fields"class="button button-lg">Save</a>
