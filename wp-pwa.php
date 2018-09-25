@@ -6,7 +6,7 @@ Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
 Version: 1.5.1
 Author: WordPress PWA
 Author URI:
-License: GPL v3
+License: GPL v3.0
 Copyright: Worona Labs SL
 */
 
