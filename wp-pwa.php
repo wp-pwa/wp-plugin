@@ -8,6 +8,7 @@ Author: WordPress PWA
 Author URI:
 License: GPL v3.0
 Copyright: Worona Labs SL
+
 */
 
 // Define the directory seperator if it isn't already
