@@ -1,3 +1,11 @@
+# [1.6.0](https://github.com/frontity/wp-plugin/compare/v1.5.1...v1.6.0) (2018-09-25)
+
+
+### Features
+
+* **api-fields:** add option to whitelist api fields ([867d759](https://github.com/frontity/wp-plugin/commit/867d759))
+* **api-fields:** change whitelist for blacklist ([a1d0811](https://github.com/frontity/wp-plugin/commit/a1d0811))
+
 ## [1.5.1](https://github.com/frontity/wp-plugin/compare/v1.5.0...v1.5.1) (2018-09-11)
 
 
