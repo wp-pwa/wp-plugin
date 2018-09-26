@@ -12,7 +12,8 @@
     },
     {
       "path": "@semantic-release/git",
-      "message": "chore(release): ${nextRelease.version}"
+      "message": "chore(release): ${nextRelease.version}",
+      "assets": ["CHANGELOG.md", "package.json", "package-lock.json", "wp-pwa.php"]
     }
   ],
   "publish": [],
