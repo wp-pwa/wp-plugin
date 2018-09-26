@@ -5,7 +5,7 @@
     "@semantic-release/npm",
     {
       "path": "@semantic-release/exec",
-      "cmd": "node release/prepare.js"
+      "cmd": "npm run sr:prepare"
     },
     {
       "path": "@semantic-release/git",
@@ -22,7 +22,7 @@
   "success": [
     {
       "path": "@semantic-release/exec",
-      "cmd": "node release/prepare.js"
+      "cmd": "npm run sr:success"
     }
   ],
   "fail": [],
