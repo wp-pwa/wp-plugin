@@ -4,6 +4,14 @@
 ### Bug Fixes
 
 * **semantic-release:** fix json ([af0490b](https://github.com/frontity/wp-plugin/commit/af0490b))
+* **semantic-release:** reorder and add empty steps ([f008b2f](https://github.com/frontity/wp-plugin/commit/f008b2f))
+
+## [1.6.1](https://github.com/frontity/wp-plugin/compare/v1.6.0...v1.6.1) (2018-09-26)
+
+
+### Bug Fixes
+
+* **semantic-release:** fix json ([af0490b](https://github.com/frontity/wp-plugin/commit/af0490b))
 
 # [1.6.0](https://github.com/frontity/wp-plugin/compare/v1.5.1...v1.6.0) (2018-09-25)
 
