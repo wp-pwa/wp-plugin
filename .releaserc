@@ -1,7 +1,6 @@
 {
   "verifyConditions": [
     "@semantic-release/changelog",
-    "@semantic-release/github",
     "@semantic-release/git"
   ],
   "prepare": [
@@ -11,10 +10,11 @@
       "path": "@semantic-release/git",
       "message": "chore(release): ${nextRelease.version}"
     }
+    {
+      "path": "@semantic-release/exec",
+      "cmd": "node release.js"
+    }
   ],
-  "publish": ["@semantic-release/github"],
-  "success": ["@semantic-release/github"],
-  "fail": ["@semantic-release/github"],
   "branch": "master",
   "npmPublish": false,
   "noCi": true
