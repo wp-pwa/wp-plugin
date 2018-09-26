@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/frontity/wp-plugin/compare/v1.6.1...v1.6.2) (2018-09-26)
+
+
+### Bug Fixes
+
+* **semantic-release:** add wp-pwa.php to git assets ([a86fb4d](https://github.com/frontity/wp-plugin/commit/a86fb4d))
+
 ## [1.6.1](https://github.com/frontity/wp-plugin/compare/v1.6.0...v1.6.1) (2018-09-26)
 
 
