@@ -9,6 +9,7 @@ const connect = require('simple-git/promise');
         await repo.checkout('dev');
         await repo.raw(['rebase', '--root', 'dev', '--onto', 'master']);
         await repo.push('origin', 'dev', `--repo=${authOrigin}`);
+        await repo.push('origin', 'master', `--repo=${authOrigin}`);
         console.log('Rebase finished.');
       }
       catch (error) {
