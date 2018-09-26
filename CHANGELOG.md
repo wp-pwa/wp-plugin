@@ -1,3 +1,10 @@
+## [1.6.4](https://github.com/frontity/wp-plugin/compare/v1.6.3...v1.6.4) (2018-09-26)
+
+
+### Bug Fixes
+
+* **semantic-release:** add github back and finish automation ([825afa0](https://github.com/frontity/wp-plugin/commit/825afa0))
+
 ## [1.6.3](https://github.com/frontity/wp-plugin/compare/v1.6.2...v1.6.3) (2018-09-26)
 
 
