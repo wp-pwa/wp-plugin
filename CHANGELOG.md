@@ -1,3 +1,12 @@
+## [1.6.3](https://github.com/frontity/wp-plugin/compare/v1.6.2...v1.6.3) (2018-09-26)
+
+
+### Bug Fixes
+
+* **semantic-release:** add push for master as well ([d223345](https://github.com/frontity/wp-plugin/commit/d223345))
+* **semantic-release:** add rebase ([4577fc8](https://github.com/frontity/wp-plugin/commit/4577fc8))
+* **semantic-release:** add success cmd ([2cde44e](https://github.com/frontity/wp-plugin/commit/2cde44e))
+
 ## [1.6.2](https://github.com/frontity/wp-plugin/compare/v1.6.1...v1.6.2) (2018-09-26)
 
 
