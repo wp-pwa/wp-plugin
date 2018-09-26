@@ -1,5 +1,9 @@
 {
-  "verifyConditions": ["@semantic-release/changelog", "@semantic-release/git"],
+  "verifyConditions": [
+    "@semantic-release/changelog",
+    "@semantic-release/github",
+    "@semantic-release/git"
+  ],
   "prepare": [
     "@semantic-release/changelog",
     "@semantic-release/npm",
@@ -18,14 +22,15 @@
       ]
     }
   ],
-  "publish": [],
+  "publish": ["@semantic-release/github"],
   "success": [
     {
       "path": "@semantic-release/exec",
       "cmd": "npm run sr:success"
-    }
+    },
+    "@semantic-release/github"
   ],
-  "fail": [],
+  "fail": ["@semantic-release/github"],
 
   "branch": "master",
   "npmPublish": false,
