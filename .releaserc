@@ -9,7 +9,7 @@
     {
       "path": "@semantic-release/git",
       "message": "chore(release): ${nextRelease.version}"
-    }
+    },
     {
       "path": "@semantic-release/exec",
       "cmd": "node release.js"
