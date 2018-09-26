@@ -8,7 +8,8 @@
     "grunt": "grunt",
     "cz": "git-cz",
     "semantic-release": "env-cmd .env.local semantic-release",
-    "change-version": "node release.js"
+    "sr:prepare": "env-cmd .env.local node release/prepare.js",
+    "sr:success": "env-cmd .env.local node release/success.js"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "husky": "^1.0.0",
     "replace-in-file": "^3.4.2",
     "semantic-release": "^15.9.16",
-    "semantic-release-cli": "^4.0.8"
+    "semantic-release-cli": "^4.0.8",
+    "simple-git": "^1.102.0"
   }
 }

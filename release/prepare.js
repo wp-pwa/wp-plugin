@@ -1,5 +1,5 @@
 const replace = require('replace-in-file');
-const packageJson = require('./package.json');
+const packageJson = require('../package.json');
 
 (async () => {
     const options = {

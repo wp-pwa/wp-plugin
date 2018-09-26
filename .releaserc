@@ -1,23 +1,30 @@
 {
-  "verifyConditions": [
-    "@semantic-release/changelog",
-    "@semantic-release/git"
-  ],
+  "verifyConditions": ["@semantic-release/changelog", "@semantic-release/git"],
   "prepare": [
     "@semantic-release/changelog",
     "@semantic-release/npm",
     {
       "path": "@semantic-release/exec",
-      "cmd": "node release.js"
+      "cmd": "npm run sr:prepare"
     },
     {
       "path": "@semantic-release/git",
       "message": "chore(release): ${nextRelease.version}",
-      "assets": ["CHANGELOG.md", "package.json", "package-lock.json", "wp-pwa.php"]
+      "assets": [
+        "CHANGELOG.md",
+        "package.json",
+        "package-lock.json",
+        "wp-pwa.php"
+      ]
     }
   ],
   "publish": [],
-  "success": [],
+  "success": [
+    {
+      "path": "@semantic-release/exec",
+      "cmd": "npm run sr:success"
+    }
+  ],
   "fail": [],
 
   "branch": "master",
