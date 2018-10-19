@@ -78,6 +78,20 @@ class wp_pwa
 		add_filter('wp_get_attachment_image_attributes', array( $this, 'add_id_to_gallery_image_attributes'), 10, 2);
 	}
 
+	function update_image_id_transient_keys( $new_transient_key ) {
+		$transient_keys = get_option( 'image_id_transient_keys' );
+		$transient_keys[]= $new_transient_key;
+		update_option( 'image_id_transient_keys', $transient_keys );
+	}
+
+	function purge_image_id_transient_keys() {
+		$transient_keys = get_option( 'image_id_transient_keys' );
+		foreach( $transient_keys as $t ) {
+			delete_transient( $t );
+		}
+		update_option( 'image_id_transient_keys', array() );
+	} 
+
 	function add_id_to_gallery_image_attributes($attrs, $attachment) {
 		$attrs['data-attachment-id'] = $attachment->ID;
 		$attrs['data-attachment-id-source'] = 'image-attributes-hook';
@@ -99,7 +113,7 @@ class wp_pwa
 	}
 	
 	function add_custom_post_types_filters($post_type) {
-		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9);
+		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9, 3);
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'), 10);
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids'), 10);
 		register_rest_field($post_type, 'latest',
@@ -218,41 +232,54 @@ class wp_pwa
 		return $data;
 	}
 
-	function get_attachment_id($url) {
-		$attachment_id = 0;
-		$dir = wp_upload_dir();
-		$uploadsPath = parse_url($dir['baseurl'])['path'];
-		$isInUploadDirectory = strpos($url, $uploadsPath . '/') !== false;
-		$wpHost = parse_url($dir['baseurl'])['host'];
-		$isNotExternalDomain = strpos($url, $wpHost . '/') !== false;
-		if ($isInUploadDirectory && $isNotExternalDomain) {
-			$file = basename(urldecode($url));
-			$query_args = array(
-				'post_type'   => 'attachment',
-				'post_status' => 'inherit',
-				'fields'      => 'ids',
-				'meta_query'  => array(
-					array(
-						'value'   => $file,
-						'compare' => 'LIKE',
-						'key'     => '_wp_attachment_metadata',
-					),
-				)
-			);
-			$query = new WP_Query( $query_args );
-			if ( $query->have_posts() ) {
-				foreach ( $query->posts as $post_id ) {
-					$meta = wp_get_attachment_metadata( $post_id );
-					$original_file       = basename( $meta['file'] );
-					$cropped_image_files = wp_list_pluck( $meta['sizes'], 'file' );
-					if ( $original_file === $file || in_array( $file, $cropped_image_files ) ) {
-						$attachment_id = $post_id;
-						break;
+	function get_attachment_id( $url ) {
+		$transient_name = 'frt_' . md5( $url );
+		$attachment_id = get_transient( $transient_name );
+		$transient_miss = !$attachment_id;
+
+		if ( $transient_miss ) {
+			$attachment_id = 0;
+			$dir = wp_upload_dir();
+			$uploadsPath = parse_url($dir['baseurl'])['path'];
+			$isInUploadDirectory = strpos($url, $uploadsPath . '/') !== false;
+			$wpHost = parse_url($dir['baseurl'])['host'];
+			$isNotExternalDomain = strpos($url, $wpHost . '/') !== false;
+			if ($isInUploadDirectory && $isNotExternalDomain) {
+				$file = basename(urldecode($url));
+				$query_args = array(
+					'post_type'   => 'attachment',
+					'post_status' => 'inherit',
+					'fields'      => 'ids',
+					'meta_query'  => array(
+						array(
+							'value'   => $file,
+							'compare' => 'LIKE',
+							'key'     => '_wp_attachment_metadata',
+						),
+					)
+				);
+				$query = new WP_Query( $query_args );
+				if ( $query->have_posts() ) {
+					foreach ( $query->posts as $post_id ) {
+						$meta = wp_get_attachment_metadata( $post_id );
+						$original_file       = basename( $meta['file'] );
+						$cropped_image_files = wp_list_pluck( $meta['sizes'], 'file' );
+						if ( $original_file === $file || in_array( $file, $cropped_image_files ) ) {
+							$attachment_id = $post_id;
+							break;
+						}
 					}
 				}
 			}
+
+			set_transient( $transient_name, $attachment_id, DAY_IN_SECONDS );
+			$this->update_image_id_transient_keys( $transient_name );
 		}
-		return $attachment_id;
+
+		return array(
+			'id'   => $attachment_id,
+			'miss' => $transient_miss,
+		);
 	}
 
 	function add_image_ids($data) {
@@ -272,10 +299,12 @@ class wp_pwa
 				$image->setAttribute('data-attachment-id-source', 'wp-image-class');
 				$imgIds[] = intval($wpImage[1]);
 			} else {
-				$id = $this->get_attachment_id($image->src);
+				$result = $this->get_attachment_id($image->src);
+				$id = $result['id'];
+				$miss = $result['miss'];
 				if ($id !== 0) {
 					$image->setAttribute('data-attachment-id', $id);
-					$image->setAttribute('data-attachment-id-source', 'wp-query');
+					$image->setAttribute('data-attachment-id-source', 'wp-query-transient-' . ($miss ? 'miss' : 'hit'));
 					$imgIds[] = intval($id);
 				}
 			}
@@ -300,7 +329,11 @@ class wp_pwa
 		return $data;
 	}
 
-	function purify_html($data) {
+	function purify_html($data, $post_type, $request) {
+		$disableHtmlPurifier = $request->get_param('disableHtmlPurifier');
+
+		if ($disableHtmlPurifier === 'true') return $data;
+
 		$data->data['title']['text'] =
 			strip_tags(html_entity_decode($data->data['title']['rendered']));
 		$data->data['excerpt']['text'] =
