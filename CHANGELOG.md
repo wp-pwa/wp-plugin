@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/frontity/wp-plugin/compare/v1.7.0...v1.7.1) (2018-10-19)
+
+
+### Bug Fixes
+
+* **image-ids:** do not treat ids equal zero as a transient cache miss ([2e15a5c](https://github.com/frontity/wp-plugin/commit/2e15a5c))
+
 # [1.7.0](https://github.com/frontity/wp-plugin/compare/v1.6.4...v1.7.0) (2018-10-19)
 
 
