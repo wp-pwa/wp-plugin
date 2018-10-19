@@ -1,3 +1,11 @@
+# [1.7.0](https://github.com/frontity/wp-plugin/compare/v1.6.4...v1.7.0) (2018-10-19)
+
+
+### Features
+
+* **wp-pwa:** add query to disable htmlPurifier ([b515d51](https://github.com/frontity/wp-plugin/commit/b515d51))
+* **wp-pwa:** use transients when getting image ids from wp-query ([a5bea25](https://github.com/frontity/wp-plugin/commit/a5bea25))
+
 ## [1.6.4](https://github.com/frontity/wp-plugin/compare/v1.6.3...v1.6.4) (2018-09-26)
 
 
