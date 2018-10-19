@@ -99,7 +99,7 @@ class wp_pwa
 	}
 	
 	function add_custom_post_types_filters($post_type) {
-		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9);
+		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9, 3);
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'), 10);
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids'), 10);
 		register_rest_field($post_type, 'latest',
@@ -300,7 +300,11 @@ class wp_pwa
 		return $data;
 	}
 
-	function purify_html($data) {
+	function purify_html($data, $post_type, $request) {
+		$disableHtmlPurifier = $request->get_param('disableHtmlPurifier');
+
+		if ($disableHtmlPurifier === 'true') return $data;
+
 		$data->data['title']['text'] =
 			strip_tags(html_entity_decode($data->data['title']['rendered']));
 		$data->data['excerpt']['text'] =
