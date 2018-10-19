@@ -235,7 +235,7 @@ class wp_pwa
 	function get_attachment_id( $url ) {
 		$transient_name = 'frt_' . md5( $url );
 		$attachment_id = get_transient( $transient_name );
-		$transient_miss = !$attachment_id;
+		$transient_miss = !is_numeric($attachment_id);
 
 		if ( $transient_miss ) {
 			$attachment_id = 0;
