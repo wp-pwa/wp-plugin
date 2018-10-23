@@ -35,7 +35,7 @@ if (($forceFrontpage === true && is_front_page()) || is_home()) {
   }
 } elseif (is_post_type_archive()) {
   $queriedObject = get_queried_object();
-  if ((isset($queriedObject->show_in_rest)) && (isset($queriedObject->rest_base)) &&
+  if ((isset($queriedObject->show_in_rest)) &&
   ($queriedObject->show_in_rest === true)) {
     $type = 'latest';
     $id = $queriedObject->name;
