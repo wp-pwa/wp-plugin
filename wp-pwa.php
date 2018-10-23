@@ -169,7 +169,8 @@ class wp_pwa
 			if (post_type_exists($cpt)) {
 				$cpt_object = get_post_type_object($cpt);
 				if ($cpt_object->show_in_rest) {
-					if (get_option('show_on_front') === 'page' &&
+					if ($cpt === 'post' &&
+							get_option('show_on_front') === 'page' &&
 							get_option('wp_pwa_settings')['wp_pwa_force_frontpage']) {
 						$link = get_option('home');
 					} else {
