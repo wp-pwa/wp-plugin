@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/frontity/wp-plugin/compare/v1.7.2...v1.7.3) (2018-10-24)
+
+
+### Bug Fixes
+
+* **purifier:** add exceptions to remove empty elements ([07438e6](https://github.com/frontity/wp-plugin/commit/07438e6))
+
 ## [1.7.2](https://github.com/frontity/wp-plugin/compare/v1.7.1...v1.7.2) (2018-10-24)
 
 
