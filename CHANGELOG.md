@@ -1,3 +1,11 @@
+## [1.7.2](https://github.com/frontity/wp-plugin/compare/v1.7.1...v1.7.2) (2018-10-24)
+
+
+### Bug Fixes
+
+* **injector:** remove the check for the REST API base slug of cpt's ([55b21d0](https://github.com/frontity/wp-plugin/commit/55b21d0))
+* **latest-link:** use home link only if the custom post type is 'post' ([5182bd5](https://github.com/frontity/wp-plugin/commit/5182bd5))
+
 ## [1.7.1](https://github.com/frontity/wp-plugin/compare/v1.7.0...v1.7.1) (2018-10-19)
 
 
