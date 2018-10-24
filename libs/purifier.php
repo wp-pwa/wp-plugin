@@ -36,6 +36,10 @@ function load_purifier() {
 
   // Rule: Remove empty elements.
   $config->set('AutoFormat', 'RemoveEmpty', true);
+  $config->set('AutoFormat', 'RemoveEmpty.Predicate', array(
+    'div' => array(0 => 'class'),
+    'span' => array(0 => 'class')
+  ));
   $config->set('AutoFormat', 'RemoveEmpty.RemoveNbsp', true);
   $config->set('AutoFormat', 'AutoParagraph', true);
 
