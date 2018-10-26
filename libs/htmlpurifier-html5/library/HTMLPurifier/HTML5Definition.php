@@ -108,6 +108,11 @@ class HTMLPurifier_HTML5Definition
         $def->addAttribute('img', 'data-attachment-id', 'Text');
         $def->addAttribute('img', 'data-attachment-id-source', 'Text');
 
+        // INFOGRAM
+        $def->addAttribute('div', 'data-id', 'CDATA');
+        $def->addAttribute('div', 'data-type', 'CDATA');
+        $def->addAttribute('div', 'data-title', 'CDATA');
+
         // IFRAME
         $def->addAttribute('iframe', 'allowfullscreen', 'Bool');
 
