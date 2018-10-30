@@ -161,7 +161,39 @@ class wp_pwa
 	      )
 			)
     ));
-	}
+  }
+  
+  function fix_forbidden_image($id) {
+    if (!$id) return;
+
+    $attachment = get_post($id);
+
+    if ($attachment->post_type !== 'attachment') {
+      echo($id . '_NOT_A_POST;');
+      return;
+    }
+
+    $status = $attachment->post_status;
+
+    $parent = get_post($attachment->post_parent);
+
+    if (!$parent) return;
+
+    $parent_status = $parent->post_status;
+    $is_forbidden = $status === 'inherit' && $parent_status !== 'publish';
+
+    $isUpdated = wp_update_post(
+      array(
+        'ID' => $id,
+        'post_parent' => null,
+        'post_status' => 'publish',
+      )
+    );
+
+    echo($id . '_' . ($isUpdated > 0 ? 'updated;' : 'do nothing'));
+
+    return $response;
+  }
 
 	function get_latest_from_cpt($cpts) {
 		$result = array();
@@ -285,7 +317,11 @@ class wp_pwa
 
 	function add_image_ids($data) {
 		global $wpdb;
-		if(!class_exists('simple_html_dom')) { require_once('libs/simple_html_dom.php'); }
+    if(!class_exists('simple_html_dom')) { require_once('libs/simple_html_dom.php'); }
+    
+    // fix featured media if necessary
+    $this->fix_forbidden_image($data->data['featured_media']);
+
 		$dom = new simple_html_dom();
 		$dom->load($data->data['content']['rendered']);
 		$imgIds = [];
@@ -311,6 +347,9 @@ class wp_pwa
 			}
 		}
 		if (sizeof($imgIds) > 0) {
+      // Fix content media if necessary
+      foreach ($imgIds as $id) $this->fix_forbidden_image($imgId);
+
 			$media_url = add_query_arg(array(
 				'include' => join(',', $imgIds),
 				'per_page' => sizeof($imgIds),
