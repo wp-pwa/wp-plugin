@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/frontity/wp-plugin.git"
+    "url": "https://github.com/frontity/wp-plugin.git"
   },
   "keywords": [
     "frontity",
