@@ -38,7 +38,11 @@ function load_purifier() {
   $config->set('AutoFormat', 'RemoveEmpty', true);
   $config->set('AutoFormat', 'RemoveEmpty.Predicate', array(
     'div' => array(0 => 'class'),
-    'span' => array(0 => 'class')
+    'span' => array(0 => 'class'),
+    'iframe' => array(0 => 'src'),
+    'colgroup' => array(),
+    'th' => array(),
+    'td' => array(),
   ));
   $config->set('AutoFormat', 'RemoveEmpty.RemoveNbsp', true);
   $config->set('AutoFormat', 'AutoParagraph', true);
