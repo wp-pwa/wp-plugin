@@ -1,3 +1,12 @@
+## [1.7.4](https://github.com/frontity/wp-plugin/compare/v1.7.3...v1.7.4) (2018-10-31)
+
+
+### Bug Fixes
+
+* **forbidden-images:** create fix_forbidden_image WIP ([b390d3e](https://github.com/frontity/wp-plugin/commit/b390d3e))
+* **forbidden-images:** use fix_forbidden_media when the query is true ([2ca8ef9](https://github.com/frontity/wp-plugin/commit/2ca8ef9))
+* **purifier:** do not override 'RemoveEmtpy.Predicate' default values ([f80b966](https://github.com/frontity/wp-plugin/commit/f80b966))
+
 ## [1.7.3](https://github.com/frontity/wp-plugin/compare/v1.7.2...v1.7.3) (2018-10-24)
 
 
