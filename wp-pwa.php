@@ -115,7 +115,7 @@ class wp_pwa
 	function add_custom_post_types_filters($post_type) {
 		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9, 3);
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'), 10);
-		add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids'), 10);
+		add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids'), 10, 3);
 		register_rest_field($post_type, 'latest',
       array(
         'get_callback' => array( $this, 'wp_api_get_latest' ),
@@ -161,7 +161,7 @@ class wp_pwa
 	      )
 			)
     ));
-	}
+  }
 
 	function get_latest_from_cpt($cpts) {
 		$result = array();
@@ -282,10 +282,36 @@ class wp_pwa
 			'miss' => $transient_miss,
 		);
 	}
+  
+  function fix_forbidden_media($id) {
+    if (!$id) return;
+    
+    $id = (int) $id;
+    $attachment = get_post($id);
+    if ($attachment->post_type !== 'attachment') return;
 
-	function add_image_ids($data) {
-		global $wpdb;
-		if(!class_exists('simple_html_dom')) { require_once('libs/simple_html_dom.php'); }
+    $parent = get_post($attachment->post_parent);
+    if ($parent && $parent->post_status !== 'publish') {
+      wp_update_post(
+        array(
+          'ID' => $id,
+          'post_parent' => 0,
+        )
+      );
+    }
+  }
+
+	function add_image_ids($data, $post_type, $request) {
+    global $wpdb;
+    
+    $fixForbiddenMedia = $request->get_param('fixForbiddenMedia') === 'true';
+
+    if(!class_exists('simple_html_dom')) { require_once('libs/simple_html_dom.php'); }
+    
+    // fix featured media if necessary
+    if ($fixForbiddenMedia)
+      $this->fix_forbidden_media($data->data['featured_media']);
+
 		$dom = new simple_html_dom();
 		$dom->load($data->data['content']['rendered']);
 		$imgIds = [];
@@ -311,6 +337,10 @@ class wp_pwa
 			}
 		}
 		if (sizeof($imgIds) > 0) {
+      // Fix content media if necessary
+      if ($fixForbiddenMedia)
+        foreach ($imgIds as $imgId) $this->fix_forbidden_media($imgId);
+
 			$media_url = add_query_arg(array(
 				'include' => join(',', $imgIds),
 				'per_page' => sizeof($imgIds),
