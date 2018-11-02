@@ -236,7 +236,7 @@ class wp_pwa
 	function get_attachment_id( $url ) {
 		$transient_name = 'frt_' . md5( $url );
 		$attachment_id = get_transient( $transient_name );
-		$transient_miss = !is_numeric($attachment_id);
+		$transient_miss = $attachment_id === false;
 
 		if ( $transient_miss ) {
 			$attachment_id = 0;
@@ -278,7 +278,7 @@ class wp_pwa
 		}
 
 		return array(
-			'id'   => $attachment_id,
+			'id'   => intval($attachment_id),
 			'miss' => $transient_miss,
 		);
 	}
@@ -304,9 +304,13 @@ class wp_pwa
 	function add_image_ids($data, $post_type, $request) {
     global $wpdb;
     
+		$purge = $request->get_param('purgeContentMediaTransients') === 'true';
     $fixForbiddenMedia = $request->get_param('fixForbiddenMedia') === 'true';
 
-    if(!class_exists('simple_html_dom')) { require_once('libs/simple_html_dom.php'); }
+		if(!class_exists('simple_html_dom')) { require_once('libs/simple_html_dom.php'); }
+		
+		// remove image ids stored in transients if requested
+		if ($purge) $this->purge_image_id_transient_keys();
     
     // fix featured media if necessary
     if ($fixForbiddenMedia)
