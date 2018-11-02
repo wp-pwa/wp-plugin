@@ -1,3 +1,10 @@
+## [1.7.5](https://github.com/frontity/wp-plugin/compare/v1.7.4...v1.7.5) (2018-11-02)
+
+
+### Bug Fixes
+
+* **attachment-ids:** return ids with integer values and purge transients ([6a25ff1](https://github.com/frontity/wp-plugin/commit/6a25ff1))
+
 ## [1.7.4](https://github.com/frontity/wp-plugin/compare/v1.7.3...v1.7.4) (2018-10-31)
 
 
