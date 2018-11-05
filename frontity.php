@@ -22,7 +22,7 @@ if( !defined('DS') ) {
 
 if( !class_exists('wp_pwa') ):
 
-class wp_pwa
+class frontity
 {
 	// vars
 	public $plugin_version = '1.7.5';
@@ -460,16 +460,16 @@ class wp_pwa
  	* Register and enqueue style sheet.
  	*/
 	public function register_wp_pwa_styles($hook) {
-		wp_register_style('font-awesome', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css', array(), '4.5.0');
 		wp_register_style('bulma-css', 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.0.26/css/bulma.min.css',array('font-awesome'));
+		wp_enqueue_style('bulma-css');
 	}
 
 	/**
 	* Register and enqueue scripts.
 	*/
 	public function register_wp_pwa_scripts($hook) {
-		wp_register_script('wp_pwa_admin_js',plugin_dir_url(__FILE__) . 'admin/js/wp-pwa-admin.js', array('jquery'), $this->plugin_version, true);
-		wp_enqueue_script('wp_pwa_admin_js');
+		wp_register_script('frontity_admin_js',plugin_dir_url(__FILE__) . 'admin/frontity-admin.js', array('jquery'), $this->plugin_version, true);
+		wp_enqueue_script('frontity_admin_js');
 	}
 
 	/*
@@ -486,22 +486,22 @@ class wp_pwa
 	*  @return	N/A
 	*/
 	function wp_pwa_admin_actions() {
-		$icon_url	= trailingslashit(plugin_dir_url( __FILE__ )) . "assets/wp_pwa_20x20.png";
+		$icon_url	= trailingslashit(plugin_dir_url( __FILE__ )) . "assets/frontity_20x20.png";
 		$position	= 64.999989; //Right before the "Plugins"
 
 		add_menu_page(
-			'PWA - Admin',
-			'PWA',
+			'Frontity - Admin',
+			'Frontity',
 			1,
-			'wp-pwa-admin',
-			array($this, 'render_wp_pwa_admin'),
+			'frontity-admin',
+			array($this, 'render_frontity_admin'),
 			$icon_url,
 			$position
 		);
 	}
 
 	/*
-	*  render_wp_pwa_admin
+	*  render_frontity_admin
 	*
 	*  This function is called by the 'wp_pwa_admin_actions' function and will do things such as:
 	*  add a wp_pwa page to render the admin content
@@ -514,9 +514,8 @@ class wp_pwa
 	*  @return	N/A
 	*/
 
-	function render_wp_pwa_admin() {
-		wp_enqueue_style('bulma-css');
-	  include('admin/wp-pwa-admin-page.php');
+	function render_frontity_admin() {
+	  include('admin/frontity-admin.php');
 	}
 
 	function get_wp_pwa_site_id() {
@@ -943,13 +942,13 @@ class wp_pwa
 *  @return	(object)
 */
 
-function wp_pwa()
+function frontity()
 {
-	global $wp_pwa;
+	global $frontity;
 
-	if( !isset($wp_pwa) )
+	if( !isset($frontity) )
 	{
-		$wp_pwa = new wp_pwa();
+		$frontity = new frontity();
 	}
 	
 	if (class_exists( 'WP_REST_Controller')){
@@ -962,7 +961,7 @@ function wp_pwa()
 }
 
 // initialize
-wp_pwa();
+frontity();
 
 function wp_pwa_activation() {
 
