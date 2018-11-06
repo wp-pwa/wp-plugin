@@ -910,14 +910,15 @@ class wp_pwa
 
 		//posts
 		if ($ampForced || (isset($wp_pwa_amp) && ($wp_pwa_amp !== 'disabled') && (is_single()) && $exclusion === false)) {
-			$singleId = get_queried_object_id();
-			$permalink = get_permalink($singleId);
+			$id = get_queried_object()->ID;
+			$type = get_queried_object()->post_type;
+			$permalink = get_permalink($id);
 			$path = parse_url($permalink, PHP_URL_PATH);
 			$query = '?siteId=' . $settings["wp_pwa_siteid"]
 				. '&env=' . $settings['wp_pwa_env']
 				. '&dev=' . $dev
-				. '&singleType=post'
-				. '&singleId=' . $singleId
+				. '&type=' . $type
+				. '&id=' . $id
 				. '&initialUrl=' . $initialUrl;
 			$amp_url = $ampServer . $path . $query;
 
