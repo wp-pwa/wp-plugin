@@ -1,3 +1,10 @@
+## [1.7.6](https://github.com/frontity/wp-plugin/compare/v1.7.5...v1.7.6) (2018-11-08)
+
+
+### Bug Fixes
+
+* **amp:** fix types for custom post types in AMP ([dc3c8cf](https://github.com/frontity/wp-plugin/commit/dc3c8cf))
+
 ## [1.7.5](https://github.com/frontity/wp-plugin/compare/v1.7.4...v1.7.5) (2018-11-02)
 
 
