@@ -273,7 +273,7 @@ class wp_pwa
 				}
 			}
 
-			set_transient( $transient_name, $attachment_id, DAY_IN_SECONDS );
+			set_transient( $transient_name, $attachment_id, 0 ); // never expires
 			$this->update_image_id_transient_keys( $transient_name );
 		}
 
@@ -333,9 +333,9 @@ class wp_pwa
 				$result = $this->get_attachment_id($image->src);
 				$id = $result['id'];
 				$miss = $result['miss'];
+				$image->setAttribute('data-attachment-id-source', 'wp-query-transient-' . ($miss ? 'miss' : 'hit'));
 				if ($id !== 0) {
 					$image->setAttribute('data-attachment-id', $id);
-					$image->setAttribute('data-attachment-id-source', 'wp-query-transient-' . ($miss ? 'miss' : 'hit'));
 					$imgIds[] = intval($id);
 				}
 			}
@@ -357,9 +357,9 @@ class wp_pwa
 		      'embeddable' => true,
 		    )
 			));
-			$html = $dom->save();
-			if ($html) $data->data['content']['rendered'] = $html;
 		}
+		$html = $dom->save();
+		if ($html) $data->data['content']['rendered'] = $html;
 		$data->data['content_media'] = $imgIds;
 		return $data;
 	}
