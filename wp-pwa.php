@@ -74,8 +74,22 @@ class wp_pwa
 
 		add_action('wp_head', array($this,'amp_add_canonical'));
 
+		add_action('embed_footer', array($this, 'send_post_embed_height'));
+
 		add_filter('wp_get_attachment_link', array( $this, 'add_id_to_gallery_images'), 10, 2);
 		add_filter('wp_get_attachment_image_attributes', array( $this, 'add_id_to_gallery_image_attributes'), 10, 2);
+	}
+
+	function send_post_embed_height() {
+		?>
+<script>
+	window.parent.postMessage({
+		sentinel: 'amp',
+		type: 'embed-size',
+		height: document.body.scrollHeight
+	}, '*');
+</script>
+		<?php
 	}
 
 	function update_image_id_transient_keys( $new_transient_key ) {
