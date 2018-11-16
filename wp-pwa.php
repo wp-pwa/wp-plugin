@@ -74,8 +74,22 @@ class wp_pwa
 
 		add_action('wp_head', array($this,'amp_add_canonical'));
 
+		add_action('embed_footer', array($this, 'send_post_embed_height'));
+
 		add_filter('wp_get_attachment_link', array( $this, 'add_id_to_gallery_images'), 10, 2);
 		add_filter('wp_get_attachment_image_attributes', array( $this, 'add_id_to_gallery_image_attributes'), 10, 2);
+	}
+
+	function send_post_embed_height() {
+		?>
+<script>
+	window.parent.postMessage({
+		sentinel: 'amp',
+		type: 'embed-size',
+		height: document.body.scrollHeight
+	}, '*');
+</script>
+		<?php
 	}
 
 	function update_image_id_transient_keys( $new_transient_key ) {
@@ -273,7 +287,7 @@ class wp_pwa
 				}
 			}
 
-			set_transient( $transient_name, $attachment_id, DAY_IN_SECONDS );
+			set_transient( $transient_name, $attachment_id, 0 ); // never expires
 			$this->update_image_id_transient_keys( $transient_name );
 		}
 
@@ -333,9 +347,9 @@ class wp_pwa
 				$result = $this->get_attachment_id($image->src);
 				$id = $result['id'];
 				$miss = $result['miss'];
+				$image->setAttribute('data-attachment-id-source', 'wp-query-transient-' . ($miss ? 'miss' : 'hit'));
 				if ($id !== 0) {
 					$image->setAttribute('data-attachment-id', $id);
-					$image->setAttribute('data-attachment-id-source', 'wp-query-transient-' . ($miss ? 'miss' : 'hit'));
 					$imgIds[] = intval($id);
 				}
 			}
@@ -357,9 +371,9 @@ class wp_pwa
 		      'embeddable' => true,
 		    )
 			));
-			$html = $dom->save();
-			if ($html) $data->data['content']['rendered'] = $html;
 		}
+		$html = $dom->save();
+		if ($html) $data->data['content']['rendered'] = $html;
 		$data->data['content_media'] = $imgIds;
 		return $data;
 	}
