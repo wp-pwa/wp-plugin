@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: WordPress PWA
+Plugin Name: Frontity
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
 Version: 1.8.0
-Author: WordPress PWA
+Author: Frontity
 Author URI:
 License: GPL v3
 Copyright: Worona Labs SL
@@ -482,7 +482,7 @@ class frontity
 	* Register and enqueue scripts.
 	*/
 	public function register_wp_pwa_scripts($hook) {
-		wp_register_script('frontity_admin_js',plugin_dir_url(__FILE__) . 'admin/frontity-admin.js', array('jquery'), $this->plugin_version, true);
+		wp_register_script('frontity_admin_js',plugin_dir_url(__FILE__) . 'admin/dist/frontity-admin.js', array('jquery'), $this->plugin_version, true);
 		wp_enqueue_script('frontity_admin_js');
 	}
 
@@ -500,17 +500,26 @@ class frontity
 	*  @return	N/A
 	*/
 	function wp_pwa_admin_actions() {
-		$icon_url	= trailingslashit(plugin_dir_url( __FILE__ )) . "assets/frontity_20x20.png";
+		$icon_url	= trailingslashit(plugin_dir_url( __FILE__ )) . "admin/assets/frontity_20x20.png";
 		$position	= 64.999989; //Right before the "Plugins"
 
 		add_menu_page(
-			'Frontity - Admin',
+			'Frontity',
 			'Frontity',
 			1,
 			'frontity-admin',
 			array($this, 'render_frontity_admin'),
 			$icon_url,
 			$position
+		);
+
+		add_submenu_page(
+			'frontity-admin',
+			'Frontity - Settings',
+			'Settings',
+			1,
+			'frontity-settings',
+			array($this, 'render_frontity_settings')
 		);
 	}
 
@@ -530,6 +539,10 @@ class frontity
 
 	function render_frontity_admin() {
 	  include('admin/frontity-admin.php');
+	}
+
+	function render_frontity_settings() {
+		include('admin/frontity-settings.php');
 	}
 
 	function get_wp_pwa_site_id() {
