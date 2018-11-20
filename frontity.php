@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.7.5
+Version: 1.8.0
 Author: WordPress PWA
 Author URI:
 License: GPL v3
@@ -25,7 +25,7 @@ if( !class_exists('wp_pwa') ):
 class frontity
 {
 	// vars
-	public $plugin_version = '1.7.5';
+	public $plugin_version = '1.8.0';
 	public $rest_api_installed 	= false;
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
@@ -74,8 +74,22 @@ class frontity
 
 		add_action('wp_head', array($this,'amp_add_canonical'));
 
+		add_action('embed_footer', array($this, 'send_post_embed_height'));
+
 		add_filter('wp_get_attachment_link', array( $this, 'add_id_to_gallery_images'), 10, 2);
 		add_filter('wp_get_attachment_image_attributes', array( $this, 'add_id_to_gallery_image_attributes'), 10, 2);
+	}
+
+	function send_post_embed_height() {
+		?>
+<script>
+	window.parent.postMessage({
+		sentinel: 'amp',
+		type: 'embed-size',
+		height: document.body.scrollHeight
+	}, '*');
+</script>
+		<?php
 	}
 
 	function update_image_id_transient_keys( $new_transient_key ) {
@@ -273,7 +287,7 @@ class frontity
 				}
 			}
 
-			set_transient( $transient_name, $attachment_id, DAY_IN_SECONDS );
+			set_transient( $transient_name, $attachment_id, 0 ); // never expires
 			$this->update_image_id_transient_keys( $transient_name );
 		}
 
@@ -333,9 +347,9 @@ class frontity
 				$result = $this->get_attachment_id($image->src);
 				$id = $result['id'];
 				$miss = $result['miss'];
+				$image->setAttribute('data-attachment-id-source', 'wp-query-transient-' . ($miss ? 'miss' : 'hit'));
 				if ($id !== 0) {
 					$image->setAttribute('data-attachment-id', $id);
-					$image->setAttribute('data-attachment-id-source', 'wp-query-transient-' . ($miss ? 'miss' : 'hit'));
 					$imgIds[] = intval($id);
 				}
 			}
@@ -357,9 +371,9 @@ class frontity
 		      'embeddable' => true,
 		    )
 			));
-			$html = $dom->save();
-			if ($html) $data->data['content']['rendered'] = $html;
 		}
+		$html = $dom->save();
+		if ($html) $data->data['content']['rendered'] = $html;
 		$data->data['content_media'] = $imgIds;
 		return $data;
 	}
@@ -909,14 +923,15 @@ class frontity
 
 		//posts
 		if ($ampForced || (isset($wp_pwa_amp) && ($wp_pwa_amp !== 'disabled') && (is_single()) && $exclusion === false)) {
-			$singleId = get_queried_object_id();
-			$permalink = get_permalink($singleId);
+			$id = get_queried_object()->ID;
+			$type = get_queried_object()->post_type;
+			$permalink = get_permalink($id);
 			$path = parse_url($permalink, PHP_URL_PATH);
 			$query = '?siteId=' . $settings["wp_pwa_siteid"]
 				. '&env=' . $settings['wp_pwa_env']
 				. '&dev=' . $dev
-				. '&singleType=post'
-				. '&singleId=' . $singleId
+				. '&type=' . $type
+				. '&id=' . $id
 				. '&initialUrl=' . $initialUrl;
 			$amp_url = $ampServer . $path . $query;
 

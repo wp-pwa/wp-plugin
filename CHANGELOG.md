@@ -1,3 +1,22 @@
+# [1.8.0](https://github.com/frontity/wp-plugin/compare/v1.7.6...v1.8.0) (2018-11-16)
+
+
+### Bug Fixes
+
+* **transients:** never expire them and set hit or miss when id is zero ([b4095f2](https://github.com/frontity/wp-plugin/commit/b4095f2))
+
+
+### Features
+
+* **wp-embeds:** send height from wp post embeds ([9e61012](https://github.com/frontity/wp-plugin/commit/9e61012))
+
+## [1.7.6](https://github.com/frontity/wp-plugin/compare/v1.7.5...v1.7.6) (2018-11-08)
+
+
+### Bug Fixes
+
+* **amp:** fix types for custom post types in AMP ([dc3c8cf](https://github.com/frontity/wp-plugin/commit/dc3c8cf))
+
 ## [1.7.5](https://github.com/frontity/wp-plugin/compare/v1.7.4...v1.7.5) (2018-11-02)
 
 
