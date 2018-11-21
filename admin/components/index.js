@@ -1,5 +1,13 @@
-import React from 'react';
+import React from "react";
+import { string } from "prop-types";
+import { inject } from "mobx-react";
 
-const App = () => <div>Frontity</div>;
+const App = ({ title }) => <div>{title}</div>;
 
-export default App;
+App.propTypes = {
+  title: string.isRequired
+};
+
+export default inject(({ stores }) => ({
+  title: stores.title
+}))(App);
