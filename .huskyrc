@@ -1,6 +1,6 @@
 {
   "hooks": {
-    "pre-commit": "npm run grunt",
+    "pre-commit": "lint-staged && npm run test:ci && npm run grunt",
     "commit-msg": "commitlint --env HUSKY_GIT_PARAMS"
   }
 }
