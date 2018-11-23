@@ -1,30 +1,10 @@
 <?php
 global $wp_pwa;
 
-$settings = get_option('wp_pwa_settings');
-	//var_dump($settings);
-	//delete_option('wp_pwa_settings');
+$settings = get_option('frontity_settings');
 $current_user = wp_get_current_user();
 
-if (isset($settings["synced_with_wp_pwa"])) {
-	$synced_with_wp_pwa = $settings["synced_with_wp_pwa"];
-} else {
-	$synced_with_wp_pwa = false;
-}
-
-if (isset($settings["wp_pwa_status"])) {
-	$wp_pwa_status = $settings["wp_pwa_status"];
-} else {
-	$wp_pwa_status = 'disabled';
-}
-
-if (isset($settings["wp_pwa_amp"])) {
-	$wp_pwa_amp = $settings["wp_pwa_amp"];
-} else {
-	$wp_pwa_amp = 'disabled';
-}
-
-	/* step & progress */
+/* step & progress */
 $progress = 0;
 $step = 0;
 $wp_version = get_bloginfo('version');
@@ -54,5 +34,9 @@ if (version_compare($wp_version, '4.4', '<')) { //REST API Plugin is only compat
 ?>
 <div id='root'></div>
 <script>
-	window.settings = <?php echo $settings ? json_encode($settings) : json_encode(new stdClass()); ?>
+	window.frontity = {
+		plugin: {
+			settings: <?php echo $settings ? json_encode($settings) : json_encode(new stdClass()); ?>
+		}
+	};
 </script>

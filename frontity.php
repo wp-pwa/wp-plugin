@@ -48,7 +48,7 @@ class frontity
 		// actions
 		add_action('init', array($this, 'init'), 1);
 		add_action('admin_menu', array($this, 'wp_pwa_admin_actions')); //add the admin page
-		add_action('admin_init', array($this,'wp_pwa_register_settings')); //register the settings
+		add_action('admin_init', array($this,'frontity_register_settings')); //register the settings
 		add_action('admin_notices',array($this,'wp_pwa_admin_notices')); //Display the validation errors and update messages
 
 		add_action('wp_ajax_sync_with_wp_pwa',array($this,'sync_with_wp_pwa'));
@@ -183,7 +183,7 @@ class frontity
 				if ($cpt_object->show_in_rest) {
 					if ($cpt === 'post' &&
 							get_option('show_on_front') === 'page' &&
-							get_option('wp_pwa_settings')['wp_pwa_force_frontpage']) {
+							get_option('frontity_settings')['wp_pwa_force_frontpage']) {
 						$link = get_option('home');
 					} else {
 						$link = get_post_type_archive_link($cpt);
@@ -446,7 +446,7 @@ class frontity
 	}
 
 	//settings are being updated via AJAX, this validator is not used now
-	function wp_pwa_settings_validator($args){
+	function frontity_settings_validator($args){
 
 		if(isset($args['synced_with_wp_pwa']) && $args['synced_with_wp_pwa']=='true'){
 			$args['synced_with_wp_pwa'] = true;
@@ -460,11 +460,11 @@ class frontity
 		settings_errors();
 	}
 
-	function wp_pwa_register_settings() {
+	function frontity_register_settings() {
 		register_setting(
-							'wp_pwa_settings',
-							'wp_pwa_settings',
-							array($this,'wp_pwa_settings_validator')
+			'frontity_settings',
+							'frontity_settings',
+							array($this,'frontity_settings_validator')
 		);
 	}
 
@@ -558,7 +558,7 @@ class frontity
 	}
 
 	function get_wp_pwa_site_id() {
-		$settings = get_option('wp_pwa_settings');
+		$settings = get_option('frontity_settings');
 
 		if (isset($settings['wp_pwa_siteid'])) {
 			$wp_pwa_site_id = $settings["wp_pwa_siteid"];
@@ -726,10 +726,10 @@ class frontity
 	function sync_with_wp_pwa() {
 		flush_rewrite_rules();
 
-		$settings = get_option('wp_pwa_settings');
+		$settings = get_option('frontity_settings');
 		$settings['synced_with_wp_pwa'] = true;
 
-		update_option('wp_pwa_settings', $settings);
+		update_option('frontity_settings', $settings);
 
 		$siteId = $settings['wp_pwa_siteid'];
 
@@ -744,10 +744,10 @@ class frontity
 
 		$status = $_POST['status'];
 
-		$settings = get_option('wp_pwa_settings');
+		$settings = get_option('frontity_settings');
 		$settings['wp_pwa_status'] = $status;
 
-		update_option('wp_pwa_settings', $settings);
+		update_option('frontity_settings', $settings);
 
 		wp_send_json( array(
 			'status' => 'ok',
@@ -759,10 +759,10 @@ class frontity
 
 		$amp = $_POST['amp'];
 
-		$settings = get_option('wp_pwa_settings');
+		$settings = get_option('frontity_settings');
 		$settings['wp_pwa_amp'] = $amp;
 
-		update_option('wp_pwa_settings', $settings);
+		update_option('frontity_settings', $settings);
 
 		wp_send_json( array(
 			'status' => 'ok',
@@ -780,11 +780,11 @@ class frontity
 				'reason' => 'Site ID is not valid.'
 			));
 		} else {
-			$settings = get_option('wp_pwa_settings');
+			$settings = get_option('frontity_settings');
 			$settings['wp_pwa_siteid'] = $siteId;
 			$settings["synced_with_wp_pwa"] = true;
 
-			update_option('wp_pwa_settings', $settings);
+			update_option('frontity_settings', $settings);
 
 			wp_send_json( array(
 				'status' => 'ok',
@@ -800,14 +800,14 @@ class frontity
 		$wp_pwa_amp_server = $_POST['wp_pwa_amp_server'];
 		$wp_pwa_force_frontpage = ($_POST['wp_pwa_force_frontpage'] === 'true');
 
-		$settings = get_option('wp_pwa_settings');
+		$settings = get_option('frontity_settings');
 		$settings['wp_pwa_env'] = $wp_pwa_env;
 		$settings['wp_pwa_ssr'] = $wp_pwa_ssr;
 		$settings['wp_pwa_static'] = $wp_pwa_static;
 		$settings['wp_pwa_amp_server'] = $wp_pwa_amp_server;
 		$settings['wp_pwa_force_frontpage'] =$wp_pwa_force_frontpage;
 
-		update_option('wp_pwa_settings', $settings);
+		update_option('frontity_settings', $settings);
 
 		wp_send_json( array(
 			'status' => 'ok',
@@ -822,10 +822,10 @@ class frontity
 			$wp_pwa_excludes = explode("\n", $excluses);
 		}
 
-		$settings = get_option('wp_pwa_settings');
+		$settings = get_option('frontity_settings');
 		$settings['wp_pwa_excludes'] = $wp_pwa_excludes;
 
-		update_option('wp_pwa_settings', $settings);
+		update_option('frontity_settings', $settings);
 
 		wp_send_json( array(
 			'status' => 'ok',
@@ -840,10 +840,10 @@ class frontity
 			$wp_pwa_api_fields = explode("\n", $apiFields);
 		}
 
-		$settings = get_option('wp_pwa_settings');
+		$settings = get_option('frontity_settings');
 		$settings['wp_pwa_api_fields'] = $wp_pwa_api_fields;
 
-		update_option('wp_pwa_settings', $settings);
+		update_option('frontity_settings', $settings);
 
 		wp_send_json( array(
 			'status' => 'ok',
@@ -913,7 +913,7 @@ class frontity
 	//Injects the amp URL to the header
 	public function amp_add_canonical() {
 
-		$settings = get_option('wp_pwa_settings');
+		$settings = get_option('frontity_settings');
 		$prettyPermalinks = get_option('permalink_structure') !== '';
 		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']
 			. $_SERVER['REQUEST_URI'];
@@ -1004,11 +1004,10 @@ function frontity()
 frontity();
 
 function frontity_activation() {
-
 	$current_user = wp_get_current_user();
 	$email = $current_user->user_email;
 
-	$settings = get_option('wp_pwa_settings');
+	$settings = get_option('frontity_settings');
 
 	if (isset($settings["synced_with_wp_pwa"])) {
 		$synced_with_wp_pwa = $settings["synced_with_wp_pwa"];
@@ -1083,9 +1082,9 @@ function frontity_activation() {
 	);
 
 	if($settings === false){
-		add_option('wp_pwa_settings',$defaults , '','yes');
+		add_option('frontity_settings', $defaults);
 	} else {
-		update_option('wp_pwa_settings',$defaults);
+		update_option('frontity_settings', $defaults);
 	}
 
 	flush_rewrite_rules();

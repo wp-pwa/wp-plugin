@@ -8,6 +8,6 @@ App.propTypes = {
   title: string.isRequired
 };
 
-export default inject(({ stores }) => ({
-  title: stores.title
+export default inject(({ stores: { settings } }) => ({
+  title: settings.title
 }))(App);
