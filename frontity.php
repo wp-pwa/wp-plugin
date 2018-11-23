@@ -30,8 +30,6 @@ class frontity
 	public $rest_api_active 	= false;
 	public $rest_api_working	= false;
 
-
-
 	/*
 	*  Constructor
 	*
@@ -66,8 +64,8 @@ class frontity
 		add_action('plugins_loaded', array($this,'wp_rest_api_plugin_is_active'));
 		add_action('init', array($this,'allow_origin'));
 
-		add_action('admin_enqueue_scripts', array( $this, 'register_wp_pwa_scripts') );
-		add_action('admin_enqueue_scripts', array( $this, 'register_wp_pwa_styles') );
+		add_action('admin_enqueue_scripts', array( $this, 'register_frontity_scripts') );
+		add_action('admin_enqueue_scripts', array( $this, 'register_frontity_styles') );
 
 		add_action('rest_api_init', array($this,'rest_routes'));
 		add_action('registered_post_type', array($this, 'add_custom_post_types_filters'));
@@ -473,17 +471,31 @@ class frontity
 	/**
  	* Register and enqueue style sheet.
  	*/
-	public function register_wp_pwa_styles($hook) {
-		wp_register_style('bulma-css', 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.0.26/css/bulma.min.css',array('font-awesome'));
-		wp_enqueue_style('bulma-css');
+	public function register_frontity_styles($hook) {
+		if ('toplevel_page_frontity-admin' === $hook) {
+			wp_register_style(
+				'bulma-css',
+				'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.0.26/css/bulma.min.css',
+				array('font-awesome')
+			);
+			wp_enqueue_style('bulma-css');
+		}
 	}
 
 	/**
 	* Register and enqueue scripts.
 	*/
-	public function register_wp_pwa_scripts($hook) {
-		wp_register_script('frontity_admin_js',plugin_dir_url(__FILE__) . 'admin/dist/frontity-admin.js', array('jquery'), $this->plugin_version, true);
-		wp_enqueue_script('frontity_admin_js');
+	public function register_frontity_scripts($hook) {
+		if ('toplevel_page_frontity-admin' === $hook) {
+			wp_register_script(
+				'frontity_admin_js',
+				plugin_dir_url(__FILE__) . 'admin/dist/frontity-admin.js',
+				array(),
+				null,
+				true
+			);
+			wp_enqueue_script('frontity_admin_js');
+		}
 	}
 
 	/*
@@ -991,7 +1003,7 @@ function frontity()
 // initialize
 frontity();
 
-function wp_pwa_activation() {
+function frontity_activation() {
 
 	$current_user = wp_get_current_user();
 	$email = $current_user->user_email;
@@ -1075,6 +1087,7 @@ function wp_pwa_activation() {
 	} else {
 		update_option('wp_pwa_settings',$defaults);
 	}
+
 	flush_rewrite_rules();
 
 	$upload = wp_upload_dir();
@@ -1093,6 +1106,6 @@ function wp_pwa_activation() {
 	}
 }
 
-register_activation_hook( __FILE__, 'wp_pwa_activation');
+register_activation_hook( __FILE__, 'frontity_activation');
 
 endif; // class_exists check
