@@ -8,6 +8,7 @@
 **License:** GPLv3  
 **License URI:** http://www.gnu.org/licenses/gpl.html  
 
+
 The simplest way to create Progressive Web Apps with WordPress. No coding skills required. Free forever.
 
 ## Description ##
