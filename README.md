@@ -1,13 +1,12 @@
 # Frontity #
 **Contributors:** [poliuk](https://profiles.wordpress.org/poliuk), [luisherranz](https://profiles.wordpress.org/luisherranz), [rmartinezduque](https://profiles.wordpress.org/rmartinezduque), [orballo](https://profiles.wordpress.org/orballo), [davidarenas](https://profiles.wordpress.org/davidarenas)  
-**Tags:** frontity, pwa, web app, progressive web app, mobile theme, mobile, HTML5 
+**Tags:** frontity, pwa, web app, progressive web app, mobile theme, mobile, HTML5  
 **Author URI:** https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description  
 **Requires at least:** 4.4  
 **Tested up to:** 4.9.6  
 **Stable tag:** trunk  
 **License:** GPLv3  
 **License URI:** http://www.gnu.org/licenses/gpl.html  
-
 
 Make your mobile site fast and highly engaging with a Progressive Web App (PWA) theme built on React.
 
@@ -19,11 +18,11 @@ Suitable for WordPress blogs and news sites, this theme makes your site faster a
 
 A Progressive Web App (PWA) theme is a great way to offer an outstanding mobile experience for your users as it combines the best of mobile web and the best of mobile apps. You can use web push notifications, let users experience instant loading times, swipe between articles or access your site from the home screen, among many things.
 
-This way, Frontity helps you increase user engagement, page views per session, retention, and boost revenue.
+This way, Frontity helps increase user engagement on your mobile site, page views per session, retention, and boost ad revenue.
 
 <strong>IMPORTANT</strong>
 
-In order to configure our plugin and get a site ID you need to be a Frontity user first. If you aren’t, please kindly **[request a demo](https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description#request-demo)** first to make sure your WordPress site is compatible with Frontity. For any questions or doubts you can also contact us at support@frontity.com.
+In order to configure our plugin and get a site ID you need to be a Frontity user. If you aren’t, please kindly [request a demo](https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description#request-demo) first to make sure your WordPress site is compatible with Frontity. For any questions or doubts you can also contact us at support@frontity.com.
 
 ## Installation ##
 
@@ -48,11 +47,11 @@ In order to get a site ID you need to be a Frontity user. If you aren’t yet, y
 
 ### How do I get a Site ID? ###
 
-You have to be a Frontity user. If you are interested in Frontity, please request a demo first at [frontity.com](https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description#request-demo).
+You have to be a Frontity user. If you are interested in Frontity, please **request a demo** first at [frontity.com](https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description#request-demo).
 
 ### Can I see a demo? ###
 
-Sure! Visit [blog.frontity.com](https://blog.frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description) from a **mobile browser** to see our PWA theme in action.
+Sure! Visit [blog.frontity.com](https://blog.frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description) from a mobile browser to see our PWA theme in action.
 
 ## Changelog ##
 
