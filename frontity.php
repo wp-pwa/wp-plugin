@@ -489,7 +489,7 @@ class frontity
 		if ('toplevel_page_frontity-admin' === $hook) {
 			wp_register_script(
 				'frontity_admin_js',
-				plugin_dir_url(__FILE__) . 'admin/dist/frontity-admin.js',
+				plugin_dir_url(__FILE__) . 'admin/dist/main.js',
 				array(),
 				null,
 				true
@@ -550,11 +550,11 @@ class frontity
 	*/
 
 	function render_frontity_admin() {
-	  include('admin/frontity-admin.php');
+	  include('admin/admin.php');
 	}
 
 	function render_frontity_settings() {
-		include('admin/frontity-settings.php');
+		include('admin/settings.php');
 	}
 
 	function get_wp_pwa_site_id() {
@@ -1004,6 +1004,15 @@ function frontity()
 frontity();
 
 function frontity_activation() {
+	wp_register_script(
+		'frontity_activation_js',
+		plugin_dir_url(__FILE__) . 'admin/dist/activation.js',
+		array(),
+		null,
+		true
+	);
+	wp_enqueue_script('frontity_activation_js');
+
 	$current_user = wp_get_current_user();
 	$email = $current_user->user_email;
 

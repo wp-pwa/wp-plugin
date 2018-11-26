@@ -32,6 +32,7 @@ if (version_compare($wp_version, '4.4', '<')) { //REST API Plugin is only compat
 	$progress = 100;
 }
 ?>
+
 <div id='root'></div>
 <script>
 	window.frontity = {

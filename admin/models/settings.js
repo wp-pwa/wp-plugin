@@ -6,7 +6,7 @@ export default types.model("Settings", {
   wp_pwa_amp: "disabled",
   wp_pwa_amp_server: "https://amp.wp-pwa.com",
   wp_pwa_env: "prod",
-  wp_pwa_excludes: types.array(types.maybe(types.string)),
+  wp_pwa_excludes: types.array(types.string),
   wp_pwa_force_frontpage: true,
   wp_pwa_siteid: "",
   wp_pwa_ssr: "https://ssr.wp-pwa.com",
