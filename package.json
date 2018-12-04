@@ -25,7 +25,7 @@
     "wordpress",
     "plugi"
   ],
-  "author": "luis@frontity.com, eduardo@frontity.com",
+  "author": "Luis Herranz (luis@frontity.com), Eduardo Campaña (eduardo@frontity.com)",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/frontity/wp-plugin/issues"
@@ -75,6 +75,8 @@
   },
   "dependencies": {
     "got": "^9.3.2",
+    "grommet": "^2.0.1",
+    "grommet-icons": "^3.2.1",
     "mobx": "^5.5.2",
     "mobx-react": "^5.3.6",
     "mobx-state-tree": "^3.7.1",
