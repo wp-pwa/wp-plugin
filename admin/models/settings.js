@@ -1,15 +1,21 @@
-import { types } from "mobx-state-tree";
+import { types, getSnapshot } from "mobx-state-tree";
+import { post } from "axios";
 
-export default types.model("Settings", {
-  title: "Admin",
-  synced_with_wp_pwa: true,
-  wp_pwa_amp: "disabled",
-  wp_pwa_amp_server: "https://amp.wp-pwa.com",
-  wp_pwa_env: "prod",
-  wp_pwa_excludes: types.array(types.string),
-  wp_pwa_force_frontpage: true,
-  wp_pwa_siteid: "",
-  wp_pwa_ssr: "https://ssr.wp-pwa.com",
-  wp_pwa_static: "https://static.wp-pwa.com",
-  wp_pwa_status: "disabled"
-});
+export default types
+  .model("Settings", {
+    test_setting: "manolo"
+  })
+  .actions(self => ({
+    setTestSetting({ target }) {
+      self.test_setting = target.value;
+    },
+    async saveSettings(event) {
+      event.preventDefault();
+
+      const data = new window.FormData();
+      data.append("action", "frontity_save_settings");
+      data.append("data", JSON.stringify(getSnapshot(self)));
+
+      await post(window.ajaxurl, data);
+    }
+  }));

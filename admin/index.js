@@ -4,6 +4,8 @@ import { Provider } from "mobx-react";
 import App from "./components";
 import Stores from "./models";
 
+import "@babel/polyfill";
+
 const stores = Stores.create({
   settings: window.frontity.plugin.settings
 });

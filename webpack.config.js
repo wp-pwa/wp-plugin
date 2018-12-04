@@ -4,8 +4,7 @@ module.exports = {
   mode: process.env.NODE_ENV || "development",
   devtool: "eval",
   entry: {
-    main: "./admin/index.js",
-    activation: "./admin/activation.js"
+    main: "./admin/index.js"
   },
   output: {
     path: path.resolve(__dirname, "./admin/dist"),
