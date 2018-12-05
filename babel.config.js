@@ -1,19 +1,22 @@
 module.exports = {
   presets: [
     [
-      '@babel/env',
+      "@babel/env",
       {
         targets: {
-          browsers: ['android >= 5', 'ios_saf > 9', 'and_chr >= 40'],
+          and_chr: "64",
+          chrome: "64",
+          ios_saf: "10",
+          safari: "10"
         },
-        useBuiltIns: 'entry',
-      },
+        useBuiltIns: "entry"
+      }
     ],
-    '@babel/react',
+    "@babel/react"
   ],
   plugins: [
-    'styled-components',
-    '@babel/proposal-object-rest-spread',
-    '@babel/proposal-class-properties',
-  ],
+    "styled-components",
+    "@babel/proposal-object-rest-spread",
+    "@babel/proposal-class-properties"
+  ]
 };
