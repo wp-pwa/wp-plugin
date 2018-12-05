@@ -7,6 +7,7 @@
   "scripts": {
     "start": "webpack --config webpack.config.js --watch",
     "build": "NODE_ENV='production' webpack --config webpack.config.js",
+    "analyze": "NODE_ENV='production' ANALYZE=true webpack --config webpack.config.js",
     "grunt": "grunt",
     "test": "jest  --watch --silent",
     "test:ci": "jest --silent --passWithNoTests",
@@ -72,6 +73,7 @@
     "semantic-release-cli": "^4.0.11",
     "simple-git": "^1.102.0",
     "webpack": "^4.25.0",
+    "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {

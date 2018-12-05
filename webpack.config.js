@@ -1,4 +1,5 @@
 const path = require("path");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 module.exports = {
   mode: process.env.NODE_ENV || "development",
@@ -17,5 +18,16 @@ module.exports = {
         loader: "babel-loader"
       }
     ]
-  }
+  },
+  plugins: process.env.ANALYZE
+    ? [
+        new BundleAnalyzerPlugin({
+          analyzerMode: "static",
+          reportFilename: "../analyze/production.html",
+          openAnalyzer: false,
+          generateStatsFile: true,
+          statsFilename: "../analyze/production.json"
+        })
+      ]
+    : []
 };
