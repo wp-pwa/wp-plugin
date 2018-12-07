@@ -3,16 +3,12 @@ import { string, func } from "prop-types";
 import { inject } from "mobx-react";
 import { Grommet, Box, FormField, TextInput, Button } from "grommet";
 
-const App = ({ testSetting, setTestSetting, saveSettings }) => (
+const App = ({ siteId, setSiteId, saveSettings }) => (
   <Grommet plain>
     <form onSubmit={saveSettings}>
       <Box width="medium">
-        <FormField label="Test Setting" htmlFor="test-setting">
-          <TextInput
-            id="test-setting"
-            value={testSetting}
-            onChange={setTestSetting}
-          />
+        <FormField label="Site ID" htmlFor="site_id">
+          <TextInput id="site_id" value={siteId} onChange={setSiteId} />
         </FormField>
         <Button type="submit" label="Save" onClick={saveSettings} primary />
       </Box>
@@ -21,13 +17,13 @@ const App = ({ testSetting, setTestSetting, saveSettings }) => (
 );
 
 App.propTypes = {
-  testSetting: string.isRequired,
-  setTestSetting: func.isRequired,
+  siteId: string.isRequired,
+  setSiteId: func.isRequired,
   saveSettings: func.isRequired
 };
 
 export default inject(({ stores: { settings } }) => ({
-  testSetting: settings.test_setting,
-  setTestSetting: settings.setTestSetting,
+  siteId: settings.site_id,
+  setSiteId: settings.setSiteId,
   saveSettings: settings.saveSettings
 }))(App);

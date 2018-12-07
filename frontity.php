@@ -79,10 +79,14 @@ class frontity {
 
 	function save_settings() {
 		$data = json_decode(stripslashes($_POST["data"]));
-		update_option(
-			'frontity_settings',
-			$data
-		);
+
+		if ($data) {
+			update_option(
+				'frontity_settings',
+				$data
+			);
+		}
+
 		wp_send_json($data);
 	}
 
@@ -992,21 +996,30 @@ function frontity() {
 frontity();
 
 function frontity_activation() {
-	$current_user = wp_get_current_user();
-	$email = $current_user->user_email;
+	$defaults = array(
+		"site_id_requested" => false,
+		"site_id" => "",
+		"pwa_active" => false,
+		"amp_active" => false,
+		"ssr_server" => "https://ssr.wp-pwa.com",
+		"static_server" => "https://static.wp-pwa.com",
+		"amp_server" => "https://amp.wp-pwa.com",
+		"frontpage_forced" => false,
+		"html_purifier_active" => false,
+		"excludes" => array(),
+		"api_filters" => array(),
+	);
 
 	$settings = get_option('frontity_settings');
 
-	if (isset($settings["test_setting"])) {
-		$test_setting = $settings["test_setting"];
-	} else {
-		$test_setting = "pepe";
+	if ($settings) {
+		// Remove deprecated settings.
+		$valid_settings = array_intersect_key($settings, $defaults);
+		// Replace defaults with existing settings.
+		$defaults = array_replace($defaults, $valid_settings);
 	}
 
-	$defaults = array("test_setting" => $test_setting);
-
-	if (!$settings)	add_option('frontity_settings', $defaults);
-	else update_option('frontity_settings', $defaults);
+	update_option('frontity_settings', $defaults);
 
 	flush_rewrite_rules();
 
@@ -1031,9 +1044,9 @@ function frontity_deactivation() {
 	delete_option('frontity_settings');
 }
 
-function frontity_uninstall() {}
-
 function frontity_update() {}
+
+function frontity_uninstallation() {}
 
 register_activation_hook(__FILE__, 'frontity_activation');
 register_deactivation_hook(__FILE__, 'frontity_deactivation');
