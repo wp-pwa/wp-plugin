@@ -2,6 +2,8 @@ import React from "react";
 import { string } from "prop-types";
 import { inject } from "mobx-react";
 import { Grommet } from "grommet";
+import Styles from "./Styles";
+import Header from "./Header";
 import Home from "./Home";
 import Settings from "./Settings";
 
@@ -10,12 +12,26 @@ const pages = {
   frontity_settings: <Settings />
 };
 
-const Admin = ({ adminPage }) => <Grommet plain>{pages[adminPage]}</Grommet>;
+const Admin = ({ page }) => (
+  <Grommet
+    theme={{
+      global: {
+        colors: {
+          brand: "#1F38C5"
+        }
+      }
+    }}
+  >
+    <Styles />
+    <Header />
+    {pages[page]}
+  </Grommet>
+);
 
 Admin.propTypes = {
-  adminPage: string.isRequired
+  page: string.isRequired
 };
 
 export default inject(({ stores: { general } }) => ({
-  adminPage: general.admin_page
+  page: general.page
 }))(Admin);

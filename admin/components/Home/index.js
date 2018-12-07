@@ -3,7 +3,7 @@ import { Box, Heading } from "grommet";
 
 const Home = () => (
   <Box width="medium">
-    <Heading>Frontity</Heading>
+    <Heading>Home</Heading>
   </Box>
 );
 
