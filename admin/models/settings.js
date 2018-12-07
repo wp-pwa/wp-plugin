@@ -16,37 +16,37 @@ export default types
     api_filters: types.array(types.string)
   })
   .actions(self => ({
-    setSiteId(target) {
+    setSiteId({ target }) {
       self.site_id = target.value;
     },
-    setSiteIdRequested(target) {
+    setSiteIdRequested({ target }) {
       self.site_id_requested = target.value;
     },
-    setPwaActive(target) {
+    setPwaActive({ target }) {
       self.pwa_active = target.value;
     },
-    setAmpActive(target) {
+    setAmpActive({ target }) {
       self.amp_active = target.value;
     },
-    setSsrServer(target) {
+    setSsrServer({ target }) {
       self.ssr_server = target.value;
     },
-    setStaticServer(target) {
+    setStaticServer({ target }) {
       self.static_server = target.value;
     },
-    setAmpServer(target) {
+    setAmpServer({ target }) {
       self.amp_server = target.value;
     },
-    setFrontpageForced(target) {
+    setFrontpageForced({ target }) {
       self.frontpage_forced = target.value;
     },
-    setHtmlPurifierActive(target) {
+    setHtmlPurifierActive({ target }) {
       self.html_purifier_active = target.value;
     },
-    setExcludes(target) {
+    setExcludes({ target }) {
       self.excludes = target.value;
     },
-    setApiFilters(target) {
+    setApiFilters({ target }) {
       self.api_filters = target.value;
     },
     async saveSettings(event) {

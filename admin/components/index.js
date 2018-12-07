@@ -1,29 +1,21 @@
 import React from "react";
-import { string, func } from "prop-types";
+import { string } from "prop-types";
 import { inject } from "mobx-react";
-import { Grommet, Box, FormField, TextInput, Button } from "grommet";
+import { Grommet } from "grommet";
+import Home from "./Home";
+import Settings from "./Settings";
 
-const App = ({ siteId, setSiteId, saveSettings }) => (
-  <Grommet plain>
-    <form onSubmit={saveSettings}>
-      <Box width="medium">
-        <FormField label="Site ID" htmlFor="site_id">
-          <TextInput id="site_id" value={siteId} onChange={setSiteId} />
-        </FormField>
-        <Button type="submit" label="Save" onClick={saveSettings} primary />
-      </Box>
-    </form>
-  </Grommet>
-);
-
-App.propTypes = {
-  siteId: string.isRequired,
-  setSiteId: func.isRequired,
-  saveSettings: func.isRequired
+const pages = {
+  frontity_home: <Home />,
+  frontity_settings: <Settings />
 };
 
-export default inject(({ stores: { settings } }) => ({
-  siteId: settings.site_id,
-  setSiteId: settings.setSiteId,
-  saveSettings: settings.saveSettings
-}))(App);
+const Admin = ({ adminPage }) => <Grommet plain>{pages[adminPage]}</Grommet>;
+
+Admin.propTypes = {
+  adminPage: string.isRequired
+};
+
+export default inject(({ stores: { general } }) => ({
+  adminPage: general.admin_page
+}))(Admin);

@@ -44,7 +44,7 @@ class frontity {
 	function __construct() {
 		// actions
 		add_action('init', array($this, 'init'), 1);
-		add_action('admin_menu', array($this, 'frontity_admin_actions')); //add the admin page
+		add_action('admin_menu', array($this, 'render_frontity_admin')); //add the admin page
 		add_action('admin_init', array($this, 'frontity_register_settings')); //register the settings
 		add_action('admin_notices', array($this, 'frontity_admin_notices')); //Display the validation errors and update messages
 
@@ -62,7 +62,6 @@ class frontity {
 		add_action('init', array($this, 'allow_origin'));
 
 		add_action('admin_enqueue_scripts', array($this, 'register_frontity_scripts'));
-		add_action('admin_enqueue_scripts', array($this, 'register_frontity_styles'));
 
 		add_action('rest_api_init', array($this, 'rest_routes'));
 		add_action('registered_post_type', array($this, 'add_custom_post_types_filters'));
@@ -78,7 +77,7 @@ class frontity {
 	function init() {}
 
 	function save_settings() {
-		$data = json_decode(stripslashes($_POST["data"]));
+		$data = json_decode(stripslashes($_POST["data"]), true);
 
 		if ($data) {
 			update_option(
@@ -469,24 +468,13 @@ class frontity {
 	}
 
 	/**
-	 * Register and enqueue style sheet.
-	 */
-	public function register_frontity_styles($hook) {
-		if ('toplevel_page_frontity_admin' === $hook) {
-			wp_register_style(
-				'bulma-css',
-				'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.0.26/css/bulma.min.css',
-				array('font-awesome')
-			);
-			wp_enqueue_style('bulma-css');
-		}
-	}
-
-	/**
 	 * Register and enqueue scripts.
 	 */
 	public function register_frontity_scripts($hook) {
-		if ('toplevel_page_frontity_admin' === $hook) {
+		if (
+			'toplevel_page_frontity_home' === $hook ||
+			'frontity_page_frontity_settings' === $hook
+		) {
 			wp_register_script(
 				'frontity_admin_js',
 				plugin_dir_url(__FILE__) . 'admin/dist/main.js',
@@ -498,44 +486,7 @@ class frontity {
 		}
 	}
 
-	/*
-	*  wp_pwa_frontity_actions
-	*
-	*  This function is called during the 'admin_menu' action and will do things such as:
-	*  add a Frontity menu page to the Main Menu
-	*
-	*  @type	action (admin_menu)
-	*  @date	18/07/14
-	*  @since	0.6.0
-	*
-	*  @param	N/A
-	*  @return	N/A
-	*/
-	function frontity_admin_actions()	{
-		$icon_url = trailingslashit(plugin_dir_url(__FILE__)) . "admin/assets/frontity_20x20.png";
-		$position = 64.999989; //Right before the "Plugins"
-
-		add_menu_page(
-			'Frontity',
-			'Frontity',
-			1,
-			'frontity_admin',
-			array($this, 'render_frontity_admin'),
-			$icon_url,
-			$position
-		);
-
-		add_submenu_page(
-			'frontity_admin',
-			'Frontity - Settings',
-			'Settings',
-			1,
-			'frontity_settings',
-			array($this, 'render_frontity_settings')
-		);
-	}
-
-			/*
+  /*
 	*  render_frontity_admin
 	*
 	*  This function is called by the 'frontity_admin_actions' function and will do things such as:
@@ -550,11 +501,31 @@ class frontity {
 	*/
 
 	function render_frontity_admin() {
-		include('admin/admin.php');
-	}
+		$icon_url = trailingslashit(plugin_dir_url(__FILE__)) . "admin/assets/frontity_20x20.png";
+		$position = 64.999989; //Right before the "Plugins"
 
-	function render_frontity_settings()	{
-		include('admin/settings.php');
+		add_menu_page(
+			'Frontity',
+			'Frontity',
+			1,
+			'frontity_home',
+			function() {
+				include('admin/index.php');
+			},
+			$icon_url,
+			$position
+		);
+
+		add_submenu_page(
+			'frontity_home',
+			'Frontity - Settings',
+			'Settings',
+			1,
+			'frontity_settings',
+			function() {
+				include('admin/index.php');
+			}
+		);
 	}
 
 	function get_wp_pwa_site_id() {
