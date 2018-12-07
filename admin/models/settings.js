@@ -38,16 +38,16 @@ export default types
       self.amp_server = target.value;
     },
     setFrontpageForced({ target }) {
-      self.frontpage_forced = target.value;
+      self.frontpage_forced = target.checked;
     },
     setHtmlPurifierActive({ target }) {
-      self.html_purifier_active = target.value;
+      self.html_purifier_active = target.checked;
     },
     setExcludes({ target }) {
-      self.excludes = target.value;
+      self.excludes = target.value.split("\n");
     },
     setApiFilters({ target }) {
-      self.api_filters = target.value;
+      self.api_filters = target.value.split("\n");
     },
     async saveSettings(event) {
       event.preventDefault();

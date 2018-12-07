@@ -2,8 +2,8 @@ import React from "react";
 import { Box, Heading } from "grommet";
 
 const Home = () => (
-  <Box width="medium">
-    <Heading>Home</Heading>
+  <Box margin="auto" width="608px">
+    <Heading level={2}>Home</Heading>
   </Box>
 );
 
