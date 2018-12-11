@@ -124,14 +124,23 @@ if ($siteId && $type && $id) {
     $inject = false;
   }
 }
+
 ?>
 
 <?php if ($inject) { ?>
   <script type='text/javascript'>window['wp-pwa']={siteId:'<?php echo $siteId; ?>',type:'<?php echo $type; ?>',id:'<?php echo $id; ?>',<?php if ($page) echo 'page:\'' . $page . '\',' ?>env:'<?php echo $env; ?>',dev:'<?php echo $dev; ?>',perPage:'<?php echo $perPage; ?>',ssr:'<?php echo $ssr; ?>',initialUrl:'<?php echo $initialUrl; ?>',static:'<?php echo $static; ?>'<?php if ($break) echo ',break:true' ?><?php if (sizeof($excludes) !== 0) echo ',excludes:["' . str_replace('\\\\', '\\', implode('", "', $excludes)) . '"]' ?>};
   <?php if ($break) {
     echo 'debugger;';
-    require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.js');
+    ob_start();
+    include(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.js');
+    $buffer = ob_get_clean();
+    $buffer = apply_filters('frontity_javascript_injector', $buffer);
+    echo $buffer;
   } else {
-    require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.min.js');
+    ob_start();
+    include(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.min.js');
+    $buffer = ob_get_clean();
+    $buffer = apply_filters('frontity_javascript_injector', $buffer);
+    echo $buffer;
   } ?></script>
 <?php } ?>
