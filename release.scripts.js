@@ -1,7 +1,7 @@
 const argv = require("minimist")(process.argv.slice(2));
 const connect = require("simple-git/promise");
 const replace = require("replace-in-file");
-const packageJson = require("../package.json");
+const packageJson = require("./package.json");
 
 const success = async () => {
   try {
