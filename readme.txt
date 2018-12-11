@@ -1,4 +1,4 @@
-=== Frontity - Progressive Web Apps Themes with Google AMP ===
+=== Frontity - Progressive Web App Themes with Google AMP ===
 Contributors: poliuk, luisherranz, rmartinezduque, orballo, davidarenas
 Tags: pwa, progressive web app, google amp, mobile theme, react
 Author URI: https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description
