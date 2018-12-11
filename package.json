@@ -7,9 +7,9 @@
   "scripts": {
     "grunt": "grunt",
     "cz": "git-cz",
-    "semantic-release": "env-cmd .env.local semantic-release",
-    "sr:prepare": "env-cmd .env.local node release/prepare.js",
-    "sr:success": "env-cmd .env.local node release/success.js"
+    "semantic-release": "env-cmd .env semantic-release",
+    "sr:prepare": "env-cmd .env node release/prepare.js",
+    "sr:success": "env-cmd .env node release/success.js"
   },
   "repository": {
     "type": "git",
