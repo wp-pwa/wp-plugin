@@ -1,4 +1,4 @@
-import { types, getSnapshot } from "mobx-state-tree";
+import { types, getSnapshot, getParent } from "mobx-state-tree";
 import { post } from "axios";
 
 export default types
@@ -19,14 +19,16 @@ export default types
     setSiteId({ target }) {
       self.site_id = target.value;
     },
-    setSiteIdRequested({ target }) {
-      self.site_id_requested = target.value;
+    setSiteIdRequested(value) {
+      self.site_id_requested = value;
     },
     setPwaActive({ target }) {
-      self.pwa_active = target.value;
+      self.pwa_active = target.checked;
+      self.saveSettings();
     },
     setAmpActive({ target }) {
-      self.amp_active = target.value;
+      self.amp_active = target.checked;
+      self.saveSettings();
     },
     setSsrServer({ target }) {
       self.ssr_server = target.value;
@@ -49,13 +51,18 @@ export default types
     setApiFilters({ target }) {
       self.api_filters = target.value.split("\n");
     },
-    async saveSettings(event) {
-      event.preventDefault();
-
+    async saveSettings() {
       const data = new window.FormData();
       data.append("action", "frontity_save_settings");
       data.append("data", JSON.stringify(getSnapshot(self)));
 
       await post(window.ajaxurl, data);
+
+      window.frontity.plugin.settings = getSnapshot(self);
+
+      const { ui } = getParent(self, 1);
+
+      if (self.site_id.length === 17) ui.setSiteIdValid(true);
+      else ui.setSiteIdInvalid(true);
     }
   }));

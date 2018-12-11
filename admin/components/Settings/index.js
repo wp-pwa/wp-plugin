@@ -47,7 +47,7 @@ const Settings = ({
       <Form>
         <FormField label="Site ID">
           <TextInput
-            placeholder="ID of 16 characters"
+            placeholder="ID of 17 characters"
             value={siteId}
             onChange={setSiteId}
           />
@@ -154,7 +154,7 @@ const StyledBox = styled(Box)`
 `;
 
 const Warning = styled(StyledBox)`
-  padding: 0 8px;
+  padding: 8px;
   box-shadow: 0 1px 4px 0 rgba(31, 56, 197, 0.12);
 `;
 

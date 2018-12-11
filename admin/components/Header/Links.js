@@ -4,7 +4,7 @@ import { Box, Button } from "grommet";
 const Links = () => (
   <Box direction="row" align="center" justify="between">
     <Button
-      label="Contant and help"
+      label="Contact and help"
       focusIndicator={false}
       margin={{ right: "20px" }}
     />

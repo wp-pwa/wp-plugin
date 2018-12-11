@@ -1,10 +1,20 @@
 import React from "react";
-import { Box, Heading } from "grommet";
+import { bool } from "prop-types";
+import { inject } from "mobx-react";
+import { Box } from "grommet";
+import WithSiteId from "./WithSiteId";
+import WithoutSiteId from "./WithoutSiteId";
 
-const Home = () => (
+const Home = ({ siteIdValid }) => (
   <Box margin="auto" width="608px">
-    <Heading level={2}>Home</Heading>
+    {siteIdValid ? <WithSiteId /> : <WithoutSiteId />}
   </Box>
 );
 
-export default Home;
+Home.propTypes = {
+  siteIdValid: bool.isRequired
+};
+
+export default inject(({ stores: { ui } }) => ({
+  siteIdValid: ui.siteIdValid
+}))(Home);
