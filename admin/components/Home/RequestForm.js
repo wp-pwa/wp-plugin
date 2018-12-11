@@ -1,5 +1,5 @@
 import React from "react";
-import { string, func } from "prop-types";
+import { string, func, shape, arrayOf } from "prop-types";
 import { inject } from "mobx-react";
 import styled from "styled-components";
 import {
@@ -8,7 +8,7 @@ import {
   Paragraph,
   FormField,
   TextInput,
-  RadioButton
+  RadioButton,
 } from "grommet";
 
 const RequestForm = ({
@@ -21,50 +21,48 @@ const RequestForm = ({
   setRequestFormEmail,
   setRequestFormUrl,
   setRequestFormType,
-  setRequestFormTraffic
+  setRequestFormTraffic,
+  requestTitleText,
+  requestContentText,
+  requestFieldName,
+  requestFieldEmail,
+  requestFieldUrl,
+  requestFieldType,
+  requestFieldTraffic,
 }) => (
   <Container margin={{ bottom: "16px" }}>
     <Header margin={{ vertical: "0", horizontal: "0" }}>
-      Get started by requesting a Site ID
+      {requestTitleText}
     </Header>
     <Body>
       <Comment margin={{ top: "0", bottom: "20px" }}>
-        Access to our platform is currently limited. In order to configure and
-        activate our Progressive Web App (PWA) theme you have to request a site
-        ID first. This will allow you to connect your WordPress site with our
-        platform.
+        {requestContentText}
       </Comment>
-      <FormField label="Name">
+      <FormField label={requestFieldName.label}>
         <TextInput
-          placeholder="John Doe"
+          placeholder={requestFieldName.placeholder}
           value={requestFormName}
           onChange={setRequestFormName}
         />
       </FormField>
-      <FormField label="Email">
+      <FormField label={requestFieldEmail.label}>
         <TextInput
-          placeholder="johndoe@example.com"
+          placeholder={requestFieldEmail.placeholder}
           value={requestFormEmail}
           onChange={setRequestFormEmail}
         />
       </FormField>
-      <FormField label="WordPress URL">
+      <FormField label={requestFieldUrl.label}>
         <TextInput
-          placeholder="yourblog.com"
+          placeholder={requestFieldUrl.placeholder}
           value={requestFormUrl}
           onChange={setRequestFormUrl}
         />
       </FormField>
       <Box margin={{ top: "24px" }} direction="row" justify="between">
         <RadioBox>
-          <RadioHead>Type of your WordPress site</RadioHead>
-          {[
-            "Blog / News Site",
-            "eCommerce / Online store",
-            "Corporate site / Online bussiness",
-            "Classifieds site",
-            "Other"
-          ].map(value => (
+          <RadioHead>{requestFieldType.label}</RadioHead>
+          {requestFieldType.options.map(value => (
             <RadioButton
               key={value}
               label={value}
@@ -75,19 +73,13 @@ const RequestForm = ({
           ))}
         </RadioBox>
         <RadioBox>
-          <RadioHead>Monthly traffic: (Pageviews per month)</RadioHead>
-          {[
-            "More than 1 million",
-            "500.000 - 1 million",
-            "100.000 - 500.000",
-            "Less than 100.000",
-            "I don't know"
-          ].map(value => (
+          <RadioHead>{requestFieldTraffic.label}</RadioHead>
+          {requestFieldTraffic.options.map(option => (
             <RadioButton
-              key={value}
-              label={value}
-              name={value}
-              checked={requestFormTraffic === value}
+              key={option}
+              label={option}
+              name={option}
+              checked={requestFormTraffic === option}
               onChange={setRequestFormTraffic}
             />
           ))}
@@ -107,21 +99,41 @@ RequestForm.propTypes = {
   setRequestFormEmail: func.isRequired,
   setRequestFormUrl: func.isRequired,
   setRequestFormType: func.isRequired,
-  setRequestFormTraffic: func.isRequired
+  setRequestFormTraffic: func.isRequired,
+  requestTitleText: string.isRequired,
+  requestContentText: string.isRequired,
+  requestFieldName: shape({ label: string, placeholder: string }).isRequired,
+  requestFieldEmail: shape({ label: string, placeholder: string }).isRequired,
+  requestFieldUrl: shape({ label: string, placeholder: string }).isRequired,
+  requestFieldType: shape({ label: string, options: arrayOf(string) })
+    .isRequired,
+  requestFieldTraffic: shape({ label: string, options: arrayOf(string) })
+    .isRequired,
 };
 
-export default inject(({ stores: { ui } }) => ({
-  requestFormName: ui.requestFormName,
-  requestFormEmail: ui.requestFormEmail,
-  requestFormUrl: ui.requestFormUrl,
-  requestFormType: ui.requestFormType,
-  requestFormTraffic: ui.requestFormTraffic,
-  setRequestFormName: ui.setRequestFormName,
-  setRequestFormEmail: ui.setRequestFormEmail,
-  setRequestFormUrl: ui.setRequestFormUrl,
-  setRequestFormType: ui.setRequestFormType,
-  setRequestFormTraffic: ui.setRequestFormTraffic
-}))(RequestForm);
+export default inject(({ stores: { ui, languages } }) => {
+  const requestForm = "home.withoutSiteId.requestForm";
+
+  return {
+    requestFormName: ui.requestFormName,
+    requestFormEmail: ui.requestFormEmail,
+    requestFormUrl: ui.requestFormUrl,
+    requestFormType: ui.requestFormType,
+    requestFormTraffic: ui.requestFormTraffic,
+    setRequestFormName: ui.setRequestFormName,
+    setRequestFormEmail: ui.setRequestFormEmail,
+    setRequestFormUrl: ui.setRequestFormUrl,
+    setRequestFormType: ui.setRequestFormType,
+    setRequestFormTraffic: ui.setRequestFormTraffic,
+    requestTitleText: languages.get(`${requestForm}.title`),
+    requestContentText: languages.get(`${requestForm}.content`),
+    requestFieldName: languages.get(`${requestForm}.fieldName`),
+    requestFieldEmail: languages.get(`${requestForm}.fieldEmail`),
+    requestFieldUrl: languages.get(`${requestForm}.fieldUrl`),
+    requestFieldType: languages.get(`${requestForm}.fieldType`),
+    requestFieldTraffic: languages.get(`${requestForm}.fieldTraffic`),
+  };
+})(RequestForm);
 
 const StyledBox = styled(Box)`
   border-radius: 4px;

@@ -1,9 +1,85 @@
 {
-  "header": {},
+  "header": {
+    "links": {
+      "contactAndHelp": "Contact and help",
+      "documentation": "Documentation",
+      "viewDemo": "View demo"
+    }
+  },
   "home": {
-    "noSiteId": {},
+    "withoutSiteId": {
+      "description": {
+        "title": "How Frontity works",
+        "content": "Frontity is a mobile WordPress theme built with React that makes your site faster and more engaging on mobile devices. It implements Progressive Web App (PWA) functionalities and Google AMP.",
+        "features": [
+          {
+            "title": "Same URL",
+            "content": "Frontity uses the same URL as your blog. When a visit comes from mobile, it automatically loads our theme."
+          },
+          {
+            "title": "Keep Your Desktop Theme",
+            "content": "Frontity is a special theme for mobile visitors, which means that your desktop version and content don't change."
+          },
+          {
+            "title": "Include / Exclude Pages",
+            "content": "You can control your menu, pages, and even exclude specific URLs from being loaded into our mobile theme."
+          }
+        ],
+        "imageFooter": "Frontity replaces your classic mobile version with a fast PWA theme.",
+        "viewDemoButton": "View demo"
+      },
+      "notifications": [
+        {
+          "highlight": "Our theme is suitable for news publishers and bloggers",
+          "content": " (blogs, news sites, magazines) who wish to improve their mobile site performance and speed."
+        },
+        {
+          "highlight": "Our theme is not compatible",
+          "content": " with e-commerce, corporate, classifieds or custom WordPress sites."
+        }
+      ],
+      "requestForm": {
+        "title": "Get started by requesting a Site ID",
+        "content": "Access to our platform is currently limited. In order to configure and activate our Progressive Web App (PWA) theme you have to request a site ID first. This will allow you to connect your WordPress site with our platform.",
+        "fieldName": {
+          "label": "Name",
+          "placeholder": "John Doe"
+        },
+        "fieldEmail": {
+          "label": "Email",
+          "placeholder": "johndoe@example.com"
+        },
+        "fieldUrl": {
+          "label": "WordPress URL",
+          "placeholder": "yourblog.com"
+        },
+        "fieldType": {
+          "label": "Type of your WordPress site",
+          "options": [
+            "Blog / News Site",
+            "eCommerce / Online store",
+            "Corporate site / Online bussiness",
+            "Classifieds site",
+            "Other"
+          ]
+        },
+        "fieldTraffic": {
+          "label": "Monthly traffic: (Pageviews per month)",
+          "options": [
+            "More than 1 million",
+            "500.000 - 1 million",
+            "100.000 - 500.000",
+            "Less than 100.000",
+            "I don't know"
+          ]
+        },
+        "alreadyLink": "I already have a Site ID",
+        "requestButton": "Request Site ID"
+      }
+    },
     "siteIdJustRequested": {},
-    "siteIdRequested": {}
+    "siteIdRequested": {},
+    "withSiteId": {}
   },
   "settings": {}
 }

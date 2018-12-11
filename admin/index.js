@@ -8,13 +8,13 @@ import "@babel/polyfill";
 
 const stores = Stores.create({
   general: {
-    page: new URLSearchParams(window.location.search).get("page")
+    page: new URLSearchParams(window.location.search).get("page"),
   },
   ui: {
     siteIdValid: window.frontity.plugin.settings.site_id.length === 17,
-    siteIdInvalid: window.frontity.plugin.settings.site_id.length !== 17
+    siteIdInvalid: window.frontity.plugin.settings.site_id.length !== 17,
   },
-  settings: window.frontity.plugin.settings
+  settings: window.frontity.plugin.settings,
 });
 
 window.frontity.client = stores;
