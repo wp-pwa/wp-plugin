@@ -8,7 +8,7 @@ Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
-Make your mobile site fast and highly engaging with a Progressive Web App (PWA) theme built with React, and Google AMP.
+Make your mobile site fast and highly engaging with a Progressive Web App (PWA) theme built with React.
 
 == Description ==
 
@@ -18,13 +18,13 @@ Suitable for **blogs and news sites**, this theme makes your site faster and mor
 
 A Progressive Web App (PWA) theme is a great way to improve site performance and offer an outstanding mobile experience for your users as it combines the best of mobile web and the best of mobile apps.
 
-You can use web push notifications, let users experience instant loading times, swipe between articles, access your site from the home screen, among many things. This way, Frontity helps you increase **user engagement**, **page views** per session, retention, and boost **revenue**.
+You can use web push notifications, let users experience instant loading times, swipe between articles, access your site from the home screen, among many things. This way, Frontity significantly helps to increase **user engagement**, **page views** per session, retention, and boost **revenue**.
 
 In addition, Frontity combines the power of PWA technologies with Google AMP (Accelerated Mobile Pages). You can enable this feature on your mobile site without any extra configuration and enjoy both PWA and AMP benefits.
 
 = How does Frontity work? =
 
-* **Keep your desktop theme**: Frontity is a Progressive Web App (PWA) theme for mobile visitors, which means that your desktop theme does not change and will continue to show for your non-mobile visitors.
+* **Keep your desktop theme**: Frontity is a Progressive Web App (PWA) theme for mobile visitors - your desktop theme will not change and will continue to show for your non-mobile visitors.
 
 * **Same URL**: Frontity uses the same URL as your regular theme. When a visit comes from a mobile device, it automatically loads the PWA theme.
 
@@ -36,7 +36,7 @@ In addition, Frontity combines the power of PWA technologies with Google AMP (Ac
 
 = Features =
 
-* **Google AMP support**: you can easily enable this feature on your Progressive Web App theme without any extra configuration and enjoy both PWA and AMP benefits.
+* **Google AMP support**: you can easily enable this feature on your Progressive Web App theme without any extra configuration and enjoy both PWA and Google AMP benefits.
 
 * **Instant loading**: Our PWAs themes are optimized to make your site load in less than one second and keep users engaged with your site.
 
