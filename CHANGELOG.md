@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/frontity/wp-plugin/compare/v1.9.0...v1.9.1) (2018-12-11)
+
+
+### Bug Fixes
+
+* **semantic-release:** move to dotenv and release.scripts.js ([a0d82b7](https://github.com/frontity/wp-plugin/commit/a0d82b7))
+
 # [1.9.0](https://github.com/frontity/wp-plugin/compare/v1.8.0...v1.9.0) (2018-12-11)
 
 
