@@ -7,9 +7,7 @@
   "scripts": {
     "grunt": "grunt",
     "cz": "git-cz",
-    "semantic-release": "env-cmd .env semantic-release",
-    "sr:prepare": "env-cmd .env node release/prepare.js",
-    "sr:success": "env-cmd .env node release/success.js"
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
@@ -36,13 +34,14 @@
     "@semantic-release/npm": "^3.4.1",
     "commitizen": "^2.10.1",
     "cz-conventional-changelog": "^2.1.0",
-    "env-cmd": "^8.0.2",
+    "dotenv": "^6.2.0",
     "grunt": "^1.0.3",
     "grunt-cli": "^1.3.1",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-uglify": "^3.4.0",
     "grunt-wp-readme-to-markdown": "^2.0.1",
     "husky": "^1.0.0",
+    "minimist": "^1.2.0",
     "replace-in-file": "^3.4.2",
     "semantic-release": "^15.9.16",
     "semantic-release-cli": "^4.0.8",

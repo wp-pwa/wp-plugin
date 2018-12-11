@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 process.env.GIT_AUTHOR_NAME = 'Frontibotito';
 process.env.GIT_AUTHOR_EMAIL = 'frontibotito@frontity.com';
 process.env.GIT_COMMITTER_NAME = 'Frontibotito';
@@ -14,7 +16,7 @@ module.exports = {
     '@semantic-release/npm',
     {
       path: '@semantic-release/exec',
-      cmd: 'npm run sr:prepare',
+      cmd: 'node release.scripts.js --prepare',
     },
     {
       path: '@semantic-release/git',
@@ -26,7 +28,7 @@ module.exports = {
   success: [
     {
       path: '@semantic-release/exec',
-      cmd: 'npm run sr:success',
+      cmd: 'node release.scripts.js --success',
     },
     '@semantic-release/github',
   ],
