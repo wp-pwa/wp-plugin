@@ -3,7 +3,7 @@
 **Tags:** pwa, progressive web app, google amp, mobile theme, react  
 **Author URI:** https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description  
 **Requires at least:** 4.4  
-**Tested up to:** 4.9.6  
+**Tested up to:** 5.0  
 **Stable tag:** trunk  
 **License:** GPLv3  
 **License URI:** http://www.gnu.org/licenses/gpl.html  
