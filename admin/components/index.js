@@ -8,8 +8,8 @@ import Home from "./Home";
 import Settings from "./Settings";
 
 const pages = {
-  frontity_home: <Home />,
-  frontity_settings: <Settings />
+  "frontity-dashboard": <Home />,
+  "frontity-settings": <Settings />,
 };
 
 const Admin = ({ page }) => (
@@ -17,9 +17,9 @@ const Admin = ({ page }) => (
     theme={{
       global: {
         colors: {
-          brand: "#1F38C5"
-        }
-      }
+          brand: "#1F38C5",
+        },
+      },
     }}
   >
     <Styles />
@@ -29,9 +29,9 @@ const Admin = ({ page }) => (
 );
 
 Admin.propTypes = {
-  page: string.isRequired
+  page: string.isRequired,
 };
 
 export default inject(({ stores: { general } }) => ({
-  page: general.page
+  page: general.page,
 }))(Admin);

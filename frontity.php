@@ -466,8 +466,8 @@ class frontity {
 	 */
 	public function register_frontity_scripts($hook) {
 		if (
-			'toplevel_page_frontity_home' === $hook ||
-			'frontity_page_frontity_settings' === $hook
+			'toplevel_page_frontity-dashboard' === $hook ||
+			'frontity_page_frontity-settings' === $hook
 		) {
 			wp_register_script(
 				'frontity_admin_js',
@@ -501,8 +501,8 @@ class frontity {
 		add_menu_page(
 			'Frontity',
 			'Frontity',
-			1,
-			'frontity_home',
+			'manage_options',
+			'frontity-dashboard',
 			function() {
 				include('admin/index.php');
 			},
@@ -511,11 +511,22 @@ class frontity {
 		);
 
 		add_submenu_page(
-			'frontity_home',
-			'Frontity - Settings',
-			'Settings',
-			1,
-			'frontity_settings',
+			'frontity-dashboard',
+			'Dashboard',
+			'Dashboard',
+			'manage_options',
+			'frontity-dashboard',
+			function() {
+				include('admin/index.php');
+			}
+		);
+
+		add_submenu_page(
+			'frontity-dashboard',
+			'Advanced Settings',
+			'Advanced Settings',
+			'manage_options',
+			'frontity-settings',
 			function() {
 				include('admin/index.php');
 			}
