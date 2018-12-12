@@ -80,7 +80,8 @@
     "siteIdJustRequested": {
       "emoji": "🎉 ",
       "title": "We have received your request, thanks!",
-      "content": "Our team will manually review your request and get back to you shortly."
+      "content": "Our team will manually review your request and get back to you shortly.",
+      "link": "I already have a Site ID"
     },
     "siteIdRequested": {
       "title": "Insert your Site ID",
@@ -89,6 +90,7 @@
         "label": "Site ID",
         "placeholder": "ID of 17 characters"
       },
+      "link": "I don't have a Site ID",
       "confirmButton": "Confirm"
     },
     "withSiteId": {
@@ -103,6 +105,10 @@
       "ampActivation": {
         "title": "Google AMP",
         "content": "Activate Google AMP on your mobile site with the same look and feel of the PWA theme."
+      },
+      "links": {
+        "twitter": "Follow @frontity in Twitter",
+        "github": "Get involved in GitHub"
       }
     }
   },

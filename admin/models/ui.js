@@ -9,7 +9,7 @@ export default types
     requestFormEmail: "",
     requestFormUrl: "",
     requestFormType: "",
-    requestFormTraffic: ""
+    requestFormTraffic: "",
   })
   .actions(self => ({
     setSiteIdJustRequested() {
@@ -19,6 +19,9 @@ export default types
 
       settings.setSiteIdRequested(true);
       settings.saveSettings();
+    },
+    unsetSiteIdJustRequested() {
+      self.siteIdJustRequested = false;
     },
     setSiteIdValid(value) {
       self.siteIdValid = value;
@@ -40,5 +43,5 @@ export default types
     },
     setRequestFormTraffic({ target }) {
       self.requestFormTraffic = target.name;
-    }
+    },
   }));

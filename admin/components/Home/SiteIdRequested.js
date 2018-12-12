@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { string, func, shape } from "prop-types";
 import { inject } from "mobx-react";
@@ -8,9 +9,11 @@ const SiteIdRequested = ({
   siteId,
   setSiteId,
   saveSettings,
+  setSiteIdRequested,
   titleText,
   contentText,
   fieldSiteId,
+  linkText,
   confirmButtonText,
 }) => (
   <>
@@ -27,7 +30,10 @@ const SiteIdRequested = ({
         </FormField>
       </Body>
     </Container>
-    <Button primary label={confirmButtonText} onClick={saveSettings} />
+    <Box direction="row" justify="between" align="center">
+      <Link onClick={setSiteIdRequested}>{linkText}</Link>
+      <Button primary label={confirmButtonText} onClick={saveSettings} />
+    </Box>
   </>
 );
 
@@ -35,9 +41,11 @@ SiteIdRequested.propTypes = {
   siteId: string.isRequired,
   setSiteId: func.isRequired,
   saveSettings: func.isRequired,
+  setSiteIdRequested: func.isRequired,
   titleText: string.isRequired,
   contentText: string.isRequired,
   fieldSiteId: shape({ label: string, placeholder: string }).isRequired,
+  linkText: string.isRequired,
   confirmButtonText: string.isRequired,
 };
 
@@ -48,9 +56,14 @@ export default inject(({ stores: { settings, languages } }) => {
     siteId: settings.site_id,
     setSiteId: settings.setSiteId,
     saveSettings: settings.saveSettings,
+    setSiteIdRequested: () => {
+      settings.setSiteIdRequested(false);
+      settings.saveSettings();
+    },
     titleText: languages.get(`${siteIdRequested}.title`),
     contentText: languages.get(`${siteIdRequested}.content`),
     fieldSiteId: languages.get(`${siteIdRequested}.fieldSiteId`),
+    linkText: languages.get(`${siteIdRequested}.link`),
     confirmButtonText: languages.get(`${siteIdRequested}.confirmButton`),
   };
 })(SiteIdRequested);
@@ -85,4 +98,9 @@ const Comment = styled(Paragraph)`
   max-width: 100%;
   color: #0c112b;
   opacity: 0.4;
+`;
+
+const Link = styled.a`
+  color: #1f38c5;
+  text-decoration: underline;
 `;

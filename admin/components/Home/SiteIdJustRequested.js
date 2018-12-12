@@ -1,38 +1,52 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
-import { string } from "prop-types";
+import { string, func } from "prop-types";
 import { inject } from "mobx-react";
 import styled from "styled-components";
 import { Box, Heading, Paragraph } from "grommet";
 
-const SiteIdJustRequested = ({ emojiText, titleText, contentText }) => (
-  <Container margin={{ top: "40px" }}>
-    <Header margin={{ horizontal: "0", vertical: "0" }}>
-      <span aria-label="Party emoji" role="img">
-        {emojiText}
-      </span>
-      {titleText}
-    </Header>
-    <Body>
-      <StyledParagraph margin={{ vertical: "0", horizontal: "0" }}>
-        {contentText}
-      </StyledParagraph>
-    </Body>
-  </Container>
+const SiteIdJustRequested = ({
+  emojiText,
+  titleText,
+  contentText,
+  linkText,
+  unsetSiteIdJustRequested,
+}) => (
+  <>
+    <Container margin={{ top: "40px", bottom: "16px" }}>
+      <Header margin={{ horizontal: "0", vertical: "0" }}>
+        <span aria-label="Party emoji" role="img">
+          {emojiText}
+        </span>
+        {titleText}
+      </Header>
+      <Body>
+        <StyledParagraph margin={{ vertical: "0", horizontal: "0" }}>
+          {contentText}
+        </StyledParagraph>
+      </Body>
+    </Container>
+    <Link onClick={unsetSiteIdJustRequested}>{linkText}</Link>
+  </>
 );
 
 SiteIdJustRequested.propTypes = {
   emojiText: string.isRequired,
   titleText: string.isRequired,
   contentText: string.isRequired,
+  linkText: string.isRequired,
+  unsetSiteIdJustRequested: func.isRequired,
 };
 
-export default inject(({ stores: { languages } }) => {
+export default inject(({ stores: { ui, languages } }) => {
   const siteIdJustRequested = "home.siteIdJustRequested";
 
   return {
     emojiText: languages.get(`${siteIdJustRequested}.emoji`),
     titleText: languages.get(`${siteIdJustRequested}.title`),
     contentText: languages.get(`${siteIdJustRequested}.content`),
+    linkText: languages.get(`${siteIdJustRequested}.link`),
+    unsetSiteIdJustRequested: ui.unsetSiteIdJustRequested,
   };
 })(SiteIdJustRequested);
 
@@ -64,4 +78,10 @@ const Body = styled(Box)`
 
 const StyledParagraph = styled(Paragraph)`
   max-width: 100%;
+`;
+
+const Link = styled.a`
+  color: #1f38c5;
+  text-decoration: underline;
+  margin: auto;
 `;

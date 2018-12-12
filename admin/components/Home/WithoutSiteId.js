@@ -12,6 +12,7 @@ const WithoutSiteId = ({
   siteIdRequested,
   siteIdJustRequested,
   setSiteIdJustRequested,
+  setSiteIdRequested,
   descriptionTitleText,
   descriptionContentText,
   descriptionFeatures,
@@ -74,7 +75,7 @@ const WithoutSiteId = ({
       ))}
       <RequestForm />
       <Box direction="row" justify="between" align="center">
-        <Link>{requestAlreadyLinkText}</Link>
+        <Link onClick={setSiteIdRequested}>{requestAlreadyLinkText}</Link>
         <Button
           primary
           label={requestButtonText}
@@ -89,6 +90,7 @@ WithoutSiteId.propTypes = {
   siteIdRequested: bool.isRequired,
   siteIdJustRequested: bool.isRequired,
   setSiteIdJustRequested: func.isRequired,
+  setSiteIdRequested: func.isRequired,
   descriptionTitleText: string.isRequired,
   descriptionContentText: string.isRequired,
   descriptionFeatures: arrayOf(shape({ title: string, content: string }))
@@ -109,6 +111,10 @@ export default inject(({ stores: { settings, ui, languages } }) => {
     siteIdRequested: settings.site_id_requested,
     siteIdJustRequested: ui.siteIdJustRequested,
     setSiteIdJustRequested: ui.setSiteIdJustRequested,
+    setSiteIdRequested: () => {
+      settings.setSiteIdRequested(true);
+      settings.saveSettings();
+    },
     descriptionTitleText: languages.get(`${description}.title`),
     descriptionContentText: languages.get(`${description}.content`),
     descriptionFeatures: languages.get(`${description}.features`),
@@ -171,6 +177,9 @@ const InnerContainer = styled.div`
 const ViewDemoButton = styled(Button)`
   width: 140px;
   align-self: flex-end;
+
+  /* hidden until autodemos is available */
+  display: none;
 `;
 
 const Footer = styled(Box)`

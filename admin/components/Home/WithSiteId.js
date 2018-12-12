@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { string, bool, func } from "prop-types";
 import { inject } from "mobx-react";
@@ -15,6 +16,8 @@ const WithSiteId = ({
   pwaContentText,
   ampTitleText,
   ampContentText,
+  linkTwitterText,
+  linkGithubText,
 }) => (
   <>
     <Notification margin={{ top: "40px", bottom: "20px" }}>
@@ -40,6 +43,14 @@ const WithSiteId = ({
     </Container>
     <Separator />
     <Notification>{bottomNotificationText}</Notification>
+    <Box direction="row" justify="between" margin={{ top: "16px" }}>
+      <Link href="https://twitter.com/frontity" target="_blank">
+        {linkTwitterText}
+      </Link>
+      <Link href="https://github.com/frontity" target="_blank">
+        {linkGithubText}
+      </Link>
+    </Box>
   </>
 );
 
@@ -54,11 +65,14 @@ WithSiteId.propTypes = {
   pwaContentText: string.isRequired,
   ampTitleText: string.isRequired,
   ampContentText: string.isRequired,
+  linkTwitterText: string.isRequired,
+  linkGithubText: string.isRequired,
 };
 
 export default inject(({ stores: { settings, languages } }) => {
   const withSiteId = "home.withSiteId";
   const notifications = `${withSiteId}.notifications`;
+  const links = `${withSiteId}.links`;
 
   return {
     pwaActive: settings.pwa_active,
@@ -71,6 +85,8 @@ export default inject(({ stores: { settings, languages } }) => {
     pwaContentText: languages.get(`${withSiteId}.pwaActivation.content`),
     ampTitleText: languages.get(`${withSiteId}.ampActivation.title`),
     ampContentText: languages.get(`${withSiteId}.ampActivation.content`),
+    linkTwitterText: languages.get(`${links}.twitter`),
+    linkGithubText: languages.get(`${links}.github`),
   };
 })(WithSiteId);
 
@@ -112,4 +128,9 @@ const Separator = styled.div`
   opacity: 0.08;
   background-color: #1f38c5;
   margin-bottom: 40px;
+`;
+
+const Link = styled.a`
+  color: #1f38c5;
+  text-decoration: underline;
 `;
