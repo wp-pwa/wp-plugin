@@ -67,7 +67,7 @@ const WithoutSiteId = ({
           margin={{ bottom: index ? "16px" : "8px" }}
         >
           <StyledParagraph margin={{ vertical: "0", horizontal: "0" }}>
-            <strong> {notification.highlight} </strong>
+            <strong>{notification.highlight} </strong>
             {notification.content}
           </StyledParagraph>
         </Notification>

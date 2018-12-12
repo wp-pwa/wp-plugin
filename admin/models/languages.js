@@ -1,5 +1,5 @@
 import { types } from "mobx-state-tree";
-import * as languages from "./languages";
+import * as languages from "../languages";
 
 export default types
   .model("Languages")

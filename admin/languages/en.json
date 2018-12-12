@@ -31,11 +31,11 @@
       "notifications": [
         {
           "highlight": "Our theme is suitable for news publishers and bloggers",
-          "content": " (blogs, news sites, magazines) who wish to improve their mobile site performance and speed."
+          "content": "(blogs, news sites, magazines) who wish to improve their mobile site performance and speed."
         },
         {
           "highlight": "Our theme is not compatible",
-          "content": " with e-commerce, corporate, classifieds or custom WordPress sites."
+          "content": "with e-commerce, corporate, classifieds or custom WordPress sites."
         }
       ],
       "requestForm": {
@@ -77,9 +77,75 @@
         "requestButton": "Request Site ID"
       }
     },
-    "siteIdJustRequested": {},
-    "siteIdRequested": {},
-    "withSiteId": {}
+    "siteIdJustRequested": {
+      "emoji": "🎉 ",
+      "title": "We have received your request, thanks!",
+      "content": "Our team will manually review your request and get back to you shortly."
+    },
+    "siteIdRequested": {
+      "title": "Insert your Site ID",
+      "content": "The Site ID connects your WordPress website with our platform.",
+      "fieldSiteId": {
+        "label": "Site ID",
+        "placeholder": "ID of 17 characters"
+      },
+      "confirmButton": "Confirm"
+    },
+    "withSiteId": {
+      "notifications": {
+        "top": "You’re all set! Now check your PWA configuration.",
+        "bottom": "If you like Frontity and appreciate our work, please leave a positive review to support continued development."
+      },
+      "pwaActivation": {
+        "title": "Progressive Web App Theme",
+        "content": "Activate this option to replace your current mobile version with our Progressive Web App theme."
+      },
+      "ampActivation": {
+        "title": "Google AMP",
+        "content": "Activate Google AMP on your mobile site with the same look and feel of the PWA theme."
+      }
+    }
   },
-  "settings": {}
+  "settings": {
+    "notification": {
+      "highlight": "Warning:",
+      "content": "Changing this settings can break your Progressive Web App"
+    },
+    "form": {
+      "title": "Advanced Settings",
+      "fieldSiteId": {
+        "label": "Site ID",
+        "placeholder": "ID of 17 characters"
+      },
+      "fieldSsrServer": {
+        "label": "SSR Server",
+        "placeholder": "SSR URL"
+      },
+      "fieldStaticServer": {
+        "label": "Static Server",
+        "placeholder": "Static URL"
+      },
+      "fieldAmpServer": {
+        "label": "AMP Server",
+        "placeholder": "AMP URL"
+      },
+      "fieldForceFrontpage": {
+        "label": "Force Frontpage",
+        "comment": "Forces FrontPage to retrieve Latest posts"
+      },
+      "fieldHtmlPurifier": {
+        "label": "Activate HTML Purifier",
+        "button": "Purge cache"
+      },
+      "fieldExcludes": {
+        "label": "Exclude URLs in the PWA",
+        "placeholder": "http://sample.com/page/\nhttp://v2.sample.com/page/"
+      },
+      "fieldApiFilters": {
+        "label": "Filter WP API fields",
+        "placeholder": "_links\ntitle.rendered"
+      }
+    },
+    "saveButton": "Save changes"
+  }
 }

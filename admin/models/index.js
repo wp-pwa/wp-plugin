@@ -2,7 +2,7 @@ import { types } from "mobx-state-tree";
 import General from "./general";
 import Ui from "./ui";
 import Settings from "./settings";
-import Languages from "./lang";
+import Languages from "./languages";
 
 export default types.model("Stores", {
   general: General,

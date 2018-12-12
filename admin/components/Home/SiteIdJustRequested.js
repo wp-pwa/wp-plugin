@@ -1,24 +1,40 @@
 import React from "react";
+import { string } from "prop-types";
+import { inject } from "mobx-react";
 import styled from "styled-components";
 import { Box, Heading, Paragraph } from "grommet";
 
-const SiteIdJustRequested = () => (
+const SiteIdJustRequested = ({ emojiText, titleText, contentText }) => (
   <Container margin={{ top: "40px" }}>
     <Header margin={{ horizontal: "0", vertical: "0" }}>
       <span aria-label="Party emoji" role="img">
-        🎉
+        {emojiText}
       </span>
-      We have received your request, thanks!
+      {titleText}
     </Header>
     <Body>
       <StyledParagraph margin={{ vertical: "0", horizontal: "0" }}>
-        Our team will manually review your request and get back to you shortly.
+        {contentText}
       </StyledParagraph>
     </Body>
   </Container>
 );
 
-export default SiteIdJustRequested;
+SiteIdJustRequested.propTypes = {
+  emojiText: string.isRequired,
+  titleText: string.isRequired,
+  contentText: string.isRequired,
+};
+
+export default inject(({ stores: { languages } }) => {
+  const siteIdJustRequested = "home.siteIdJustRequested";
+
+  return {
+    emojiText: languages.get(`${siteIdJustRequested}.emoji`),
+    titleText: languages.get(`${siteIdJustRequested}.title`),
+    contentText: languages.get(`${siteIdJustRequested}.content`),
+  };
+})(SiteIdJustRequested);
 
 const Container = styled(Box)`
   border-radius: 4px;

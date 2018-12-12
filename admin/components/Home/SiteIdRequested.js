@@ -1,29 +1,33 @@
 import React from "react";
-import { string, func } from "prop-types";
+import { string, func, shape } from "prop-types";
 import { inject } from "mobx-react";
 import styled from "styled-components";
 import { Box, Heading, Paragraph, FormField, TextInput, Button } from "grommet";
 
-const SiteIdRequested = ({ siteId, setSiteId, saveSettings }) => (
+const SiteIdRequested = ({
+  siteId,
+  setSiteId,
+  saveSettings,
+  titleText,
+  contentText,
+  fieldSiteId,
+  confirmButtonText,
+}) => (
   <>
     <Container margin={{ top: "40px", bottom: "24px" }}>
-      <Header margin={{ horizontal: "0", vertical: "0" }}>
-        Insert your Site ID
-      </Header>
+      <Header margin={{ horizontal: "0", vertical: "0" }}>{titleText}</Header>
       <Body>
-        <Comment>
-          The Site ID connects your WordPress website with our platform.
-        </Comment>
-        <FormField label="Site ID">
+        <Comment>{contentText}</Comment>
+        <FormField label={fieldSiteId.label}>
           <TextInput
-            placeholder="ID of 17 characters"
+            placeholder={fieldSiteId.placeholder}
             value={siteId}
             onChange={setSiteId}
           />
         </FormField>
       </Body>
     </Container>
-    <Button label="Confirm" primary onClick={saveSettings} />
+    <Button primary label={confirmButtonText} onClick={saveSettings} />
   </>
 );
 
@@ -31,13 +35,25 @@ SiteIdRequested.propTypes = {
   siteId: string.isRequired,
   setSiteId: func.isRequired,
   saveSettings: func.isRequired,
+  titleText: string.isRequired,
+  contentText: string.isRequired,
+  fieldSiteId: shape({ label: string, placeholder: string }).isRequired,
+  confirmButtonText: string.isRequired,
 };
 
-export default inject(({ stores: { settings } }) => ({
-  siteId: settings.site_id,
-  setSiteId: settings.setSiteId,
-  saveSettings: settings.saveSettings,
-}))(SiteIdRequested);
+export default inject(({ stores: { settings, languages } }) => {
+  const siteIdRequested = "home.siteIdRequested";
+
+  return {
+    siteId: settings.site_id,
+    setSiteId: settings.setSiteId,
+    saveSettings: settings.saveSettings,
+    titleText: languages.get(`${siteIdRequested}.title`),
+    contentText: languages.get(`${siteIdRequested}.content`),
+    fieldSiteId: languages.get(`${siteIdRequested}.fieldSiteId`),
+    confirmButtonText: languages.get(`${siteIdRequested}.confirmButton`),
+  };
+})(SiteIdRequested);
 
 const Container = styled(Box)`
   border-radius: 4px;

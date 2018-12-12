@@ -1,43 +1,45 @@
 import React from "react";
-import { bool, func } from "prop-types";
+import { string, bool, func } from "prop-types";
 import { inject } from "mobx-react";
 import styled from "styled-components";
 import { Box, Heading, Paragraph, CheckBox } from "grommet";
 
-const WithSiteId = ({ pwaActive, ampActive, setPwaActive, setAmpActive }) => (
+const WithSiteId = ({
+  pwaActive,
+  ampActive,
+  setPwaActive,
+  setAmpActive,
+  topNotificationText,
+  bottomNotificationText,
+  pwaTitleText,
+  pwaContentText,
+  ampTitleText,
+  ampContentText,
+}) => (
   <>
     <Notification margin={{ top: "40px", bottom: "20px" }}>
-      You’re all set! Now check your PWA configuration.
+      {topNotificationText}
     </Notification>
     <Container margin={{ bottom: "20px" }}>
       <Box direction="row" justify="between">
         <StyledHeading margin={{ vertical: "0", horizontal: "0" }}>
-          Progressive Web App Theme
+          {pwaTitleText}
         </StyledHeading>
         <CheckBox toggle checked={pwaActive} onChange={setPwaActive} />
       </Box>
-      <Comment>
-        Activate this option to replace your current mobile version with our
-        Progressive Web App theme.
-      </Comment>
+      <Comment>{pwaContentText}</Comment>
     </Container>
     <Container margin={{ bottom: "40px" }}>
       <Box direction="row" justify="between">
         <StyledHeading margin={{ vertical: "0", horizontal: "0" }}>
-          Google AMP
+          {ampTitleText}
         </StyledHeading>
         <CheckBox toggle checked={ampActive} onChange={setAmpActive} />
       </Box>
-      <Comment>
-        Activate Google AMP on your mobile site with the same look and feel of
-        the PWA theme.
-      </Comment>
+      <Comment>{ampContentText}</Comment>
     </Container>
     <Separator />
-    <Notification>
-      If you like Frontity and appreciate our work, please leave a positive
-      review to support continued development.
-    </Notification>
+    <Notification>{bottomNotificationText}</Notification>
   </>
 );
 
@@ -45,15 +47,32 @@ WithSiteId.propTypes = {
   pwaActive: bool.isRequired,
   ampActive: bool.isRequired,
   setPwaActive: func.isRequired,
-  setAmpActive: func.isRequired
+  setAmpActive: func.isRequired,
+  topNotificationText: string.isRequired,
+  bottomNotificationText: string.isRequired,
+  pwaTitleText: string.isRequired,
+  pwaContentText: string.isRequired,
+  ampTitleText: string.isRequired,
+  ampContentText: string.isRequired,
 };
 
-export default inject(({ stores: { settings } }) => ({
-  pwaActive: settings.pwa_active,
-  ampActive: settings.amp_active,
-  setPwaActive: settings.setPwaActive,
-  setAmpActive: settings.setAmpActive
-}))(WithSiteId);
+export default inject(({ stores: { settings, languages } }) => {
+  const withSiteId = "home.withSiteId";
+  const notifications = `${withSiteId}.notifications`;
+
+  return {
+    pwaActive: settings.pwa_active,
+    ampActive: settings.amp_active,
+    setPwaActive: settings.setPwaActive,
+    setAmpActive: settings.setAmpActive,
+    topNotificationText: languages.get(`${notifications}.top`),
+    bottomNotificationText: languages.get(`${notifications}.bottom`),
+    pwaTitleText: languages.get(`${withSiteId}.pwaActivation.title`),
+    pwaContentText: languages.get(`${withSiteId}.pwaActivation.content`),
+    ampTitleText: languages.get(`${withSiteId}.ampActivation.title`),
+    ampContentText: languages.get(`${withSiteId}.ampActivation.content`),
+  };
+})(WithSiteId);
 
 const StyledBox = styled(Box)`
   border-radius: 4px;
