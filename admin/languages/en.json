@@ -96,7 +96,11 @@
     "withSiteId": {
       "notifications": {
         "top": "You’re all set! Now check your PWA configuration.",
-        "bottom": "If you like Frontity and appreciate our work, please leave a positive review to support continued development."
+        "bottom": {
+          "contentPreLink": "If you like Frontity and appreciate our work, please",
+          "link": "leave a positive review",
+          "contentPostLink": "to support continued development."
+        }
       },
       "pwaActivation": {
         "title": "Progressive Web App Theme",

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
-import { string, bool, func } from "prop-types";
+import { string, bool, func, shape } from "prop-types";
 import { inject } from "mobx-react";
 import styled from "styled-components";
 import { Box, Heading, Paragraph, CheckBox } from "grommet";
@@ -11,7 +11,7 @@ const WithSiteId = ({
   setPwaActive,
   setAmpActive,
   topNotificationText,
-  bottomNotificationText,
+  bottomNotification,
   pwaTitleText,
   pwaContentText,
   ampTitleText,
@@ -42,7 +42,19 @@ const WithSiteId = ({
       <Comment>{ampContentText}</Comment>
     </Container>
     <Separator />
-    <Notification>{bottomNotificationText}</Notification>
+    <Notification>
+      <StyledParagraph margin={{ vertical: "0" }}>
+        {bottomNotification.contentPreLink}
+        <NotificationLink
+          href="https://wordpress.org/support/plugin/wp-pwa/reviews/?filter=5"
+          target="_blank"
+        >
+          {" "}
+          {bottomNotification.link}{" "}
+        </NotificationLink>
+        {bottomNotification.contentPostLink}
+      </StyledParagraph>
+    </Notification>
     <Box direction="row" justify="between" margin={{ top: "16px" }}>
       <Link href="https://twitter.com/frontity" target="_blank">
         {linkTwitterText}
@@ -60,7 +72,11 @@ WithSiteId.propTypes = {
   setPwaActive: func.isRequired,
   setAmpActive: func.isRequired,
   topNotificationText: string.isRequired,
-  bottomNotificationText: string.isRequired,
+  bottomNotification: shape({
+    contentPreLink: string,
+    link: string,
+    contentPostLink: string,
+  }).isRequired,
   pwaTitleText: string.isRequired,
   pwaContentText: string.isRequired,
   ampTitleText: string.isRequired,
@@ -80,7 +96,7 @@ export default inject(({ stores: { settings, languages } }) => {
     setPwaActive: settings.setPwaActive,
     setAmpActive: settings.setAmpActive,
     topNotificationText: languages.get(`${notifications}.top`),
-    bottomNotificationText: languages.get(`${notifications}.bottom`),
+    bottomNotification: languages.get(`${notifications}.bottom`),
     pwaTitleText: languages.get(`${withSiteId}.pwaActivation.title`),
     pwaContentText: languages.get(`${withSiteId}.pwaActivation.content`),
     ampTitleText: languages.get(`${withSiteId}.ampActivation.title`),
@@ -133,4 +149,9 @@ const Separator = styled.div`
 const Link = styled.a`
   color: #1f38c5;
   text-decoration: underline;
+`;
+
+const NotificationLink = styled.a`
+  color: #1f38c5;
+  text-decoration: none;
 `;
