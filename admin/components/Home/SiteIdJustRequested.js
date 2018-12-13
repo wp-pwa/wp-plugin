@@ -10,7 +10,7 @@ const SiteIdJustRequested = ({
   titleText,
   contentText,
   linkText,
-  unsetSiteIdJustRequested,
+  setSiteIdJustRequested,
 }) => (
   <>
     <Container margin={{ top: "40px", bottom: "16px" }}>
@@ -26,7 +26,7 @@ const SiteIdJustRequested = ({
         </StyledParagraph>
       </Body>
     </Container>
-    <Link onClick={unsetSiteIdJustRequested}>{linkText}</Link>
+    <Link onClick={setSiteIdJustRequested}>{linkText}</Link>
   </>
 );
 
@@ -35,7 +35,7 @@ SiteIdJustRequested.propTypes = {
   titleText: string.isRequired,
   contentText: string.isRequired,
   linkText: string.isRequired,
-  unsetSiteIdJustRequested: func.isRequired,
+  setSiteIdJustRequested: func.isRequired,
 };
 
 export default inject(({ stores: { ui, languages } }) => {
@@ -46,7 +46,9 @@ export default inject(({ stores: { ui, languages } }) => {
     titleText: languages.get(`${siteIdJustRequested}.title`),
     contentText: languages.get(`${siteIdJustRequested}.content`),
     linkText: languages.get(`${siteIdJustRequested}.link`),
-    unsetSiteIdJustRequested: ui.unsetSiteIdJustRequested,
+    setSiteIdJustRequested: () => {
+      ui.setSiteIdJustRequested(false);
+    },
   };
 })(SiteIdJustRequested);
 

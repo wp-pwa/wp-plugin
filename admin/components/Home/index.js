@@ -1,20 +1,24 @@
 import React from "react";
-import { bool } from "prop-types";
+import { string } from "prop-types";
 import { inject } from "mobx-react";
 import { Box } from "grommet";
 import WithSiteId from "./WithSiteId";
 import WithoutSiteId from "./WithoutSiteId";
 
-const Home = ({ siteIdValid }) => (
+const Home = ({ siteIdStatus }) => (
   <Box margin="auto" width="608px">
-    {siteIdValid ? <WithSiteId /> : <WithoutSiteId />}
+    {siteIdStatus === "valid" ? <WithSiteId /> : <WithoutSiteId />}
   </Box>
 );
 
 Home.propTypes = {
-  siteIdValid: bool.isRequired
+  siteIdStatus: string,
+};
+
+Home.defaultProps = {
+  siteIdStatus: undefined,
 };
 
 export default inject(({ stores: { ui } }) => ({
-  siteIdValid: ui.siteIdValid
+  siteIdStatus: ui.siteIdStatus,
 }))(Home);

@@ -17,6 +17,11 @@ const RequestForm = ({
   requestFormUrl,
   requestFormType,
   requestFormTraffic,
+  requestFormNameStatus,
+  requestFormEmailStatus,
+  requestFormUrlStatus,
+  requestFormTypeStatus,
+  requestFormTrafficStatus,
   setRequestFormName,
   setRequestFormEmail,
   setRequestFormUrl,
@@ -39,28 +44,31 @@ const RequestForm = ({
         {requestContentText}
       </Comment>
       <FormField label={requestFieldName.label}>
-        <TextInput
+        <StyledTextInput
+          status={requestFormNameStatus}
           placeholder={requestFieldName.placeholder}
           value={requestFormName}
           onChange={setRequestFormName}
         />
       </FormField>
       <FormField label={requestFieldEmail.label}>
-        <TextInput
+        <StyledTextInput
+          status={requestFormEmailStatus}
           placeholder={requestFieldEmail.placeholder}
           value={requestFormEmail}
           onChange={setRequestFormEmail}
         />
       </FormField>
       <FormField label={requestFieldUrl.label}>
-        <TextInput
+        <StyledTextInput
+          status={requestFormUrlStatus}
           placeholder={requestFieldUrl.placeholder}
           value={requestFormUrl}
           onChange={setRequestFormUrl}
         />
       </FormField>
       <Box margin={{ top: "24px" }} direction="row" justify="between">
-        <RadioBox>
+        <RadioBox status={requestFormTypeStatus}>
           <RadioHead>{requestFieldType.label}</RadioHead>
           {requestFieldType.options.map(value => (
             <RadioButton
@@ -72,7 +80,7 @@ const RequestForm = ({
             />
           ))}
         </RadioBox>
-        <RadioBox>
+        <RadioBox status={requestFormTrafficStatus}>
           <RadioHead>{requestFieldTraffic.label}</RadioHead>
           {requestFieldTraffic.options.map(option => (
             <RadioButton
@@ -95,6 +103,11 @@ RequestForm.propTypes = {
   requestFormUrl: string.isRequired,
   requestFormType: string.isRequired,
   requestFormTraffic: string.isRequired,
+  requestFormNameStatus: string,
+  requestFormEmailStatus: string,
+  requestFormUrlStatus: string,
+  requestFormTypeStatus: string,
+  requestFormTrafficStatus: string,
   setRequestFormName: func.isRequired,
   setRequestFormEmail: func.isRequired,
   setRequestFormUrl: func.isRequired,
@@ -111,6 +124,14 @@ RequestForm.propTypes = {
     .isRequired,
 };
 
+RequestForm.defaultProps = {
+  requestFormNameStatus: undefined,
+  requestFormEmailStatus: undefined,
+  requestFormUrlStatus: undefined,
+  requestFormTypeStatus: undefined,
+  requestFormTrafficStatus: undefined,
+};
+
 export default inject(({ stores: { ui, languages } }) => {
   const requestForm = "home.withoutSiteId.requestForm";
 
@@ -120,11 +141,31 @@ export default inject(({ stores: { ui, languages } }) => {
     requestFormUrl: ui.requestFormUrl,
     requestFormType: ui.requestFormType,
     requestFormTraffic: ui.requestFormTraffic,
-    setRequestFormName: ui.setRequestFormName,
-    setRequestFormEmail: ui.setRequestFormEmail,
-    setRequestFormUrl: ui.setRequestFormUrl,
-    setRequestFormType: ui.setRequestFormType,
-    setRequestFormTraffic: ui.setRequestFormTraffic,
+    requestFormNameStatus: ui.requestFormNameStatus,
+    requestFormEmailStatus: ui.requestFormEmailStatus,
+    requestFormUrlStatus: ui.requestFormUrlStatus,
+    requestFormTypeStatus: ui.requestFormTypeStatus,
+    requestFormTrafficStatus: ui.requestFormTrafficStatus,
+    setRequestFormName: event => {
+      ui.setRequestFormNameStatus();
+      ui.setRequestFormName(event);
+    },
+    setRequestFormEmail: event => {
+      ui.setRequestFormEmailStatus();
+      ui.setRequestFormEmail(event);
+    },
+    setRequestFormUrl: event => {
+      ui.setRequestFormUrlStatus();
+      ui.setRequestFormUrl(event);
+    },
+    setRequestFormType: event => {
+      ui.setRequestFormTypeStatus();
+      ui.setRequestFormType(event);
+    },
+    setRequestFormTraffic: event => {
+      ui.setRequestFormTrafficStatus();
+      ui.setRequestFormTraffic(event);
+    },
     requestTitleText: languages.get(`${requestForm}.title`),
     requestContentText: languages.get(`${requestForm}.content`),
     requestFieldName: languages.get(`${requestForm}.fieldName`),
@@ -177,10 +218,19 @@ const RadioBox = styled(Box)`
   label[class^="StyledRadioButton"] {
     margin-bottom: 8px;
   }
+  div[class^="StyledRadioButton__StyledRadioButtonBox"] {
+    ${({ status }) =>
+      status === "invalid" ? "background-color: #ea5a3555;" : ""}
+  }
 `;
 
 const RadioHead = styled(Paragraph)`
   width: 200px;
   margin-top: 0;
   margin-bottom: 12px;
+`;
+
+const StyledTextInput = styled(TextInput)`
+  ${({ status }) =>
+    status === "invalid" ? "background-color: #ea5a3555;" : ""}
 `;

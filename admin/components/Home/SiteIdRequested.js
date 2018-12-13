@@ -15,6 +15,7 @@ const SiteIdRequested = ({
   fieldSiteId,
   linkText,
   confirmButtonText,
+  siteIdStatus,
 }) => (
   <>
     <Container margin={{ top: "40px", bottom: "24px" }}>
@@ -22,7 +23,8 @@ const SiteIdRequested = ({
       <Body>
         <Comment>{contentText}</Comment>
         <FormField label={fieldSiteId.label}>
-          <TextInput
+          <StyledTextInput
+            status={siteIdStatus}
             placeholder={fieldSiteId.placeholder}
             value={siteId}
             onChange={setSiteId}
@@ -47,15 +49,26 @@ SiteIdRequested.propTypes = {
   fieldSiteId: shape({ label: string, placeholder: string }).isRequired,
   linkText: string.isRequired,
   confirmButtonText: string.isRequired,
+  siteIdStatus: string,
 };
 
-export default inject(({ stores: { settings, languages } }) => {
+SiteIdRequested.defaultProps = {
+  siteIdStatus: undefined,
+};
+
+export default inject(({ stores: { settings, languages, ui } }) => {
   const siteIdRequested = "home.siteIdRequested";
 
   return {
     siteId: settings.site_id,
-    setSiteId: settings.setSiteId,
-    saveSettings: settings.saveSettings,
+    setSiteId: event => {
+      ui.setSiteIdStatus();
+      settings.setSiteId(event);
+    },
+    saveSettings: () => {
+      ui.validateSettings();
+      settings.saveSettings();
+    },
     setSiteIdRequested: () => {
       settings.setSiteIdRequested(false);
       settings.saveSettings();
@@ -65,6 +78,7 @@ export default inject(({ stores: { settings, languages } }) => {
     fieldSiteId: languages.get(`${siteIdRequested}.fieldSiteId`),
     linkText: languages.get(`${siteIdRequested}.link`),
     confirmButtonText: languages.get(`${siteIdRequested}.confirmButton`),
+    siteIdStatus: ui.siteIdStatus,
   };
 })(SiteIdRequested);
 
@@ -103,4 +117,9 @@ const Comment = styled(Paragraph)`
 const Link = styled.a`
   color: #1f38c5;
   text-decoration: underline;
+`;
+
+const StyledTextInput = styled(TextInput)`
+  ${({ status }) =>
+    status === "invalid" ? "background-color: #ea5a3555;" : ""}
 `;

@@ -11,7 +11,7 @@ import RequestForm from "./RequestForm";
 const WithoutSiteId = ({
   siteIdRequested,
   siteIdJustRequested,
-  setSiteIdJustRequested,
+  sendRequest,
   setSiteIdRequested,
   descriptionTitleText,
   descriptionContentText,
@@ -76,11 +76,7 @@ const WithoutSiteId = ({
       <RequestForm />
       <Box direction="row" justify="between" align="center">
         <Link onClick={setSiteIdRequested}>{requestAlreadyLinkText}</Link>
-        <Button
-          primary
-          label={requestButtonText}
-          onClick={setSiteIdJustRequested}
-        />
+        <Button primary label={requestButtonText} onClick={sendRequest} />
       </Box>
     </>
   );
@@ -89,7 +85,7 @@ const WithoutSiteId = ({
 WithoutSiteId.propTypes = {
   siteIdRequested: bool.isRequired,
   siteIdJustRequested: bool.isRequired,
-  setSiteIdJustRequested: func.isRequired,
+  sendRequest: func.isRequired,
   setSiteIdRequested: func.isRequired,
   descriptionTitleText: string.isRequired,
   descriptionContentText: string.isRequired,
@@ -110,7 +106,13 @@ export default inject(({ stores: { settings, ui, languages } }) => {
   return {
     siteIdRequested: settings.site_id_requested,
     siteIdJustRequested: ui.siteIdJustRequested,
-    setSiteIdJustRequested: ui.setSiteIdJustRequested,
+    sendRequest: () => {
+      if (ui.validateRequestForm()) {
+        ui.setSiteIdJustRequested(true);
+        settings.setSiteIdRequested(true);
+        settings.saveSettings();
+      }
+    },
     setSiteIdRequested: () => {
       settings.setSiteIdRequested(true);
       settings.saveSettings();

@@ -6,7 +6,7 @@ import Languages from "./languages";
 
 export default types.model("Stores", {
   general: General,
-  ui: Ui,
+  ui: types.optional(Ui, {}),
   settings: Settings,
   languages: types.optional(Languages, {}),
 });

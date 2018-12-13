@@ -1,4 +1,4 @@
-import { types, getSnapshot, getParent } from "mobx-state-tree";
+import { types, getSnapshot } from "mobx-state-tree";
 import { post } from "axios";
 
 export default types
@@ -13,7 +13,7 @@ export default types
     frontpage_forced: false,
     html_purifier_active: false,
     excludes: types.array(types.string),
-    api_filters: types.array(types.string)
+    api_filters: types.array(types.string),
   })
   .actions(self => ({
     setSiteId({ target }) {
@@ -59,10 +59,5 @@ export default types
       await post(window.ajaxurl, data);
 
       window.frontity.plugin.settings = getSnapshot(self);
-
-      const { ui } = getParent(self, 1);
-
-      if (self.site_id.length === 17) ui.setSiteIdValid(true);
-      else ui.setSiteIdInvalid(true);
-    }
+    },
   }));

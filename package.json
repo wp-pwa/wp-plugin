@@ -85,6 +85,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "styled-components": "^4.1.2"
+    "styled-components": "^4.1.2",
+    "validator": "^10.9.0"
   }
 }

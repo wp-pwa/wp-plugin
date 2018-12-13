@@ -42,6 +42,10 @@ const Settings = ({
   fieldExcludes,
   fieldApiFilters,
   saveButtonText,
+  siteIdStatus,
+  ssrServerStatus,
+  staticServerStatus,
+  ampServerStatus,
 }) => (
   <Box margin={{ horizontal: "auto", top: "40px" }} width="608px">
     <Notification align="center" margin={{ bottom: "20px" }}>
@@ -56,28 +60,32 @@ const Settings = ({
       </Header>
       <Form>
         <FormField label={fieldSiteId.label}>
-          <TextInput
+          <StyledTextInput
+            status={siteIdStatus}
             placeholder={fieldSiteId.placeholder}
             value={siteId}
             onChange={setSiteId}
           />
         </FormField>
         <FormField label={fieldSsrServer.label}>
-          <TextInput
+          <StyledTextInput
+            status={ssrServerStatus}
             placeholder={fieldSsrServer.placeholder}
             value={ssrServer}
             onChange={setSsrServer}
           />
         </FormField>
         <FormField label={fieldStaticServer.label}>
-          <TextInput
+          <StyledTextInput
+            status={staticServerStatus}
             placeholder={fieldStaticServer.placeholder}
             value={staticServer}
             onChange={setStaticServer}
           />
         </FormField>
         <FormField label={fieldAmpServer.label}>
-          <TextInput
+          <StyledTextInput
+            status={ampServerStatus}
             placeholder={fieldAmpServer.placeholder}
             value={ampServer}
             onChange={setAmpServer}
@@ -139,6 +147,7 @@ const Settings = ({
     </Options>
     <Button
       primary
+      margin={{ left: "auto" }}
       type="submit"
       label={saveButtonText}
       onClick={saveSettings}
@@ -175,9 +184,20 @@ Settings.propTypes = {
   fieldExcludes: shape({ label: string, placeholder: string }).isRequired,
   fieldApiFilters: shape({ label: string, placeholder: string }).isRequired,
   saveButtonText: string.isRequired,
+  siteIdStatus: string,
+  ssrServerStatus: string,
+  staticServerStatus: string,
+  ampServerStatus: string,
 };
 
-export default inject(({ stores: { settings, languages } }) => {
+Settings.defaultProps = {
+  siteIdStatus: undefined,
+  ssrServerStatus: undefined,
+  staticServerStatus: undefined,
+  ampServerStatus: undefined,
+};
+
+export default inject(({ stores: { settings, languages, ui } }) => {
   const form = "settings.form";
 
   return {
@@ -189,15 +209,30 @@ export default inject(({ stores: { settings, languages } }) => {
     htmlPurifierActive: settings.html_purifier_active,
     excludes: settings.excludes.join("\n"),
     apiFilters: settings.api_filters.join("\n"),
-    setSiteId: settings.setSiteId,
-    setSsrServer: settings.setSsrServer,
-    setStaticServer: settings.setStaticServer,
-    setAmpServer: settings.setAmpServer,
+    setSiteId: event => {
+      settings.setSiteId(event);
+      ui.setSiteIdStatus();
+    },
+    setSsrServer: event => {
+      settings.setSsrServer(event);
+      ui.setSsrServerStatus();
+    },
+    setStaticServer: event => {
+      settings.setStaticServer(event);
+      ui.setStaticServerStatus();
+    },
+    setAmpServer: event => {
+      settings.setAmpServer(event);
+      ui.setAmpServerStatus();
+    },
     setFrontpageForced: settings.setFrontpageForced,
     setHtmlPurifierActive: settings.setHtmlPurifierActive,
     setExcludes: settings.setExcludes,
     setApiFilters: settings.setApiFilters,
-    saveSettings: settings.saveSettings,
+    saveSettings: () => {
+      ui.validateSettings();
+      settings.saveSettings();
+    },
     notification: languages.get("settings.notification"),
     formTitleText: languages.get(`${form}.title`),
     fieldSiteId: languages.get(`${form}.fieldSiteId`),
@@ -209,6 +244,10 @@ export default inject(({ stores: { settings, languages } }) => {
     fieldExcludes: languages.get(`${form}.fieldExcludes`),
     fieldApiFilters: languages.get(`${form}.fieldApiFilters`),
     saveButtonText: languages.get("settings.saveButton"),
+    siteIdStatus: ui.siteIdStatus,
+    ssrServerStatus: ui.ssrServerStatus,
+    staticServerStatus: ui.staticServerStatus,
+    ampServerStatus: ui.ampServerStatus,
   };
 })(Settings);
 
@@ -249,4 +288,9 @@ const Comment = styled(Paragraph)`
   width: 250px;
   opacity: 0.4;
   color: #0c112b;
+`;
+
+const StyledTextInput = styled(TextInput)`
+  ${({ status }) =>
+    status === "invalid" ? "background-color: #ea5a3555;" : ""}
 `;
