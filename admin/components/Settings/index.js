@@ -31,6 +31,7 @@ const Settings = ({
   setExcludes,
   setApiFilters,
   saveSettings,
+  purgeHtmlPurifierCache,
   notification,
   formTitleText,
   fieldSiteId,
@@ -127,7 +128,10 @@ const Settings = ({
               onChange={setHtmlPurifierActive}
             />
           </Box>
-          <Button label={fieldHtmlPurifier.button} />
+          <Button
+            label={fieldHtmlPurifier.button}
+            onClick={purgeHtmlPurifierCache}
+          />
         </Box>
         <FormField label={fieldExcludes.label}>
           <TextArea
@@ -173,6 +177,7 @@ Settings.propTypes = {
   setExcludes: func.isRequired,
   setApiFilters: func.isRequired,
   saveSettings: func.isRequired,
+  purgeHtmlPurifierCache: func.isRequired,
   notification: shape({ highlight: string, content: string }).isRequired,
   formTitleText: string.isRequired,
   fieldSiteId: shape({ label: string, placeholder: string }).isRequired,
@@ -233,6 +238,7 @@ export default inject(({ stores: { settings, languages, ui } }) => {
       ui.validateSettings();
       settings.saveSettings();
     },
+    purgeHtmlPurifierCache: settings.purgeHtmlPurifierCache,
     notification: languages.get("settings.notification"),
     formTitleText: languages.get(`${form}.title`),
     fieldSiteId: languages.get(`${form}.fieldSiteId`),

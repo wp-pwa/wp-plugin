@@ -60,4 +60,10 @@ export default types
 
       window.frontity.plugin.settings = getSnapshot(self);
     },
+    async purgeHtmlPurifierCache() {
+      const data = new window.FormData();
+      data.append("action", "frontity_purge_htmlpurifier_cache");
+
+      await post(window.ajaxurl, data);
+    },
   }));

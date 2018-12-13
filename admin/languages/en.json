@@ -54,7 +54,7 @@
           "placeholder": "yourblog.com"
         },
         "fieldType": {
-          "label": "Type of your WordPress site",
+          "label": "Type of your WordPress site:",
           "options": [
             "Blog / News Site",
             "eCommerce / Online store",

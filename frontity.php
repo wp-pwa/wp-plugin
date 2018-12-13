@@ -49,7 +49,7 @@ class frontity {
 		add_action('admin_notices', array($this, 'frontity_admin_notices')); //Display the validation errors and update messages
 
 		add_action('wp_ajax_frontity_save_settings', array($this, 'save_settings'));
-		// add_action('wp_ajax_wp_pwa_purge_htmlpurifier_cache', array($this,'purge_htmlpurifier_cache'));
+		add_action('wp_ajax_frontity_purge_htmlpurifier_cache', array($this,'purge_htmlpurifier_cache'));
 
 		add_action('plugins_loaded', array($this, 'wp_rest_api_plugin_is_installed'));
 		add_action('plugins_loaded', array($this, 'wp_rest_api_plugin_is_active'));

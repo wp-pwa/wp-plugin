@@ -106,10 +106,11 @@ export default inject(({ stores: { settings, ui, languages } }) => {
   return {
     siteIdRequested: settings.site_id_requested,
     siteIdJustRequested: ui.siteIdJustRequested,
-    sendRequest: () => {
+    sendRequest: async () => {
       if (ui.validateRequestForm()) {
-        ui.setSiteIdJustRequested(true);
+        await ui.sendRequest();
         settings.setSiteIdRequested(true);
+        ui.setSiteIdJustRequested(true);
         settings.saveSettings();
       }
     },

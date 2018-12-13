@@ -1,5 +1,6 @@
 import { types, getParent } from "mobx-state-tree";
 import { isLength, isEmpty, isURL, isEmail } from "validator";
+import { post } from "axios";
 
 export default types
   .model("UI", {
@@ -110,6 +111,35 @@ export default types
         self.requestFormUrlStatus === "valid" &&
         self.requestFormTypeStatus === "valid" &&
         self.requestFormTrafficStatus === "valid"
+      );
+    },
+    async sendRequest() {
+      const siteTypes = {
+        "Blog / News Site": "blog",
+        "eCommerce / Online store": "ecommerce",
+        "Corporate site / Online bussiness": "corpsite",
+        "Classifieds site": "classifiedsite",
+        Other: "other",
+      };
+
+      const siteTraffics = {
+        "More than 1 million": "A",
+        "500.000 - 1 million": "B",
+        "100.000 - 500.000": "C",
+        "Less than 100.000": "D",
+        "I don't know": "Unknown",
+      };
+
+      await post(
+        "https://hook.integromat.com/214srcvxlj88frdnqaua6vipqvsnmjgo",
+        {
+          name: self.requestFormName,
+          email: self.requestFormEmail,
+          wpUrl: self.requestFormUrl,
+          siteType: siteTypes[self.requestFormType],
+          siteTraffic: siteTraffics[self.requestFormTraffic],
+          source: "plugin",
+        }
       );
     },
   }));
