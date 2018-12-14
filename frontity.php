@@ -23,7 +23,7 @@ if (!class_exists('frontity')) :
 
 class frontity {
 	// vars
-	public $plugin_version = '1.8.0';
+	public $plugin_version = '1.9.1';
 	public $rest_api_installed = false;
 	public $rest_api_active = false;
 	public $rest_api_working = false;
@@ -44,12 +44,14 @@ class frontity {
 	function __construct() {
 		// actions
 		add_action('init', array($this, 'init'), 1);
+		add_action('upgrader_process_complete', array($this, 'plugin_update_completed'));
 		add_action('admin_menu', array($this, 'render_frontity_admin')); //add the admin page
 		add_action('admin_init', array($this, 'frontity_register_settings')); //register the settings
 		add_action('admin_notices', array($this, 'frontity_admin_notices')); //Display the validation errors and update messages
 
 		add_action('wp_ajax_frontity_save_settings', array($this, 'save_settings'));
 		add_action('wp_ajax_frontity_purge_htmlpurifier_cache', array($this,'purge_htmlpurifier_cache'));
+		add_action('wp_ajax_frontity_upgrade_plugin', array($this, 'upgrade_plugin'));
 
 		add_action('plugins_loaded', array($this, 'wp_rest_api_plugin_is_installed'));
 		add_action('plugins_loaded', array($this, 'wp_rest_api_plugin_is_active'));
@@ -69,6 +71,24 @@ class frontity {
 	}
 
 	function init() {}
+
+	function upgrade_plugin() {
+		$plugin = plugin_basename(__FILE__);
+		$this->plugin_update_completed(null, array(
+			'action' => 'update',
+			'type' => 'plugin',
+			'bulk' => 1,
+			'plugins' => array($plugin)
+		));
+	}
+
+	function plugin_update_completed($upgrader_object, $data) {
+		$settings = get_option('frontity_settings');
+		$old_settings = get_option('wp_pwa_settings');
+		echo var_dump($settings);
+		echo var_dump($old_settings);
+		// echo $data['plugins'][0];
+	}
 
 	function save_settings() {
 		$data = json_decode(stripslashes($_POST["data"]), true);
@@ -151,7 +171,7 @@ class frontity {
 	function rest_routes() {
 		register_rest_route('wp-pwa/v1', '/siteid/', array(
 			'methods' => 'GET',
-			'callback' => array($this, 'get_wp_pwa_site_id')
+			'callback' => array($this, 'get_site_id')
 		));
 		register_rest_route('wp-pwa/v1', '/discover/', array(
 			'methods' => 'GET',
@@ -159,7 +179,7 @@ class frontity {
 		));
 		register_rest_route('wp-pwa/v1', '/plugin-version/', array(
 			'methods' => 'GET',
-			'callback' => array($this, 'get_wp_pwa_plugin_version')
+			'callback' => array($this, 'get_plugin_version')
 		));
 		register_rest_route('wp-pwa/v1', '/site-info/', array(
 			'methods' => 'GET',
@@ -190,7 +210,7 @@ class frontity {
 				if ($cpt_object->show_in_rest) {
 					if ($cpt === 'post' &&
 						get_option('show_on_front') === 'page' &&
-						get_option('frontity_settings')['wp_pwa_force_frontpage']) {
+						get_option('frontity_settings')['frontpage_forced']) {
 						$link = get_option('home');
 					} else {
 						$link = get_post_type_archive_link($cpt);
@@ -473,7 +493,7 @@ class frontity {
 				'frontity_admin_js',
 				plugin_dir_url(__FILE__) . 'admin/dist/main.js',
 				array(),
-				null,
+				$this->plugin_version,
 				true
 			);
 			wp_enqueue_script('frontity_admin_js');
@@ -484,7 +504,7 @@ class frontity {
 	*  render_frontity_admin
 	*
 	*  This function is called by the 'frontity_admin_actions' function and will do things such as:
-	*  add a wp_pwa page to render the admin content
+	*  add a Frontity page to render the admin content
 	*
 	*  @type	fucntion called by 'frontity_admin_actions'
 	*  @date	18/07/14
@@ -533,19 +553,19 @@ class frontity {
 		);
 	}
 
-	function get_wp_pwa_site_id() {
-		$settings = get_option('frontity_settings');
+	function get_site_id() {
+		$settings = get_option("frontity_settings");
 
-		if (isset($settings['wp_pwa_siteid'])) {
-			$wp_pwa_site_id = $settings["wp_pwa_siteid"];
+		if (isset($settings["site_id"])) {
+			$site_id = $settings["site_id"];
 		} else {
-			$wp_pwa_site_id = null;
+			$site_id = null;
 		}
 
-		return array('siteId' => $wp_pwa_site_id);
+		return array('siteId' => $site_id);
 	}
 
-	function get_wp_pwa_plugin_version() {
+	function get_plugin_version() {
 		return array('plugin_version' => $this->plugin_version);
 	}
 
@@ -562,8 +582,8 @@ class frontity {
 			'per_page' => $per_page
 		);
 
-		if (has_filter('wp_pwa_get_site_info')) {
-			$site_info = apply_filters('wp_pwa_get_site_info', $site_info);
+		if (has_filter('get_site_info')) {
+			$site_info = apply_filters('get_site_info', $site_info);
 		}
 
 		return array(
@@ -762,11 +782,11 @@ class frontity {
 		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']
 			. $_SERVER['REQUEST_URI'];
 		$initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
-		$wp_pwa_amp = $settings['wp_pwa_amp'];
-		$ampServer = $settings['wp_pwa_amp_server'];
+		$amp_active = $settings['amp_active'];
+		$amp_server = $settings['amp_server'];
 		$ampForced = false;
 		$dev = 'false';
-		$excludes = isset($settings['wp_pwa_excludes']) ? $settings['wp_pwa_excludes'] : array();
+		$excludes = isset($settings['excludes']) ? $settings['excludes'] : array();
 		$exclusion = false;
 
 		if (sizeof($excludes) !== 0) {
@@ -785,19 +805,18 @@ class frontity {
 			$dev = 'true';
 		}
 		if (isset($_GET['ampUrl'])) {
-			$ampServer = $_GET['ampUrl'];
+			$amp_server = $_GET['ampUrl'];
 			$dev = 'true';
 		}
 		if (isset($_GET['dev'])) $dev = $_GET['dev'];
 
 				//posts
-		if ($ampForced || (isset($wp_pwa_amp) && ($wp_pwa_amp !== 'disabled') && (is_single()) && $exclusion === false)) {
+		if ($ampForced || (isset($amp_active) && ($amp_active) && (is_single()) && $exclusion === false)) {
 			$id = get_queried_object()->ID;
 			$type = get_queried_object()->post_type;
 			$permalink = get_permalink($id);
 			$path = parse_url($permalink, PHP_URL_PATH);
-			$query = '?siteId=' . $settings["wp_pwa_siteid"]
-				. '&env=' . $settings['wp_pwa_env']
+			$query = '?siteId=' . $settings["site_id"]
 				. '&dev=' . $dev
 				. '&type=' . $type
 				. '&id=' . $id

@@ -4,6 +4,7 @@ import { string, bool, func, arrayOf, shape } from "prop-types";
 import { inject } from "mobx-react";
 import styled from "styled-components";
 import { Box, Heading, Paragraph, Button } from "grommet";
+import { post } from "axios";
 import SiteIdJustRequested from "./SiteIdJustRequested";
 import SiteIdRequested from "./SiteIdRequested";
 import RequestForm from "./RequestForm";
@@ -27,6 +28,14 @@ const WithoutSiteId = ({
 
   return (
     <>
+      <Button
+        label="Update Plugin"
+        onClick={async () => {
+          const data = new window.FormData();
+          data.append("action", "frontity_upgrade_plugin");
+          await post(window.ajaxurl, data);
+        }}
+      />
       <Container>
         <InnerContainer>
           <Image
