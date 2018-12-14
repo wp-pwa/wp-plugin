@@ -478,8 +478,14 @@ class Frontity {
 
 	function purify_html($data, $post_type, $request)	{
 		$disableHtmlPurifier = $request->get_param('disableHtmlPurifier');
+		$settings = get_option('frontity_settings');
 
-		if ($disableHtmlPurifier === 'true') return $data;
+		if (
+			$disableHtmlPurifier === 'true' ||
+			!$settings['html_purifier_active']
+		) {
+			return $data;
+		}
 
 		$data->data['title']['text'] =
 			strip_tags(html_entity_decode($data->data['title']['rendered']));
@@ -930,7 +936,7 @@ function initialize_settings() {
 		"static_server" => "https://static.wp-pwa.com",
 		"amp_server" => "https://amp.wp-pwa.com",
 		"frontpage_forced" => false,
-		"html_purifier_active" => false,
+		"html_purifier_active" => true,
 		"excludes" => array(),
 		"api_filters" => array(),
 	);
