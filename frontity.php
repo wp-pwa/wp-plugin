@@ -116,10 +116,8 @@ class Frontity {
 					// Initialize settings when the plugin is updated
 					// but was already activated (update doesn't trigger activation hook).
 					if (!$settings) {
-						echo var_dump($settings);
 						initialize_settings();
 						$settings = get_option('frontity_settings');
-						echo var_dump($settings);
 					}
 
 					// If there are settings from the previous versions of the plugin
