@@ -125,7 +125,7 @@
       "title": "Advanced Settings",
       "fieldSiteId": {
         "label": "Site ID",
-        "placeholder": "ID of 17 characters"
+        "placeholder": "ID of your site"
       },
       "fieldSsrServer": {
         "label": "SSR Server",

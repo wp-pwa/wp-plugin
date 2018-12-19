@@ -74,7 +74,7 @@ export default types
       const { settings } = getParent(self, 1);
 
       self.setSiteIdStatus(
-        isLength(settings.site_id, { min: 17, max: 17 }) ? "valid" : "invalid"
+        isLength(settings.site_id, { min: 1 }) ? "valid" : "invalid"
       );
       self.setSsrServerStatus(isURL(settings.ssr_server) ? "valid" : "invalid");
       self.setStaticServerStatus(
