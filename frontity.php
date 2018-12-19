@@ -847,7 +847,7 @@ function frontity() {
 		require_once('libs/class-rest-api-filter-fields.php');
 	}
 
-	$GLOBALS['frontity_path'] = '/' . basename(plugin_dir_path(__FILE__));
+	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
 
 	return $frontity;
 }
