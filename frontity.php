@@ -29,7 +29,7 @@ class Frontity {
 
 	function __construct() {
 		// Migrates settings when the plugin updates.
-		add_action('upgrader_process_complete', 'frontity_initialize_and_update_settings');
+		add_action('upgrader_process_complete', array($this, 'plugin_update_completed'));
 		// Adds the admin pages to the menu.
 		add_action('admin_menu', array($this, 'render_frontity_admin'));
 		// Resgisters the settings.
@@ -71,7 +71,7 @@ class Frontity {
 		* 
 		*	function upgrade_plugin() {
 		*		$plugin = plugin_basename(__FILE__);
-		*		frontity_initialize_and_update_settings(null, array(
+		*		$this->plugin_update_completed(null, array(
 		*			'action' => 'update',
 		*			'type' => 'plugin',
 		*			'bulk' => 1,
@@ -106,6 +106,24 @@ class Frontity {
 			}, '*');
 		</script>
 <?php
+	}
+
+	// Update settings when plugin is updated.
+	function plugin_update_completed($upgrader_object, $data) {
+		$our_plugin = plugin_basename(__FILE__);
+		
+		// Check if our plugin is being updated.
+		if (
+			$data['action'] == 'update' &&
+			$data['type'] == 'plugin' &&
+			isset($data['plugins'])
+		) {
+			foreach ($data['plugins'] as $plugin) {
+				if ($plugin == $our_plugin) {
+					frontity_update_settings();
+				}
+			}
+		}
 	}
 
 	// Save the image id transient keys for future purges.
@@ -863,12 +881,58 @@ function frontity_initialize_settings() {
 	}
 	
 	update_option('frontity_settings', $defaults);
-	
-	flush_rewrite_rules();
+}
+
+function frontity_update_settings() {
+	$settings = get_option('frontity_settings');
+	$old_settings = get_option('wp_pwa_settings');
+
+	// Initialize settings when the plugin is updated
+	// but was already activated (update doesn't trigger activation hook).
+	if (!$settings) {
+		frontity_initialize_settings();
+		$settings = get_option('frontity_settings');
+	}
+
+	// If there are settings from the previous versions of the plugin
+	// map them into the new settings and delete the old settings.
+	if ($old_settings) {
+		if (isset($old_settings['wp_pwa_status'])) {
+			$settings['pwa_active'] = $old_settings['wp_pwa_status'] == 'mobile' ? true : false;
+		}
+		if (isset($old_settings['wp_pwa_amp'])) {
+			$settings['amp_active'] = $old_settings['wp_pwa_amp'] == 'posts' ? true : false;
+		}
+		if (isset($old_settings['wp_pwa_siteid'])) {
+			$settings['site_id'] = $old_settings['wp_pwa_siteid'];
+		}
+		if (isset($old_settings['wp_pwa_ssr'])) {
+			$settings['ssr_server'] = $old_settings['wp_pwa_ssr'];
+		}
+		if (isset($old_settings['wp_pwa_static'])) {
+			$settings['static_server'] = $old_settings['wp_pwa_static'];
+		}
+		if (isset($old_settings['wp_pwa_amp_server'])) {
+			$settings['amp_server'] = $old_settings['wp_pwa_amp_server'];
+		}
+		if (isset($old_settings['wp_pwa_force_frontpage'])) {
+			$settings['frontpage_forced'] = $old_settings['wp_pwa_force_frontpage'];
+		}
+		if (isset($old_settings['wp_pwa_excludes'])) {
+			$settings['excludes'] = $old_settings['wp_pwa_excludes'];
+		}
+		if (isset($old_settings['wp_pwa_api_fields'])) {
+			$settings['api_filters'] = $old_settings['wp_pwa_api_fields'];
+		}
+
+		update_option('frontity_settings', $settings);
+		delete_option('wp_pwa_settings');
+	}
 }
 
 function frontity_activation() {
-	frontity_initialize_and_update_settings();
+	frontity_update_settings();
+	flush_rewrite_rules();
 
 	$upload = wp_upload_dir();
 	$upload_base = $upload['basedir'];
@@ -894,66 +958,6 @@ function frontity_deactivation() {
 
 function frontity_uninstallation() {
 	delete_option('frontity_settings');
-}
-
-function frontity_initialize_and_update_settings($upgrader_object, $data) {
-	$our_plugin = plugin_basename(__FILE__);
-	
-	// Check if our plugin is being updated.
-	if (
-		$data['action'] == 'update' &&
-		$data['type'] == 'plugin' &&
-		isset($data['plugins'])
-	) {
-		foreach ($data['plugins'] as $plugin) {
-			if ($plugin == $our_plugin) {
-				$settings = get_option('frontity_settings');
-				$old_settings = get_option('wp_pwa_settings');
-
-				// Initialize settings when the plugin is updated
-				// but was already activated (update doesn't trigger activation hook).
-				if (!$settings) {
-					frontity_initialize_settings();
-					$settings = get_option('frontity_settings');
-				}
-
-				// If there are settings from the previous versions of the plugin
-				// map them into the new settings and delete the old settings.
-				if ($old_settings) {
-					if (isset($old_settings['wp_pwa_status'])) {
-						$settings['pwa_active'] = $old_settings['wp_pwa_status'] == 'mobile' ? true : false;
-					}
-					if (isset($old_settings['wp_pwa_amp'])) {
-						$settings['amp_active'] = $old_settings['wp_pwa_amp'] == 'posts' ? true : false;
-					}
-					if (isset($old_settings['wp_pwa_siteid'])) {
-						$settings['site_id'] = $old_settings['wp_pwa_siteid'];
-					}
-					if (isset($old_settings['wp_pwa_ssr'])) {
-						$settings['ssr_server'] = $old_settings['wp_pwa_ssr'];
-					}
-					if (isset($old_settings['wp_pwa_static'])) {
-						$settings['static_server'] = $old_settings['wp_pwa_static'];
-					}
-					if (isset($old_settings['wp_pwa_amp_server'])) {
-						$settings['amp_server'] = $old_settings['wp_pwa_amp_server'];
-					}
-					if (isset($old_settings['wp_pwa_force_frontpage'])) {
-						$settings['frontpage_forced'] = $old_settings['wp_pwa_force_frontpage'];
-					}
-					if (isset($old_settings['wp_pwa_excludes'])) {
-						$settings['excludes'] = $old_settings['wp_pwa_excludes'];
-					}
-					if (isset($old_settings['wp_pwa_api_fields'])) {
-						$settings['api_filters'] = $old_settings['wp_pwa_api_fields'];
-					}
-
-					update_option('frontity_settings', $settings);
-					delete_option('wp_pwa_settings');
-				}
-			}
-		}
-	}
 }
 
 register_activation_hook(__FILE__, 'frontity_activation');
