@@ -17,7 +17,7 @@ const SiteIdRequested = ({
   confirmButtonText,
   siteIdStatus,
 }) => (
-  <>
+  <form onSubmit={saveSettings}>
     <Container margin={{ top: "40px", bottom: "24px" }}>
       <Header margin={{ horizontal: "0", vertical: "0" }}>{titleText}</Header>
       <Body>
@@ -34,9 +34,9 @@ const SiteIdRequested = ({
     </Container>
     <Box direction="row" justify="between" align="center">
       <Link onClick={setSiteIdRequested}>{linkText}</Link>
-      <Button primary label={confirmButtonText} onClick={saveSettings} />
+      <Button primary label={confirmButtonText} type="submit" />
     </Box>
-  </>
+  </form>
 );
 
 SiteIdRequested.propTypes = {
@@ -65,7 +65,8 @@ export default inject(({ stores: { settings, languages, ui } }) => {
       ui.setSiteIdStatus();
       settings.setSiteId(event);
     },
-    saveSettings: () => {
+    saveSettings: event => {
+      event.preventDefault();
       ui.validateSettings();
       settings.saveSettings();
     },
