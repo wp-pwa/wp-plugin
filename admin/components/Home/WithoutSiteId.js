@@ -57,7 +57,11 @@ const WithoutSiteId = ({
               </Box>
             ))}
           </Box>
-          <ViewDemoButton label={descriptionButtonText} />
+          <ViewDemoButton
+            label={descriptionButtonText}
+            href="https://frontity.com/demo"
+            target="_blank"
+          />
         </InnerContainer>
       </Container>
       <Separator />
@@ -179,9 +183,6 @@ const InnerContainer = styled.div`
 const ViewDemoButton = styled(Button)`
   width: 140px;
   align-self: flex-end;
-
-  /* hidden until autodemos is available */
-  display: none;
 `;
 
 const Footer = styled(Box)`
