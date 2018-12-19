@@ -28,7 +28,6 @@ class Frontity {
 	public $rest_api_working = false;
 
 	function __construct() {
-		add_action('init', array($this, 'init'), 1);
 		// Migrates settings when the plugin updates.
 		add_action('upgrader_process_complete', array($this, 'plugin_update_completed'));
 		// Adds the admin pages to the menu.
@@ -66,8 +65,6 @@ class Frontity {
 		add_filter('wp_get_attachment_link', array($this, 'add_id_to_gallery_images'), 10, 2);
 		add_filter('wp_get_attachment_image_attributes', array($this, 'add_id_to_gallery_image_attributes'), 10, 2);
 	}
-
-	function init() {}
 
 	/**
 	 * 	Used to test the plugin_update_completed function.
