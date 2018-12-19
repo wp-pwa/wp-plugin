@@ -145,7 +145,7 @@
       },
       "fieldHtmlPurifier": {
         "label": "Activate HTML Purifier",
-        "button": "Purge cache"
+        "button": "Purge HtmlPurifier"
       },
       "fieldExcludes": {
         "label": "Exclude URLs in the PWA",
