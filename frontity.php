@@ -22,24 +22,10 @@ if (!defined('DS')) {
 if (!class_exists('frontity')) :
 
 class Frontity {
-	// vars
 	public $plugin_version = '1.9.1';
 	public $rest_api_installed = false;
 	public $rest_api_active = false;
 	public $rest_api_working = false;
-
-	/*
-	 *  Constructor
-	 *
-	 *  This function will construct all the neccessary actions, filters and functions for the Frontity plugin to work
-	 *
-	 *  @type	function
-	 *  @date	10/06/14
-	 *  @since	0.6.0
-	 *
-	 *  @param	N/A
-	 *  @return	N/A
-	 */
 
 	function __construct() {
 		add_action('init', array($this, 'init'), 1);
@@ -173,6 +159,7 @@ class Frontity {
 		wp_send_json($data);
 	}
 
+	// Add resizement to wp-embedded iframes.
 	function send_post_embed_height() {
 ?>
 		<script>
@@ -185,12 +172,14 @@ class Frontity {
 <?php
 	}
 
+	// Save the image id transient keys for future purges.
 	function update_image_id_transient_keys($new_transient_key) {
 		$transient_keys = get_option('image_id_transient_keys');
 		$transient_keys[] = $new_transient_key;
 		update_option('image_id_transient_keys', $transient_keys);
 	}
 
+	// Purge (delete) all the image id transients.
 	function purge_image_id_transient_keys() {
 		$transient_keys = get_option('image_id_transient_keys');
 		foreach ($transient_keys as $t) {
@@ -199,12 +188,14 @@ class Frontity {
 		update_option('image_id_transient_keys', array());
 	}
 
+	// Add data-attachment-ids to galleries using the wp_get_attachment_image_attributes hook.
 	function add_id_to_gallery_image_attributes($attrs, $attachment) {
 		$attrs['data-attachment-id'] = $attachment->ID;
 		$attrs['data-attachment-id-source'] = 'image-attributes-hook';
 		return $attrs;
 	}
 
+	// Add data-attachment-ids to galleries using the wp_get_attachment_link hook.	
 	function add_id_to_gallery_images($html, $attachment_id) {
 		$attachment_id = intval($attachment_id);
 		$html = str_replace(
@@ -219,6 +210,7 @@ class Frontity {
 		return $html;
 	}
 
+	// Add hooks for each custom post type.
 	function add_custom_post_types_filters($post_type) {
 		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9, 3);
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'), 10);
@@ -233,11 +225,13 @@ class Frontity {
 		);
 	}
 
+	// Add latest hook.
 	function wp_api_get_latest($p) {
 		$types = apply_filters('add_custom_post_types_to_latest', array($p['type']));
 		return $types;
 	}
 
+	// Register our own routes.
 	function rest_routes() {
 		register_rest_route('wp-pwa/v1', '/siteid/', array(
 			'methods' => 'GET',
@@ -272,6 +266,7 @@ class Frontity {
 		));
 	}
 
+	// Get latest info of each custom post type.
 	function get_latest_from_cpt($cpts) {
 		$result = array();
 		foreach ($cpts as &$cpt) {
@@ -301,6 +296,7 @@ class Frontity {
 		return $result;
 	}
 
+	// Return latest info on the individual endpoint.
 	function latest_individual_endpoint($data) {
 		$cpts = apply_filters(
 			'add_custom_post_types_to_latest',
@@ -309,6 +305,7 @@ class Frontity {
 		return $this->get_latest_from_cpt($cpts);
 	}
 
+	// Return latest info on the general endpoint.
 	function latest_general_endpoint($data)	{
 		$params = $data->get_params();
 		foreach ($params as $params_cpt => $params_id) {
@@ -324,6 +321,7 @@ class Frontity {
 		return $this->get_latest_from_cpt($cpts);
 	}
 
+	// Add latest info in the _links section of each post.
 	function add_latest_to_links($data)	{
 		$type = $data->data['type'];
 		$id = $data->data['id'];
@@ -342,6 +340,7 @@ class Frontity {
 		return $data;
 	}
 
+	// Try to get the image id from the database and store it using transients.
 	function get_attachment_id($url) {
 		$transient_name = 'frt_' . md5($url);
 		$attachment_id = get_transient($transient_name);
@@ -392,6 +391,7 @@ class Frontity {
 		);
 	}
 
+	// If an image doesn't have permissions to be shown in the database, fix it.
 	function fix_forbidden_media($id)	{
 		if (!$id) return;
 
@@ -410,6 +410,7 @@ class Frontity {
 		}
 	}
 
+	// Add data-attachment-id to content images.
 	function add_image_ids($data, $post_type, $request)	{
 		global $wpdb;
 
@@ -476,6 +477,7 @@ class Frontity {
 		return $data;
 	}
 
+	// Use HTML Purifier in the content.
 	function purify_html($data, $post_type, $request)	{
 		$disableHtmlPurifier = $request->get_param('disableHtmlPurifier');
 		$settings = get_option('frontity_settings');
@@ -502,20 +504,7 @@ class Frontity {
 		return $data;
 	}
 
-			/*
-	*  init
-	*
-	*  This function is called during the 'init' action and will do things such as:
-	*  create custom_post_types, register scripts, add actions / filters
-	*
-	*  @type	action (init)
-	*  @date	10/06/14
-	*  @since	0.6.0
-	*
-	*  @param	N/A
-	*  @return	N/A
-	*/
-
+	// Delete directory. Used when purging HTML Purifier files.
 	function rrmdir($dir)	{
 		if (is_dir($dir)) {
 			$objects = scandir($dir);
@@ -533,6 +522,7 @@ class Frontity {
 		}
 	}
 
+	// Purge the Html Purifier files.
 	function purge_htmlpurifier_cache()	{
 		$upload = wp_upload_dir();
 		$upload_base = $upload['basedir'];
@@ -557,7 +547,7 @@ class Frontity {
 		);
 	}
 
-	// Loads React in admin pages.
+	// Load React in admin pages.
 	public function register_frontity_scripts($hook) {
 		if (
 			'toplevel_page_frontity-dashboard' === $hook ||
@@ -615,6 +605,7 @@ class Frontity {
 		);
 	}
 
+	// Get site id from the database. Used in the REST API.
 	function get_site_id() {
 		$settings = get_option("frontity_settings");
 
@@ -627,11 +618,12 @@ class Frontity {
 		return array('siteId' => $site_id);
 	}
 
-	// Populates plugin version in REST Api.
+	// Populates plugin version in REST API.
 	function get_plugin_version() {
 		return array('plugin_version' => $this->plugin_version);
 	}
 
+	// Populates certain info in the REST API.
 	function get_site_info() {
 		$homepage_title = get_bloginfo('name');
 		$homepage_metadesc = get_bloginfo('description');
@@ -659,9 +651,7 @@ class Frontity {
 		);
 	}
 
-	/*
-	*	@param \WP_REST_Request $request Full details about the request
-	*/
+	// Our first implementation of url discovery.
 	function discover_url($request)	{
 		$first_folder = $request['first_folder'];
 		$last_folder = $request['last_folder'];
@@ -782,7 +772,7 @@ class Frontity {
 		return array('Error' => $last_folder . ' not found');
 	}
 
-			//Checks if the rest-api plugin is installed
+	// Checks if the rest-api plugin is installed. I don't think it's used anymore.
 	public function wp_rest_api_plugin_is_installed() {
 		if (!function_exists('get_plugins')) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -792,12 +782,12 @@ class Frontity {
 		$this->rest_api_installed = isset($plugins['rest-api/plugin.php']);
 	}
 
-			//Checks if the rest-api plugin is active
+	// Checks if the rest-api plugin is active. I don't think it's used anymore.
 	public function wp_rest_api_plugin_is_active() {
 		$this->rest_api_active = class_exists('WP_REST_Controller');
 	}
 
-	//Generates the url to 'auto-activate' the rest-api plugin
+	// Generates the url to 'auto-activate' the rest-api plugin. I don't think it's used anymore.
 	public function get_activate_wp_rest_api_plugin_url() {
 		$plugin = 'rest-api/plugin.php';
 		$plugin_escaped = str_replace('/', '%2F', $plugin);
@@ -811,12 +801,12 @@ class Frontity {
 		return $activateUrl;
 	}
 
-	//Adds Cross origin * to the header
+	// Adds Cross origin * to the header
 	function allow_origin() {
 		if (!headers_sent()) header("Access-Control-Allow-Origin: *");
 	}
 
-	//Checks if the json posts endpoint is responding correctly
+	// Checks if the json posts endpoint is responding correctly.  I don't think it's used anymore.
 	function wp_rest_api_endpoint_works() {
 		$rest_api_url = get_site_url() . '/wp-json/wp/v2/posts';
 		$args = array('timeout' => 10, 'httpversion' => '1.1');
@@ -838,7 +828,7 @@ class Frontity {
 		}
 	}
 
-	//Injects the amp URL to the header
+	// Injects the AMP URL to the header.
 	public function amp_add_canonical() {
 		$settings = get_option('frontity_settings');
 		$prettyPermalinks = get_option('permalink_structure') !== '';
@@ -892,22 +882,7 @@ class Frontity {
 	}
 }
 
-/*
- *  frontity
- *
- *  The main function responsible for returning the one true frontity Instance to functions everywhere.
- *  Use this function like you would a global variable, except without needing to declare the global.
- *
- *  Example: <?php frontity = frontity(); ?>
- *
- *  @type	function
- *  @date	11/06/14
- *  @since	0.6.0
- *
- *  @param	N/A
- *  @return	(object)
- */
-
+// This initializates the frontity class and sets the global path.
 function frontity() {
 	global $frontity;
 
@@ -923,9 +898,10 @@ function frontity() {
 	return $frontity;
 }
 
-// initialize
+// Initialize frontity.
 frontity();
 
+// 
 function initialize_settings() {
 	$defaults = array(
 		"site_id_requested" => false,
@@ -981,7 +957,6 @@ function frontity_deactivation() {
 }
 
 function frontity_update() {
-
 }
 
 function frontity_uninstallation() {
