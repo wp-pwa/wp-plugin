@@ -2,7 +2,6 @@
 import React from "react";
 import { string, func } from "prop-types";
 import { inject } from "mobx-react";
-import styled from "styled-components";
 import { Box, Button } from "grommet";
 
 const Links = ({
@@ -25,7 +24,13 @@ const Links = ({
       margin={{ right: "20px" }}
       onClick={openDocumentation}
     />
-    <ViewDemoButton primary label={viewDemoText} focusIndicator={false} />
+    <Button
+      primary
+      label={viewDemoText}
+      focusIndicator={false}
+      href="https://frontity.com/demo?utm_source=plugin-dashboard&utm_medium=cta-button&utm_campaign=plugin-dashboard"
+      target="_blank"
+    />
   </Box>
 );
 
@@ -49,8 +54,3 @@ export default inject(({ stores: { languages } }) => ({
   openDocumentation: () =>
     window.open("https://support.frontity.com/", "_blank"),
 }))(Links);
-
-const ViewDemoButton = styled(Button)`
-  /* hidden until feature is available */
-  display: none;
-`;
