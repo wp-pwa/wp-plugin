@@ -59,7 +59,7 @@ const WithoutSiteId = ({
           </Box>
           <ViewDemoButton
             label={descriptionButtonText}
-            href="https://frontity.com/demo"
+            href="https://frontity.com/demo?utm_source=plugin-dashboard&utm_medium=cta-button&utm_campaign=plugin-dashboard"
             target="_blank"
           />
         </InnerContainer>
