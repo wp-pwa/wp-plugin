@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const argv = require("minimist")(process.argv.slice(2));
 const connect = require("simple-git/promise");
 const replace = require("replace-in-file");
@@ -24,7 +25,7 @@ const success = async () => {
 
 const prepare = async () => {
   const options = {
-    files: "wp-pwa.php",
+    files: "frontity.php",
     from: [/Version: \d+\.\d+\.\d+/, /plugin_version = '\d+\.\d+\.\d+'/],
     to: [
       `Version: ${packageJson.version}`,

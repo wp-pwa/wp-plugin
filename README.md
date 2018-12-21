@@ -2,7 +2,7 @@
 **Contributors:** [poliuk](https://profiles.wordpress.org/poliuk), [luisherranz](https://profiles.wordpress.org/luisherranz), [rmartinezduque](https://profiles.wordpress.org/rmartinezduque), [orballo](https://profiles.wordpress.org/orballo), [davidarenas](https://profiles.wordpress.org/davidarenas)  
 **Tags:** pwa, progressive web app, google amp, mobile theme, react  
 **Author URI:** https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description  
-**Requires at least:** 4.4  
+**Requires at least:** 4.7  
 **Tested up to:** 5.0  
 **Stable tag:** trunk  
 **License:** GPLv3  

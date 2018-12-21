@@ -1,0 +1,161 @@
+{
+  "header": {
+    "links": {
+      "contactAndHelp": "Contact and help",
+      "documentation": "Documentation",
+      "viewDemo": "View demo"
+    }
+  },
+  "home": {
+    "withoutSiteId": {
+      "description": {
+        "title": "How Frontity works",
+        "content": "Frontity is a mobile WordPress theme built with React that makes your site faster and more engaging on mobile devices. It implements Progressive Web App (PWA) functionalities and Google AMP.",
+        "features": [
+          {
+            "title": "Same URL",
+            "content": "Frontity uses the same URL as your blog. When a visit comes from mobile, it automatically loads our theme."
+          },
+          {
+            "title": "Keep Your Desktop Theme",
+            "content": "Frontity is a special theme for mobile visitors, which means that your desktop version and content don't change."
+          },
+          {
+            "title": "Include / Exclude Pages",
+            "content": "You can control your menu, pages, and even exclude specific URLs from being loaded into our mobile theme."
+          }
+        ],
+        "imageFooter": "Frontity replaces your classic mobile version with a fast PWA theme.",
+        "viewDemoButton": "View demo"
+      },
+      "notifications": [
+        {
+          "highlight": "Our theme is suitable for news publishers and bloggers",
+          "content": "(blogs, news sites, magazines) who wish to improve their mobile site performance and speed."
+        },
+        {
+          "highlight": "Our theme is not compatible",
+          "content": "with e-commerce, corporate, classifieds or custom WordPress sites."
+        }
+      ],
+      "requestForm": {
+        "title": "Get started by requesting a Site ID",
+        "content": "Access to our platform is currently limited. In order to configure and activate our Progressive Web App (PWA) theme you have to request a site ID first. This will allow you to connect your WordPress site with our platform.",
+        "fieldName": {
+          "label": "Name",
+          "placeholder": "John Doe"
+        },
+        "fieldEmail": {
+          "label": "Email",
+          "placeholder": "johndoe@example.com"
+        },
+        "fieldUrl": {
+          "label": "WordPress URL",
+          "placeholder": "yourblog.com"
+        },
+        "fieldType": {
+          "label": "Type of your WordPress site:",
+          "options": [
+            "Blog / News Site",
+            "eCommerce / Online store",
+            "Corporate site / Online bussiness",
+            "Classifieds site",
+            "Other"
+          ]
+        },
+        "fieldTraffic": {
+          "label": "Monthly traffic: (Pageviews per month)",
+          "options": [
+            "More than 1 million",
+            "500.000 - 1 million",
+            "100.000 - 500.000",
+            "Less than 100.000",
+            "I don't know"
+          ]
+        },
+        "alreadyLink": "I already have a Site ID",
+        "requestButton": "Request Site ID"
+      }
+    },
+    "siteIdJustRequested": {
+      "emoji": "🎉 ",
+      "title": "We have received your request, thanks!",
+      "content": "Our team will manually review your request and get back to you shortly.",
+      "link": "I already have a Site ID"
+    },
+    "siteIdRequested": {
+      "title": "Insert your Site ID",
+      "content": "The Site ID connects your WordPress website with our platform.",
+      "fieldSiteId": {
+        "label": "Site ID",
+        "placeholder": "ID of 17 characters"
+      },
+      "link": "I don't have a Site ID",
+      "confirmButton": "Confirm"
+    },
+    "withSiteId": {
+      "notifications": {
+        "top": "You’re all set! Now check your PWA configuration.",
+        "bottom": {
+          "contentPreLink": "If you like Frontity and appreciate our work, please",
+          "link": "leave a positive review",
+          "contentPostLink": "to support continued development."
+        }
+      },
+      "pwaActivation": {
+        "title": "Progressive Web App Theme",
+        "content": "Activate this option to replace your current mobile version with our Progressive Web App theme."
+      },
+      "ampActivation": {
+        "title": "Google AMP",
+        "content": "Activate Google AMP on your mobile site with the same look and feel of the PWA theme."
+      },
+      "links": {
+        "twitter": "Follow @frontity in Twitter",
+        "github": "Get involved in GitHub"
+      }
+    }
+  },
+  "settings": {
+    "notification": {
+      "highlight": "Warning:",
+      "content": "Changing this settings can break your Progressive Web App"
+    },
+    "form": {
+      "title": "Advanced Settings",
+      "fieldSiteId": {
+        "label": "Site ID",
+        "placeholder": "ID of your site"
+      },
+      "fieldSsrServer": {
+        "label": "SSR Server",
+        "placeholder": "SSR URL"
+      },
+      "fieldStaticServer": {
+        "label": "Static Server",
+        "placeholder": "Static URL"
+      },
+      "fieldAmpServer": {
+        "label": "AMP Server",
+        "placeholder": "AMP URL"
+      },
+      "fieldForceFrontpage": {
+        "label": "Force Frontpage",
+        "comment": "Forces FrontPage to retrieve Latest posts"
+      },
+      "fieldHtmlPurifier": {
+        "label": "Activate HTML Purifier",
+        "button": "Purge HtmlPurifier"
+      },
+      "fieldExcludes": {
+        "label": "Exclude URLs in the PWA",
+        "placeholder": "http://sample.com/page/\nhttp://v2.sample.com/page/"
+      },
+      "fieldApiFilters": {
+        "label": "Filter WP API fields",
+        "placeholder": "_links\ntitle.rendered"
+      }
+    },
+    "saveButton": "Save changes"
+  }
+}

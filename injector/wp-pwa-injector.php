@@ -19,10 +19,10 @@ $prettyPermalinks = get_option('permalink_structure') !== '';
 $url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']
   . $_SERVER['REQUEST_URI'];
 $initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
-$settings = get_option('wp_pwa_settings');
-$pwaStatus = $settings['wp_pwa_status'];
-$forceFrontpage = $settings['wp_pwa_force_frontpage'];
-$excludes = isset($settings['wp_pwa_excludes']) ? $settings['wp_pwa_excludes'] : array();
+$settings = get_option('frontity_settings');
+$pwa_active = $settings['pwa_active'];
+$forceFrontpage = $settings['frontpage_forced'];
+$excludes = isset($settings['excludes']) ? $settings['excludes'] : array();
 
 if (($forceFrontpage === true && is_front_page()) || is_home()) {
   $type = 'latest';
@@ -35,8 +35,7 @@ if (($forceFrontpage === true && is_front_page()) || is_home()) {
   }
 } elseif (is_post_type_archive()) {
   $queriedObject = get_queried_object();
-  if ((isset($queriedObject->show_in_rest)) &&
-  ($queriedObject->show_in_rest === true)) {
+  if ((isset($queriedObject->show_in_rest)) && ($queriedObject->show_in_rest === true)) {
     $type = 'latest';
     $id = $queriedObject->name;
     $page = 1;
@@ -65,39 +64,33 @@ if (is_paged()) {
 
 if (isset($_GET['siteId'])) {
   $siteId = $_GET['siteId'];
-} elseif (isset($settings['wp_pwa_siteid']) && $settings['wp_pwa_siteid'] !== '' ) {
-  $siteId = $settings['wp_pwa_siteid'];
-}
-
-if (isset($_GET['env']) && ($_GET['env'] === 'pre' || $_GET['env'] === 'prod')) {
-  $env = $_GET['env'];
-} elseif (isset($settings['wp_pwa_env'])) {
-  $env = $settings['wp_pwa_env'];
+} elseif (isset($settings['site_id']) && $settings['site_id'] !== '') {
+  $siteId = $settings['site_id'];
 }
 
 if (isset($_GET['ssrUrl'])) {
   $ssr = $_GET['ssrUrl'];
 } elseif (isset($_GET['server'])) {
   $ssr = $_GET['server'];
-} elseif (isset($settings['wp_pwa_ssr'])) {
-  $ssr = $settings['wp_pwa_ssr'];
+} elseif (isset($settings['ssr_server'])) {
+  $ssr = $settings['ssr_server'];
 }
 if (isset($_GET['staticUrl'])) {
   $static = $_GET['staticUrl'];
 } elseif (isset($_GET['server'])) {
   $static = $_GET['server'];
-} elseif (isset($settings['wp_pwa_static'])) {
-  $static = $settings['wp_pwa_static'];
+} elseif (isset($settings['static_server'])) {
+  $static = $settings['static_server'];
 }
 
-if (isset($_GET['pwa']) && $_GET['pwa'] === 'true' ){
+if (isset($_GET['pwa']) && $_GET['pwa'] === 'true') {
   $pwa = true;
 }
 
 if (isset($_GET['pwa']) || isset($_GET['server']) || isset($_GET['staticUrl']) ||
   isset($_GET['ssrUrl']) || isset($_GET['env']) || isset($_GET['siteId'])) {
-    $dev = 'true';
-  }
+  $dev = 'true';
+}
 if (isset($_GET['dev'])) {
   $dev = $_GET['dev'];
 }
@@ -117,7 +110,7 @@ if (sizeof($excludes) !== 0 && $pwa === false) {
 }
 
 if ($siteId && $type && $id) {
-  if ($pwa || ($pwaStatus === 'mobile' && $exclusion === false)) {
+  if ($pwa || ($pwa_active === true && $exclusion === false)) {
     $inject = true;
   }
   if (isset($page) && $page >= 2) {
@@ -143,4 +136,5 @@ if ($siteId && $type && $id) {
     $buffer = apply_filters('frontity_javascript_injector', $buffer);
     echo $buffer;
   } ?></script>
-<?php } ?>
+<?php 
+} ?>

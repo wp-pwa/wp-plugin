@@ -93,8 +93,8 @@ public function filter_magic( $response, $post, $request ){
   // and returns 'null' when not exists
   $fields = $request->get_param('fields');
   $embed = $request->get_param('_embed');
-  $settings = get_option('wp_pwa_settings');
-  $filters = isset($settings['wp_pwa_api_fields']) ? $settings['wp_pwa_api_fields'] : array();  
+  $settings = get_option('frontity_settings');
+  $filters = isset($settings['api_filters']) ? $settings['api_filters'] : array();  
 
   if(sizeof($filters) !== 0){
     // Create a new array
