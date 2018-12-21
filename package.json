@@ -6,14 +6,14 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack --config webpack.config.js --watch",
-    "build": "NODE_ENV='production' webpack --config webpack.config.js",
+    "build": "rimraf admin/dist && NODE_ENV='production' webpack --config webpack.config.js",
     "analyze": "NODE_ENV='production' ANALYZE=true webpack --config webpack.config.js",
     "grunt": "grunt",
     "test": "jest  --watch --silent",
     "test:ci": "jest --silent --passWithNoTests",
     "test:debug": "node --inspect node_modules/.bin/jest --watch",
     "cz": "git-cz",
-    "semantic-release": "semantic-release"
+    "release": "rimraf admin/analyze && npm run build && semantic-release && rimraf node_modules"
   },
   "repository": {
     "type": "git",
@@ -69,6 +69,7 @@
     "minimist": "^1.2.0",
     "prettier": "^1.15.3",
     "replace-in-file": "^3.4.2",
+    "rimraf": "^2.6.2",
     "semantic-release": "^15.12.4",
     "semantic-release-cli": "^4.0.12",
     "simple-git": "^1.107.0",
