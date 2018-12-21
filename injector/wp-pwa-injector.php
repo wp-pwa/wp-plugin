@@ -20,7 +20,7 @@ $url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HO
   . $_SERVER['REQUEST_URI'];
 $initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
 $settings = get_option('frontity_settings');
-$pwaStatus = $settings['pwa_active'];
+$pwa_active = $settings['pwa_active'];
 $forceFrontpage = $settings['frontpage_forced'];
 $excludes = isset($settings['excludes']) ? $settings['excludes'] : array();
 
@@ -35,8 +35,7 @@ if (($forceFrontpage === true && is_front_page()) || is_home()) {
   }
 } elseif (is_post_type_archive()) {
   $queriedObject = get_queried_object();
-  if ((isset($queriedObject->show_in_rest)) &&
-  ($queriedObject->show_in_rest === true)) {
+  if ((isset($queriedObject->show_in_rest)) && ($queriedObject->show_in_rest === true)) {
     $type = 'latest';
     $id = $queriedObject->name;
     $page = 1;
@@ -65,7 +64,7 @@ if (is_paged()) {
 
 if (isset($_GET['siteId'])) {
   $siteId = $_GET['siteId'];
-} elseif (isset($settings['site_id']) && $settings['site_id'] !== '' ) {
+} elseif (isset($settings['site_id']) && $settings['site_id'] !== '') {
   $siteId = $settings['site_id'];
 }
 
@@ -84,14 +83,14 @@ if (isset($_GET['staticUrl'])) {
   $static = $settings['static_server'];
 }
 
-if (isset($_GET['pwa']) && $_GET['pwa'] === 'true' ){
+if (isset($_GET['pwa']) && $_GET['pwa'] === 'true') {
   $pwa = true;
 }
 
 if (isset($_GET['pwa']) || isset($_GET['server']) || isset($_GET['staticUrl']) ||
   isset($_GET['ssrUrl']) || isset($_GET['env']) || isset($_GET['siteId'])) {
-    $dev = 'true';
-  }
+  $dev = 'true';
+}
 if (isset($_GET['dev'])) {
   $dev = $_GET['dev'];
 }
@@ -111,7 +110,7 @@ if (sizeof($excludes) !== 0 && $pwa === false) {
 }
 
 if ($siteId && $type && $id) {
-  if ($pwa || ($pwaStatus === 'mobile' && $exclusion === false)) {
+  if ($pwa || ($pwa_active === true && $exclusion === false)) {
     $inject = true;
   }
   if (isset($page) && $page >= 2) {
@@ -137,4 +136,5 @@ if ($siteId && $type && $id) {
     $buffer = apply_filters('frontity_javascript_injector', $buffer);
     echo $buffer;
   } ?></script>
-<?php } ?>
+<?php 
+} ?>
