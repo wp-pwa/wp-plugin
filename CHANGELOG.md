@@ -1,3 +1,10 @@
+## [1.10.1](https://github.com/frontity/wp-plugin/compare/v1.10.0...v1.10.1) (2018-12-21)
+
+
+### Bug Fixes
+
+* **filename:** renames frontity.php to wp-pwa.php to avoid conflicts ([a3211f4](https://github.com/frontity/wp-plugin/commit/a3211f4))
+
 # [1.10.0](https://github.com/frontity/wp-plugin/compare/v1.9.1...v1.10.0) (2018-12-21)
 
 
