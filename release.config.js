@@ -10,14 +10,14 @@ module.exports = {
   verifyConditions: [
     "@semantic-release/changelog",
     "@semantic-release/github",
-    "@semantic-release/git"
+    "@semantic-release/git",
   ],
   prepare: [
     "@semantic-release/changelog",
     "@semantic-release/npm",
     {
       path: "@semantic-release/exec",
-      cmd: "node release.scripts.js --prepare"
+      cmd: "node release.scripts.js --prepare",
     },
     {
       path: "@semantic-release/git",
@@ -26,21 +26,21 @@ module.exports = {
         "CHANGELOG.md",
         "package.json",
         "package-lock.json",
-        "frontity.php"
-      ]
-    }
+        "wp-pwa.php",
+      ],
+    },
   ],
   publish: ["@semantic-release/github"],
   success: [
     {
       path: "@semantic-release/exec",
-      cmd: "node release.scripts.js --success"
+      cmd: "node release.scripts.js --success",
     },
-    "@semantic-release/github"
+    "@semantic-release/github",
   ],
   fail: ["@semantic-release/github"],
 
   branch: "master",
   npmPublish: false,
-  noCi: true
+  noCi: true,
 };

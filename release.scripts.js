@@ -25,12 +25,12 @@ const success = async () => {
 
 const prepare = async () => {
   const options = {
-    files: "frontity.php",
+    files: "wp-pwa.php",
     from: [/Version: \d+\.\d+\.\d+/, /plugin_version = '\d+\.\d+\.\d+'/],
     to: [
       `Version: ${packageJson.version}`,
-      `plugin_version = '${packageJson.version}'`
-    ]
+      `plugin_version = '${packageJson.version}'`,
+    ],
   };
   try {
     const changes = await replace(options);
