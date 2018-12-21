@@ -235,8 +235,9 @@ export default inject(({ stores: { settings, languages, ui } }) => {
     setExcludes: settings.setExcludes,
     setApiFilters: settings.setApiFilters,
     saveSettings: () => {
-      ui.validateSettings();
-      settings.saveSettings();
+      if (ui.validateSettings()) {
+        settings.saveSettings();
+      }
     },
     purgeHtmlPurifierCache: settings.purgeHtmlPurifierCache,
     notification: languages.get("settings.notification"),

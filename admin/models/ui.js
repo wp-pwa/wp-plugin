@@ -76,11 +76,24 @@ export default types
       self.setSiteIdStatus(
         isLength(settings.site_id, { min: 1 }) ? "valid" : "invalid"
       );
-      self.setSsrServerStatus(isURL(settings.ssr_server) ? "valid" : "invalid");
-      self.setStaticServerStatus(
-        isURL(settings.static_server) ? "valid" : "invalid"
+      self.setSsrServerStatus(
+        isURL(settings.ssr_server, { require_tld: false }) ? "valid" : "invalid"
       );
-      self.setAmpServerStatus(isURL(settings.amp_server) ? "valid" : "invalid");
+      self.setStaticServerStatus(
+        isURL(settings.static_server, { require_tld: false })
+          ? "valid"
+          : "invalid"
+      );
+      self.setAmpServerStatus(
+        isURL(settings.amp_server, { require_tld: false }) ? "valid" : "invalid"
+      );
+
+      return (
+        self.siteIdStatus === "valid" &&
+        self.ssrServerStatus === "valid" &&
+        self.staticServerStatus === "valid" &&
+        self.ampServerStatus === "valid"
+      );
     },
     validateRequestForm() {
       self.setRequestFormNameStatus(
