@@ -1,3 +1,26 @@
+# [1.10.0](https://github.com/frontity/wp-plugin/compare/v1.9.1...v1.10.0) (2018-12-21)
+
+
+### Bug Fixes
+
+* **dashboard:** use proper form instead of only a button ([53fd3f0](https://github.com/frontity/wp-plugin/commit/53fd3f0))
+* **demos:** show links ([71c70b1](https://github.com/frontity/wp-plugin/commit/71c70b1))
+* **demos:** update links with UTM campaigns ([56b08e9](https://github.com/frontity/wp-plugin/commit/56b08e9))
+* **htmlpurifier:** use explicit htmlpurifier text to avoid confusion ([aada9af](https://github.com/frontity/wp-plugin/commit/aada9af))
+* **injector:** change settings names in injector ([eb8ef92](https://github.com/frontity/wp-plugin/commit/eb8ef92))
+* **injector:** fixes injector not being loaded ([05bd015](https://github.com/frontity/wp-plugin/commit/05bd015))
+* **injector:** use wp_pwa_path name again ([66f02c9](https://github.com/frontity/wp-plugin/commit/66f02c9))
+* **settings:** don't use the update plugin logic for update settings ([9fd3d22](https://github.com/frontity/wp-plugin/commit/9fd3d22))
+* **settings:** fixes settings saved without validation ([e8b157e](https://github.com/frontity/wp-plugin/commit/e8b157e))
+* **settings:** move initialization and update of settings out of Class ([015c2a3](https://github.com/frontity/wp-plugin/commit/015c2a3))
+* **settings:** site id is no longer restricted to 17 chars ([7a6e70f](https://github.com/frontity/wp-plugin/commit/7a6e70f))
+
+
+### Features
+
+* **all:** migrate to react [WIP] ([9ea3150](https://github.com/frontity/wp-plugin/commit/9ea3150))
+* **all:** new plugin design! ([e7757ea](https://github.com/frontity/wp-plugin/commit/e7757ea))
+
 ## [1.9.1](https://github.com/frontity/wp-plugin/compare/v1.9.0...v1.9.1) (2018-12-11)
 
 
