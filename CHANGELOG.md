@@ -1,3 +1,10 @@
+## [1.10.4](https://github.com/frontity/wp-plugin/compare/v1.10.3...v1.10.4) (2018-12-24)
+
+
+### Bug Fixes
+
+* **update:** adds github plugin uri to wp-pwa.php ([bc11a34](https://github.com/frontity/wp-plugin/commit/bc11a34))
+
 ## [1.10.3](https://github.com/frontity/wp-plugin/compare/v1.10.2...v1.10.3) (2018-12-24)
 
 
