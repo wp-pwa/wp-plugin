@@ -74,7 +74,7 @@ export default types
       const { settings } = getParent(self, 1);
 
       self.setSiteIdStatus(
-        !isEmpty(self.requestFormName, { ignore_whitespace: true })
+        !isEmpty(settings.site_id, { ignore_whitespace: true })
           ? "valid"
           : "invalid"
       );
