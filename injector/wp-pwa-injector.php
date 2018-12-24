@@ -66,6 +66,8 @@ if (isset($_GET['siteId'])) {
   $siteId = $_GET['siteId'];
 } elseif (isset($settings['site_id']) && $settings['site_id'] !== '') {
   $siteId = $settings['site_id'];
+} else {
+  $siteId = null;
 }
 
 if (isset($_GET['ssrUrl'])) {
