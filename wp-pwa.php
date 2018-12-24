@@ -828,7 +828,7 @@ class Frontity {
 				. '&type=' . $type
 				. '&id=' . $id
 				. '&initialUrl=' . $initialUrl;
-			$amp_url = $ampServer . $path . $query;
+			$amp_url = $amp_server . $path . $query;
 
 			printf('<link rel="amphtml" href="%s" />', $amp_url);
 			printf("\n");
