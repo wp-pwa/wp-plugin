@@ -3,6 +3,7 @@
 // Copy on header.php, just after <head> the following code:
 // if (isset($GLOBALS['wp_pwa_path'])) { require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] .'/injector/wp-pwa-injector.php'); }
 
+$siteId = null;
 $type = null;
 $id = null;
 $page = null;
@@ -66,8 +67,6 @@ if (isset($_GET['siteId'])) {
   $siteId = $_GET['siteId'];
 } elseif (isset($settings['site_id']) && $settings['site_id'] !== '') {
   $siteId = $settings['site_id'];
-} else {
-  $siteId = null;
 }
 
 if (isset($_GET['ssrUrl'])) {
