@@ -9,15 +9,18 @@ import "@babel/polyfill";
 
 const stores = Stores.create({
   general: {
+    site: window.frontity.plugin.site_url,
     page: new URLSearchParams(window.location.search).get("page"),
   },
   settings: window.frontity.plugin.settings,
   ui: {
-    siteIdStatus: !isEmpty(window.frontity.plugin.settings.site_id, {
-      ignore_whitespace: true,
-    })
-      ? "valid"
-      : undefined,
+    siteIdStatus:
+      window.frontity.plugin.settings.site_id &&
+      !isEmpty(window.frontity.plugin.settings.site_id, {
+        ignore_whitespace: true,
+      })
+        ? "valid"
+        : undefined,
   },
 });
 

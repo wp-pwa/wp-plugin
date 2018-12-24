@@ -114,8 +114,8 @@ class Frontity {
 		
 		// Check if our plugin is being updated.
 		if (
-			$data['action'] == 'update' &&
-			$data['type'] == 'plugin' &&
+			$data['action'] === 'update' &&
+			$data['type'] === 'plugin' &&
 			isset($data['plugins'])
 		) {
 			foreach ($data['plugins'] as $plugin) {
