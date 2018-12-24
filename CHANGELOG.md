@@ -1,3 +1,12 @@
+## [1.10.2](https://github.com/frontity/wp-plugin/compare/v1.10.1...v1.10.2) (2018-12-24)
+
+
+### Bug Fixes
+
+* **amp:** fixes amp url ([bdcf78f](https://github.com/frontity/wp-plugin/commit/bdcf78f))
+* **injector:** fixes php error about sitId undefined in dev ([893127c](https://github.com/frontity/wp-plugin/commit/893127c))
+* **validation:** fixes site_id validation ([2ebe7b1](https://github.com/frontity/wp-plugin/commit/2ebe7b1))
+
 ## [1.10.1](https://github.com/frontity/wp-plugin/compare/v1.10.0...v1.10.1) (2018-12-21)
 
 
