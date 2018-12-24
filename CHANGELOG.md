@@ -1,3 +1,12 @@
+## [1.10.3](https://github.com/frontity/wp-plugin/compare/v1.10.2...v1.10.3) (2018-12-24)
+
+
+### Bug Fixes
+
+* **images:** fixes image url in dashboard view ([c0547f1](https://github.com/frontity/wp-plugin/commit/c0547f1))
+* **update:** fixes update process ([e1e0574](https://github.com/frontity/wp-plugin/commit/e1e0574))
+* **validation:** fixes site id validation ([fedaa5a](https://github.com/frontity/wp-plugin/commit/fedaa5a))
+
 ## [1.10.2](https://github.com/frontity/wp-plugin/compare/v1.10.1...v1.10.2) (2018-12-24)
 
 
