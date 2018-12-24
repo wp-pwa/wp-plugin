@@ -44,6 +44,8 @@ class Frontity {
 
 		add_action('plugins_loaded', array($this, 'wp_rest_api_plugin_is_installed'));
 		add_action('plugins_loaded', array($this, 'wp_rest_api_plugin_is_active'));
+		add_action('plugins_loaded', array($this, 'update_settings'));
+
 		add_action('init', array($this, 'allow_origin'));
 
 		// Loads React for admin pages.
@@ -81,7 +83,42 @@ class Frontity {
 		*
 		* */
 
-	// Updates settings in WP db.
+	// Sets transient to check if plugin has been updated.
+	function plugin_update_completed($upgrader_object, $data) {
+		$our_plugin = plugin_basename(__FILE__);
+
+		// Check if our plugin is being updated.
+		if (
+			$data['action'] === 'update' &&
+			$data['type'] === 'plugin' &&
+			isset($data['plugins'])
+		) {
+			foreach ($data['plugins'] as $plugin) {
+				if ($plugin == $our_plugin) {
+					set_transient('frontity_update', $this->plugin_version);
+				}
+			}
+		}
+	}
+
+	// Updates settings if plugin has been updated.
+	function update_settings() {
+		$should_update = false;
+		$frontity_update_transient = get_transient('frontity_update');
+
+		if (!$frontity_update_transient) {
+			$should_update = true;
+		} else if ($frontity_update_transient !== $this->plugin_version) {
+			$should_update = true;
+		}
+
+		if ($should_update && current_user_can('update_plugins')) {
+			frontity_update_settings();
+			set_transient('frontity_update', $this->plugin_version);
+		}
+	}
+
+	// Updates settings in WP db after user input.
 	function save_settings() {
 		$data = json_decode(stripslashes($_POST["data"]), true);
 
@@ -106,24 +143,6 @@ class Frontity {
 			}, '*');
 		</script>
 <?php
-	}
-
-	// Update settings when plugin is updated.
-	function plugin_update_completed($upgrader_object, $data) {
-		$our_plugin = plugin_basename(__FILE__);
-		
-		// Check if our plugin is being updated.
-		if (
-			$data['action'] == 'update' &&
-			$data['type'] == 'plugin' &&
-			isset($data['plugins'])
-		) {
-			foreach ($data['plugins'] as $plugin) {
-				if ($plugin == $our_plugin) {
-					frontity_update_settings();
-				}
-			}
-		}
 	}
 
 	// Save the image id transient keys for future purges.
@@ -855,7 +874,7 @@ function frontity() {
 // Initialize frontity.
 frontity();
 
-// 
+// Initialize frontity_settings if they don't exist.
 function frontity_initialize_settings() {
 	$defaults = array(
 		"site_id_requested" => false,
@@ -952,8 +971,9 @@ function frontity_activation() {
 }
 
 function frontity_deactivation() {
+	delete_transient('frontity_update');
 	// DO NOT UNCOMMENT THIS LINE.
-	// delete_option('frontity_settings');
+	delete_option('frontity_settings');
 }
 
 function frontity_uninstallation() {
