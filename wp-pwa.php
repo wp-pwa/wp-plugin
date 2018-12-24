@@ -2,6 +2,7 @@
 /*
 Plugin Name: Frontity
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
+GitHub Plugin URI: https://github.com/frontity/wp-plugin
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
 Version: 1.10.3
 Author: Frontity
@@ -972,8 +973,6 @@ function frontity_activation() {
 
 function frontity_deactivation() {
 	delete_transient('frontity_update');
-	// DO NOT UNCOMMENT THIS LINE.
-	delete_option('frontity_settings');
 }
 
 function frontity_uninstallation() {
