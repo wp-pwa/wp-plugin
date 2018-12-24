@@ -1,5 +1,5 @@
 import { types, getParent } from "mobx-state-tree";
-import { isLength, isEmpty, isURL, isEmail } from "validator";
+import { isEmpty, isURL, isEmail } from "validator";
 import { post } from "axios";
 
 export default types
@@ -74,7 +74,9 @@ export default types
       const { settings } = getParent(self, 1);
 
       self.setSiteIdStatus(
-        isLength(settings.site_id, { min: 1 }) ? "valid" : "invalid"
+        !isEmpty(self.requestFormName, { ignore_whitespace: true })
+          ? "valid"
+          : "invalid"
       );
       self.setSsrServerStatus(
         isURL(settings.ssr_server, { require_tld: false }) ? "valid" : "invalid"
