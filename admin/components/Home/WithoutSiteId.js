@@ -23,6 +23,7 @@ const WithoutSiteId = ({
   notifications,
   requestAlreadyLinkText,
   requestButtonText,
+  siteUrl,
 }) => {
   if (siteIdRequested)
     return siteIdJustRequested ? <SiteIdJustRequested /> : <SiteIdRequested />;
@@ -31,7 +32,7 @@ const WithoutSiteId = ({
     <>
       <Container>
         <InnerContainer>
-          <Image alt="Frontity Theme" src={frontityThemeImage} />
+          <Image alt="Frontity Theme" src={`${siteUrl}${frontityThemeImage}`} />
           <Footer>
             <Paragraph margin={{ vertical: "0" }}>
               {descriptionImageFooterText}
@@ -100,9 +101,10 @@ WithoutSiteId.propTypes = {
     .isRequired,
   requestAlreadyLinkText: string.isRequired,
   requestButtonText: string.isRequired,
+  siteUrl: string.isRequired,
 };
 
-export default inject(({ stores: { settings, ui, languages } }) => {
+export default inject(({ stores: { general, settings, ui, languages } }) => {
   const description = "home.withoutSiteId.description";
   const requestForm = "home.withoutSiteId.requestForm";
 
@@ -129,6 +131,7 @@ export default inject(({ stores: { settings, ui, languages } }) => {
     notifications: languages.get("home.withoutSiteId.notifications"),
     requestAlreadyLinkText: languages.get(`${requestForm}.alreadyLink`),
     requestButtonText: languages.get(`${requestForm}.requestButton`),
+    siteUrl: general.site,
   };
 })(WithoutSiteId);
 
