@@ -1,3 +1,10 @@
+## [1.10.5](https://github.com/frontity/wp-plugin/compare/v1.10.4...v1.10.5) (2018-12-27)
+
+
+### Bug Fixes
+
+* **request-demo:** fix form field names ([2a1d856](https://github.com/frontity/wp-plugin/commit/2a1d856))
+
 ## [1.10.4](https://github.com/frontity/wp-plugin/compare/v1.10.3...v1.10.4) (2018-12-24)
 
 
