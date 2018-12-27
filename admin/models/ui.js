@@ -150,9 +150,9 @@ export default types
         {
           name: self.requestFormName,
           email: self.requestFormEmail,
-          wpUrl: self.requestFormUrl,
-          siteType: siteTypes[self.requestFormType],
-          siteTraffic: siteTraffics[self.requestFormTraffic],
+          url: self.requestFormUrl,
+          type: siteTypes[self.requestFormType],
+          traffic: siteTraffics[self.requestFormTraffic],
           source: "plugin",
         }
       );
