@@ -1,3 +1,10 @@
+## [1.10.6](https://github.com/frontity/wp-plugin/compare/v1.10.5...v1.10.6) (2019-01-02)
+
+
+### Bug Fixes
+
+* **request-site-id:** change source to origin ([da6300f](https://github.com/frontity/wp-plugin/commit/da6300f))
+
 ## [1.10.5](https://github.com/frontity/wp-plugin/compare/v1.10.4...v1.10.5) (2018-12-27)
 
 
