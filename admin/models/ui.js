@@ -153,7 +153,7 @@ export default types
           url: self.requestFormUrl,
           type: siteTypes[self.requestFormType],
           traffic: siteTraffics[self.requestFormTraffic],
-          source: "plugin",
+          origin: "plugin",
         }
       );
     },
