@@ -11,6 +11,7 @@ import RequestForm from "./RequestForm";
 import frontityThemeImage from "../../assets/frontity-theme.png";
 
 const WithoutSiteId = ({
+  siteUrl,
   siteIdRequested,
   siteIdJustRequested,
   sendRequest,
@@ -23,7 +24,6 @@ const WithoutSiteId = ({
   notifications,
   requestAlreadyLinkText,
   requestButtonText,
-  siteUrl,
 }) => {
   if (siteIdRequested)
     return siteIdJustRequested ? <SiteIdJustRequested /> : <SiteIdRequested />;
@@ -87,6 +87,7 @@ const WithoutSiteId = ({
 };
 
 WithoutSiteId.propTypes = {
+  siteUrl: string.isRequired,
   siteIdRequested: bool.isRequired,
   siteIdJustRequested: bool.isRequired,
   sendRequest: func.isRequired,
@@ -101,39 +102,30 @@ WithoutSiteId.propTypes = {
     .isRequired,
   requestAlreadyLinkText: string.isRequired,
   requestButtonText: string.isRequired,
-  siteUrl: string.isRequired,
 };
 
-export default inject(({ stores: { general, settings, ui, languages } }) => {
-  const description = "home.withoutSiteId.description";
-  const requestForm = "home.withoutSiteId.requestForm";
+export default inject(
+  ({ stores: { general, settings, request, languages } }) => {
+    const description = "home.withoutSiteId.description";
+    const requestForm = "home.withoutSiteId.requestForm";
 
-  return {
-    siteIdRequested: settings.site_id_requested,
-    siteIdJustRequested: ui.siteIdJustRequested,
-    sendRequest: async () => {
-      if (ui.validateRequestForm()) {
-        await ui.sendRequest();
-        settings.setSiteIdRequested(true);
-        ui.setSiteIdJustRequested(true);
-        settings.saveSettings();
-      }
-    },
-    setSiteIdRequested: () => {
-      settings.setSiteIdRequested(true);
-      settings.saveSettings();
-    },
-    descriptionTitleText: languages.get(`${description}.title`),
-    descriptionContentText: languages.get(`${description}.content`),
-    descriptionFeatures: languages.get(`${description}.features`),
-    descriptionImageFooterText: languages.get(`${description}.imageFooter`),
-    descriptionButtonText: languages.get(`${description}.viewDemoButton`),
-    notifications: languages.get("home.withoutSiteId.notifications"),
-    requestAlreadyLinkText: languages.get(`${requestForm}.alreadyLink`),
-    requestButtonText: languages.get(`${requestForm}.requestButton`),
-    siteUrl: general.site,
-  };
-})(WithoutSiteId);
+    return {
+      siteUrl: general.site,
+      siteIdRequested: settings.site_id_requested,
+      siteIdJustRequested: general.siteIdJustRequested,
+      sendRequest: request.sendRequest,
+      setSiteIdRequested: () => settings.setSiteIdRequested(true),
+      descriptionTitleText: languages.get(`${description}.title`),
+      descriptionContentText: languages.get(`${description}.content`),
+      descriptionFeatures: languages.get(`${description}.features`),
+      descriptionImageFooterText: languages.get(`${description}.imageFooter`),
+      descriptionButtonText: languages.get(`${description}.viewDemoButton`),
+      notifications: languages.get("home.withoutSiteId.notifications"),
+      requestAlreadyLinkText: languages.get(`${requestForm}.alreadyLink`),
+      requestButtonText: languages.get(`${requestForm}.requestButton`),
+    };
+  }
+)(WithoutSiteId);
 
 const Notification = styled(Box)`
   border-radius: 4px;

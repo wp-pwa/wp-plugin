@@ -38,17 +38,17 @@ SiteIdJustRequested.propTypes = {
   setSiteIdJustRequested: func.isRequired,
 };
 
-export default inject(({ stores: { ui, languages } }) => {
+export default inject(({ stores: { general, languages } }) => {
   const siteIdJustRequested = "home.siteIdJustRequested";
 
   return {
+    setSiteIdJustRequested: () => {
+      general.setSiteIdJustRequested(false);
+    },
     emojiText: languages.get(`${siteIdJustRequested}.emoji`),
     titleText: languages.get(`${siteIdJustRequested}.title`),
     contentText: languages.get(`${siteIdJustRequested}.content`),
     linkText: languages.get(`${siteIdJustRequested}.link`),
-    setSiteIdJustRequested: () => {
-      ui.setSiteIdJustRequested(false);
-    },
   };
 })(SiteIdJustRequested);
 
