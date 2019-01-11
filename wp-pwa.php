@@ -61,6 +61,29 @@ class Frontity {
 		add_filter('wp_get_attachment_link', array($this, 'add_id_to_gallery_images'), 10, 2);
 		add_filter('wp_get_attachment_image_attributes', array($this, 'add_id_to_gallery_image_attributes'), 10, 2);
 
+		add_action('template_redirect', function() {
+			ob_start();
+		});
+
+		add_action('wp_footer', function() {
+			$final = '';
+	
+			// We'll need to get the number of ob levels we're in, so that we can iterate over each, collecting
+			// that buffer's output into the final output.
+			$levels = ob_get_level();
+	
+			for ($i = 0; $i < $levels; $i++) {
+					$final .= ob_get_clean();
+			}
+	
+			// Apply any filters to the final output
+			echo apply_filters('frontity_html_for_injector', $final);
+		}, 0);
+
+		add_filter('frontity_html_for_injector', function($html) {
+			return str_replace('<head>', '<head><script src="hola amigos"></script>', $html);
+		});
+
 		/** 
 		 * Used to test plugin_updated_complete function.
 		 * 
