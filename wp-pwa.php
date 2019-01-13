@@ -61,11 +61,11 @@ class Frontity {
 		add_filter('wp_get_attachment_link', array($this, 'add_id_to_gallery_images'), 10, 2);
 		add_filter('wp_get_attachment_image_attributes', array($this, 'add_id_to_gallery_image_attributes'), 10, 2);
 
-		add_action('template_redirect', function() {
+		add_action('get_header', function() {
 			ob_start();
 		});
 
-		add_action('wp_footer', function() {
+		add_action('wp_head', function() {
 			$final = '';
 	
 			// We'll need to get the number of ob levels we're in, so that we can iterate over each, collecting
