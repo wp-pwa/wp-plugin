@@ -17,6 +17,9 @@ const stores = Stores.create({
       site_id: window.frontity.plugin.settings.site_id ? "valid" : undefined,
     },
   },
+  languages: {
+    code: window.frontity.plugin.locale,
+  },
 });
 
 window.frontity.client = stores;

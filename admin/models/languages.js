@@ -1,14 +1,16 @@
 import { types } from "mobx-state-tree";
-import * as languages from "../languages";
+import languages from "../languages";
 
 export default types
   .model("Languages")
   .props({
-    default: types.frozen(languages.en),
-    current: types.frozen({}),
-    code: types.optional(types.string, "en"),
+    default: types.frozen(languages.en_US),
+    code: types.optional(types.string, "en_US"),
   })
   .views(self => ({
+    get current() {
+      return languages[self.code] || {};
+    },
     get(key) {
       const results = key.split(".").reduce(
         (result, property) => {
@@ -23,11 +25,5 @@ export default types
       );
 
       return results[0] || results[1];
-    },
-  }))
-  .actions(self => ({
-    setLanguage(language) {
-      self.current = languages[language] || {};
-      self.code = language;
     },
   }));
