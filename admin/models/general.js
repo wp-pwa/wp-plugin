@@ -6,8 +6,12 @@ export default types
     site: "",
     page: "",
     siteIdJustRequested: false,
+    saveButtonStatus: "idle",
   })
   .actions(self => ({
+    setSaveButtonStatus(value) {
+      self.saveButtonStatus = value;
+    },
     setSiteIdJustRequested(value) {
       self.siteIdJustRequested = value;
     },

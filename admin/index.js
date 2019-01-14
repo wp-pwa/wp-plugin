@@ -1,7 +1,6 @@
 import React from "react";
 import { render } from "react-dom";
 import { Provider } from "mobx-react";
-import { isEmpty } from "validator";
 import Admin from "./components";
 import Stores from "./models";
 
@@ -13,14 +12,10 @@ const stores = Stores.create({
     page: new URLSearchParams(window.location.search).get("page"),
   },
   settings: window.frontity.plugin.settings,
-  ui: {
-    siteIdStatus:
-      window.frontity.plugin.settings.site_id &&
-      !isEmpty(window.frontity.plugin.settings.site_id, {
-        ignore_whitespace: true,
-      })
-        ? "valid"
-        : undefined,
+  validations: {
+    settings: {
+      site_id: window.frontity.plugin.settings.site_id ? "valid" : undefined,
+    },
   },
 });
 

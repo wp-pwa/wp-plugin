@@ -56,6 +56,10 @@ export default types
         "I don't know": "Unknown",
       };
 
+      self.name = self.name.trim();
+      self.email = self.email.trim();
+      self.url = self.url.trim();
+
       if (self.validate()) {
         await post(
           "https://hook.integromat.com/214srcvxlj88frdnqaua6vipqvsnmjgo",

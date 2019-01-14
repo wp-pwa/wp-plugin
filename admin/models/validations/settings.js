@@ -17,9 +17,7 @@ export default types
         return getParent(self, 2).settings;
       },
       get site_idIsValid() {
-        return !isEmpty(self.settings.site_id, {
-          ignore_whitespace: true,
-        });
+        return !isEmpty(self.settings.site_id);
       },
       get ssr_serverIsValid() {
         return isUrl(self.settings.ssr_server);

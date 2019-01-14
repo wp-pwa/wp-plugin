@@ -156,6 +156,10 @@
         "placeholder": "_links\ntitle.rendered"
       }
     },
-    "saveButton": "Save changes"
+    "saveButton": {
+      "idle": "Save changes",
+      "busy": "Saving...",
+      "done": "Saved"
+    }
   }
 }

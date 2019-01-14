@@ -47,6 +47,7 @@ const Settings = ({
   ssrServerValidation,
   staticServerValidation,
   ampServerValidation,
+  saveButtonStatus,
 }) => (
   <Box margin={{ horizontal: "auto", top: "40px" }} width="608px">
     <Notification align="center" margin={{ bottom: "20px" }}>
@@ -60,101 +61,108 @@ const Settings = ({
         {formTitleText}
       </Header>
       <Form>
-        <FormField label={fieldSiteId.label}>
-          <StyledTextInput
-            validation={siteIdValidation}
-            placeholder={fieldSiteId.placeholder}
-            value={siteId}
-            onChange={setSiteId}
-          />
-        </FormField>
-        <FormField label={fieldSsrServer.label}>
-          <StyledTextInput
-            validation={ssrServerValidation}
-            placeholder={fieldSsrServer.placeholder}
-            value={ssrServer}
-            onChange={setSsrServer}
-          />
-        </FormField>
-        <FormField label={fieldStaticServer.label}>
-          <StyledTextInput
-            validation={staticServerValidation}
-            placeholder={fieldStaticServer.placeholder}
-            value={staticServer}
-            onChange={setStaticServer}
-          />
-        </FormField>
-        <FormField label={fieldAmpServer.label}>
-          <StyledTextInput
-            validation={ampServerValidation}
-            placeholder={fieldAmpServer.placeholder}
-            value={ampServer}
-            onChange={setAmpServer}
-          />
-        </FormField>
-        <Box
-          direction="row"
-          justify="between"
-          align="start"
-          margin={{ bottom: "18px" }}
-        >
-          <Box direction="row" justify="between" align="center" width="262px">
-            <Paragraph margin={{ vertical: "0", left: "12px", right: "20px" }}>
-              {fieldForceFrontpage.label}
-            </Paragraph>
-            <CheckBox
-              toggle
-              checked={frontpageForced}
-              onChange={setFrontpageForced}
+        <form id="settings-form" onSubmit={saveSettings}>
+          <FormField label={fieldSiteId.label}>
+            <StyledTextInput
+              validation={siteIdValidation}
+              placeholder={fieldSiteId.placeholder}
+              value={siteId}
+              onChange={setSiteId}
+            />
+          </FormField>
+          <FormField label={fieldSsrServer.label}>
+            <StyledTextInput
+              validation={ssrServerValidation}
+              placeholder={fieldSsrServer.placeholder}
+              value={ssrServer}
+              onChange={setSsrServer}
+            />
+          </FormField>
+          <FormField label={fieldStaticServer.label}>
+            <StyledTextInput
+              validation={staticServerValidation}
+              placeholder={fieldStaticServer.placeholder}
+              value={staticServer}
+              onChange={setStaticServer}
+            />
+          </FormField>
+          <FormField label={fieldAmpServer.label}>
+            <StyledTextInput
+              validation={ampServerValidation}
+              placeholder={fieldAmpServer.placeholder}
+              value={ampServer}
+              onChange={setAmpServer}
+            />
+          </FormField>
+          <Box
+            direction="row"
+            justify="between"
+            align="start"
+            margin={{ bottom: "18px" }}
+          >
+            <Box direction="row" justify="between" align="center" width="262px">
+              <Paragraph
+                margin={{ vertical: "0", left: "12px", right: "20px" }}
+              >
+                {fieldForceFrontpage.label}
+              </Paragraph>
+              <CheckBox
+                toggle
+                checked={frontpageForced}
+                onChange={setFrontpageForced}
+              />
+            </Box>
+            <Comment margin={{ vertical: "0" }}>
+              {fieldForceFrontpage.comment}
+            </Comment>
+          </Box>
+          <Box
+            direction="row"
+            justify="between"
+            align="center"
+            margin={{ bottom: "18px" }}
+          >
+            <Box direction="row" justify="between" align="center" width="262px">
+              <Paragraph
+                margin={{ vertical: "0", left: "12px", right: "20px" }}
+              >
+                {fieldHtmlPurifier.label}
+              </Paragraph>
+              <CheckBox
+                toggle
+                checked={htmlPurifierActive}
+                onChange={setHtmlPurifierActive}
+              />
+            </Box>
+            <Button
+              label={fieldHtmlPurifier.button}
+              onClick={purgeHtmlPurifierCache}
             />
           </Box>
-          <Comment margin={{ vertical: "0" }}>
-            {fieldForceFrontpage.comment}
-          </Comment>
-        </Box>
-        <Box
-          direction="row"
-          justify="between"
-          align="center"
-          margin={{ bottom: "18px" }}
-        >
-          <Box direction="row" justify="between" align="center" width="262px">
-            <Paragraph margin={{ vertical: "0", left: "12px", right: "20px" }}>
-              {fieldHtmlPurifier.label}
-            </Paragraph>
-            <CheckBox
-              toggle
-              checked={htmlPurifierActive}
-              onChange={setHtmlPurifierActive}
+          <FormField label={fieldExcludes.label}>
+            <TextArea
+              placeholder={fieldExcludes.placeholder}
+              value={excludes}
+              onChange={setExcludes}
             />
-          </Box>
-          <Button
-            label={fieldHtmlPurifier.button}
-            onClick={purgeHtmlPurifierCache}
-          />
-        </Box>
-        <FormField label={fieldExcludes.label}>
-          <TextArea
-            placeholder={fieldExcludes.placeholder}
-            value={excludes}
-            onChange={setExcludes}
-          />
-        </FormField>
-        <FormField label={fieldApiFilters.label}>
-          <TextArea
-            placeholder={fieldApiFilters.placeholder}
-            value={apiFilters}
-            onChange={setApiFilters}
-          />
-        </FormField>
+          </FormField>
+          <FormField label={fieldApiFilters.label}>
+            <TextArea
+              placeholder={fieldApiFilters.placeholder}
+              value={apiFilters}
+              onChange={setApiFilters}
+            />
+          </FormField>
+        </form>
       </Form>
     </Options>
-    <Button
+    <StyledButton
+      form="settings-form"
       primary
+      disabled={saveButtonStatus !== "idle"}
       margin={{ left: "auto" }}
       type="submit"
-      label={saveButtonText}
-      onClick={saveSettings}
+      label={saveButtonText[saveButtonStatus]}
     />
   </Box>
 );
@@ -188,11 +196,13 @@ Settings.propTypes = {
   fieldHtmlPurifier: shape({ label: string, button: string }).isRequired,
   fieldExcludes: shape({ label: string, placeholder: string }).isRequired,
   fieldApiFilters: shape({ label: string, placeholder: string }).isRequired,
-  saveButtonText: string.isRequired,
+  saveButtonText: shape({ idle: string, busy: string, done: string })
+    .isRequired,
   siteIdValidation: string,
   ssrServerValidation: string,
   staticServerValidation: string,
   ampServerValidation: string,
+  saveButtonStatus: string.isRequired,
 };
 
 Settings.defaultProps = {
@@ -202,45 +212,48 @@ Settings.defaultProps = {
   ampServerValidation: undefined,
 };
 
-export default inject(({ stores: { validations, settings, languages } }) => {
-  const form = "settings.form";
+export default inject(
+  ({ stores: { general, validations, settings, languages } }) => {
+    const form = "settings.form";
 
-  return {
-    siteId: settings.site_id,
-    ssrServer: settings.ssr_server,
-    staticServer: settings.static_server,
-    ampServer: settings.amp_server,
-    frontpageForced: settings.frontpage_forced,
-    htmlPurifierActive: settings.html_purifier_active,
-    excludes: settings.excludes.join("\n"),
-    apiFilters: settings.api_filters.join("\n"),
-    setSiteId: settings.setSiteId,
-    setSsrServer: settings.setSsrServer,
-    setStaticServer: settings.setStaticServer,
-    setAmpServer: settings.setAmpServer,
-    setFrontpageForced: settings.setFrontpageForced,
-    setHtmlPurifierActive: settings.setHtmlPurifierActive,
-    setExcludes: settings.setExcludes,
-    setApiFilters: settings.setApiFilters,
-    saveSettings: settings.saveSettings,
-    purgeHtmlPurifierCache: settings.purgeHtmlPurifierCache,
-    siteIdValidation: validations.settings.site_id,
-    ssrServerValidation: validations.settings.ssr_server,
-    staticServerValidation: validations.settings.static_server,
-    ampServerValidation: validations.settings.amp_server,
-    notification: languages.get("settings.notification"),
-    formTitleText: languages.get(`${form}.title`),
-    fieldSiteId: languages.get(`${form}.fieldSiteId`),
-    fieldSsrServer: languages.get(`${form}.fieldSsrServer`),
-    fieldStaticServer: languages.get(`${form}.fieldStaticServer`),
-    fieldAmpServer: languages.get(`${form}.fieldAmpServer`),
-    fieldForceFrontpage: languages.get(`${form}.fieldForceFrontpage`),
-    fieldHtmlPurifier: languages.get(`${form}.fieldHtmlPurifier`),
-    fieldExcludes: languages.get(`${form}.fieldExcludes`),
-    fieldApiFilters: languages.get(`${form}.fieldApiFilters`),
-    saveButtonText: languages.get("settings.saveButton"),
-  };
-})(Settings);
+    return {
+      siteId: settings.site_id,
+      ssrServer: settings.ssr_server,
+      staticServer: settings.static_server,
+      ampServer: settings.amp_server,
+      frontpageForced: settings.frontpage_forced,
+      htmlPurifierActive: settings.html_purifier_active,
+      excludes: settings.excludes.join("\n"),
+      apiFilters: settings.api_filters.join("\n"),
+      setSiteId: settings.setSiteId,
+      setSsrServer: settings.setSsrServer,
+      setStaticServer: settings.setStaticServer,
+      setAmpServer: settings.setAmpServer,
+      setFrontpageForced: settings.setFrontpageForced,
+      setHtmlPurifierActive: settings.setHtmlPurifierActive,
+      setExcludes: settings.setExcludes,
+      setApiFilters: settings.setApiFilters,
+      saveSettings: settings.saveSettings,
+      purgeHtmlPurifierCache: settings.purgeHtmlPurifierCache,
+      siteIdValidation: validations.settings.site_id,
+      ssrServerValidation: validations.settings.ssr_server,
+      staticServerValidation: validations.settings.static_server,
+      ampServerValidation: validations.settings.amp_server,
+      saveButtonStatus: general.saveButtonStatus,
+      notification: languages.get("settings.notification"),
+      formTitleText: languages.get(`${form}.title`),
+      fieldSiteId: languages.get(`${form}.fieldSiteId`),
+      fieldSsrServer: languages.get(`${form}.fieldSsrServer`),
+      fieldStaticServer: languages.get(`${form}.fieldStaticServer`),
+      fieldAmpServer: languages.get(`${form}.fieldAmpServer`),
+      fieldForceFrontpage: languages.get(`${form}.fieldForceFrontpage`),
+      fieldHtmlPurifier: languages.get(`${form}.fieldHtmlPurifier`),
+      fieldExcludes: languages.get(`${form}.fieldExcludes`),
+      fieldApiFilters: languages.get(`${form}.fieldApiFilters`),
+      saveButtonText: languages.get("settings.saveButton"),
+    };
+  }
+)(Settings);
 
 const Notification = styled(Box)`
   border-radius: 4px;
@@ -284,4 +297,8 @@ const Comment = styled(Paragraph)`
 const StyledTextInput = styled(TextInput)`
   ${({ validation }) =>
     validation === "invalid" ? "background-color: #ea5a3555;" : ""}
+`;
+
+const StyledButton = styled(Button)`
+  width: 162px;
 `;

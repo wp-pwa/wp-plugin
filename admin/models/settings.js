@@ -16,6 +16,9 @@ export default types
     api_filters: types.array(types.string),
   })
   .views(self => ({
+    get general() {
+      return getParent(self, 1).general;
+    },
     get validations() {
       return getParent(self, 1).validations.settings;
     },
@@ -66,9 +69,23 @@ export default types
     async saveSettings(event) {
       if (event) event.preventDefault();
 
+      // Clean fields before validation.
+      self.site_id = self.site_id.trim();
+      self.ssr_server = self.ssr_server.trim();
+      self.static_server = self.static_server.trim();
+      self.amp_server = self.amp_server.trim();
+      self.excludes = self.excludes
+        .map(exclude => exclude.trim())
+        .filter(exclude => exclude);
+      self.api_filters = self.api_filters
+        .map(filter => filter.trim())
+        .filter(filter => filter);
+
       const clientSettings = getSnapshot(self);
 
       if (self.validate()) {
+        self.general.setSaveButtonStatus("busy");
+
         const data = new window.FormData();
         data.append("action", "frontity_save_settings");
         data.append("data", JSON.stringify(clientSettings));
@@ -76,6 +93,13 @@ export default types
         await post(window.ajaxurl, data);
 
         window.frontity.plugin.settings = clientSettings;
+
+        setTimeout(() => {
+          self.general.setSaveButtonStatus("done");
+          setTimeout(() => {
+            self.general.setSaveButtonStatus("idle");
+          }, 1000);
+        }, 500);
       } else {
         const pluginSettings = window.frontity.plugin.settings;
         const settingsWithoutValidation = [
