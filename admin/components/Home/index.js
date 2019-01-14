@@ -6,7 +6,7 @@ import WithSiteId from "./WithSiteId";
 import WithoutSiteId from "./WithoutSiteId";
 
 const Home = ({ siteIdValidation }) => (
-  <Box margin="auto" width="608px">
+  <Box margin="auto" width="632px" pad={{ horizontal: "12px" }}>
     {siteIdValidation === "valid" ? <WithSiteId /> : <WithoutSiteId />}
   </Box>
 );

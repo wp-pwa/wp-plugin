@@ -49,7 +49,11 @@ const Settings = ({
   ampServerValidation,
   saveButtonStatus,
 }) => (
-  <Box margin={{ horizontal: "auto", top: "40px" }} width="608px">
+  <Box
+    margin={{ horizontal: "auto", top: "40px" }}
+    width="632px"
+    pad={{ horizontal: "12px" }}
+  >
     <Notification align="center" margin={{ bottom: "20px" }}>
       <StyledParagraph margin={{ vertical: "0" }}>
         <strong>{notification.highlight} </strong>
@@ -94,7 +98,7 @@ const Settings = ({
               onChange={setAmpServer}
             />
           </FormField>
-          <Box
+          <StyledBox
             direction="row"
             justify="between"
             align="start"
@@ -115,8 +119,8 @@ const Settings = ({
             <Comment margin={{ vertical: "0" }}>
               {fieldForceFrontpage.comment}
             </Comment>
-          </Box>
-          <Box
+          </StyledBox>
+          <StyledBox
             direction="row"
             justify="between"
             align="center"
@@ -138,7 +142,7 @@ const Settings = ({
               label={fieldHtmlPurifier.button}
               onClick={purgeHtmlPurifierCache}
             />
-          </Box>
+          </StyledBox>
           <FormField label={fieldExcludes.label}>
             <TextArea
               placeholder={fieldExcludes.placeholder}
@@ -301,4 +305,17 @@ const StyledTextInput = styled(TextInput)`
 
 const StyledButton = styled(Button)`
   width: 162px;
+`;
+
+const StyledBox = styled(Box)`
+  @media (max-width: 782px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    & > p,
+    & > button {
+      margin-left: 12px;
+      margin-top: 8px;
+    }
+  }
 `;
