@@ -48,6 +48,7 @@ const Settings = ({
   staticServerValidation,
   ampServerValidation,
   saveButtonStatus,
+  purgePurifierButtonStatus,
 }) => (
   <Box
     margin={{ horizontal: "auto", top: "40px" }}
@@ -138,8 +139,9 @@ const Settings = ({
                 onChange={setHtmlPurifierActive}
               />
             </Box>
-            <Button
-              label={fieldHtmlPurifier.button}
+            <PurgeButton
+              disabled={purgePurifierButtonStatus !== "idle"}
+              label={fieldHtmlPurifier.button[purgePurifierButtonStatus]}
               onClick={purgeHtmlPurifierCache}
             />
           </StyledBox>
@@ -160,7 +162,7 @@ const Settings = ({
         </form>
       </Form>
     </Options>
-    <StyledButton
+    <SaveButton
       form="settings-form"
       primary
       disabled={saveButtonStatus !== "idle"}
@@ -197,7 +199,10 @@ Settings.propTypes = {
   fieldStaticServer: shape({ label: string, placeholder: string }).isRequired,
   fieldAmpServer: shape({ label: string, placeholder: string }).isRequired,
   fieldForceFrontpage: shape({ label: string, comment: string }).isRequired,
-  fieldHtmlPurifier: shape({ label: string, button: string }).isRequired,
+  fieldHtmlPurifier: shape({
+    label: string,
+    button: shape({ idle: string, busy: string, done: string }),
+  }).isRequired,
   fieldExcludes: shape({ label: string, placeholder: string }).isRequired,
   fieldApiFilters: shape({ label: string, placeholder: string }).isRequired,
   saveButtonText: shape({ idle: string, busy: string, done: string })
@@ -207,6 +212,7 @@ Settings.propTypes = {
   staticServerValidation: string,
   ampServerValidation: string,
   saveButtonStatus: string.isRequired,
+  purgePurifierButtonStatus: string.isRequired,
 };
 
 Settings.defaultProps = {
@@ -244,6 +250,7 @@ export default inject(
       staticServerValidation: validations.settings.static_server,
       ampServerValidation: validations.settings.amp_server,
       saveButtonStatus: general.saveButtonStatus,
+      purgePurifierButtonStatus: general.purgePurifierButtonStatus,
       notification: languages.get("settings.notification"),
       formTitleText: languages.get(`${form}.title`),
       fieldSiteId: languages.get(`${form}.fieldSiteId`),
@@ -303,8 +310,11 @@ const StyledTextInput = styled(TextInput)`
     validation === "invalid" ? "background-color: #ea5a3555;" : ""}
 `;
 
-const StyledButton = styled(Button)`
+const SaveButton = styled(Button)`
   width: 162px;
+`;
+const PurgeButton = styled(Button)`
+  width: 197px;
 `;
 
 const StyledBox = styled(Box)`

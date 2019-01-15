@@ -50,7 +50,7 @@ describe("Admin › Models › Settings", () => {
       .create();
 
     Object.defineProperty(store, "validations", {
-      value: { settings: "validations" },
+      value: "validations",
     });
 
     expect(store.settings.validations).toBe("validations");
@@ -273,7 +273,7 @@ describe("Admin › Models › Settings", () => {
     expect(store.api_filters).toEqual(["something", "something else"]);
   });
 
-  test("`saveSettings` should call `trimTextFields()`, send a request to save the settings and update the value for `saveButtonStatus`", async () => {
+  test("`saveSettings` should call `trimTextFields()`, send a request to save the settings and update `saveButtonStatus`", async () => {
     const store = Store.create();
     const validate = jest.fn(() => true);
     const setSaveButtonStatus = jest.fn();
@@ -395,14 +395,26 @@ describe("Admin › Models › Settings", () => {
     expect(post).not.toHaveBeenCalled();
   });
 
-  test("`purgeHtmlPurifierCache` should send a request to purge the cache", async () => {
+  test("`purgeHtmlPurifierCache` should send a request to purge the cache and update `purgeHtmlPurifierStatus`", async () => {
     const store = Store.create();
+    const setPurgePurifierButtonStatus = jest.fn();
+
+    Object.defineProperty(store, "general", {
+      value: { setPurgePurifierButtonStatus },
+    });
 
     const data = new window.FormData();
     data.append("action", "frontity_purge_htmlpurifier_cache");
 
     await store.purgeHtmlPurifierCache();
     expect(post).toHaveBeenCalledWith("https://ajax.url", data);
+    jest.runOnlyPendingTimers();
+    expect(setTimeout).toHaveBeenNthCalledWith(1, expect.any(Function), 500);
+    expect(setTimeout).toHaveBeenNthCalledWith(2, expect.any(Function), 1000);
+    jest.runOnlyPendingTimers();
+    expect(setPurgePurifierButtonStatus).toHaveBeenNthCalledWith(1, "busy");
+    expect(setPurgePurifierButtonStatus).toHaveBeenNthCalledWith(2, "done");
+    expect(setPurgePurifierButtonStatus).toHaveBeenNthCalledWith(3, "idle");
   });
 
   test("`validate()` should call `validations.validateAll()`", () => {

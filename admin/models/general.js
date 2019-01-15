@@ -7,12 +7,16 @@ export default types
     page: "",
     siteIdJustRequested: false,
     saveButtonStatus: "idle",
+    purgePurifierButtonStatus: "idle",
   })
   .actions(self => ({
+    setSiteIdJustRequested(value) {
+      self.siteIdJustRequested = value;
+    },
     setSaveButtonStatus(value) {
       self.saveButtonStatus = value;
     },
-    setSiteIdJustRequested(value) {
-      self.siteIdJustRequested = value;
+    setPurgePurifierButtonStatus(value) {
+      self.purgePurifierButtonStatus = value;
     },
   }));

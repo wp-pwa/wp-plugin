@@ -85,20 +85,7 @@ describe("Admin › Models › Validations › Settings", () => {
     expect(clear).toHaveBeenCalledWith("settings", "site_id");
   });
 
-  test("`validate()` should call `validations.validate()` and return a boolean", () => {
-    const store = Settings.create();
-    const validate = jest.fn(() => true);
-
-    Object.defineProperty(store, "validations", {
-      value: { validate },
-    });
-
-    const validation = store.validate("site_id");
-    expect(validate).toHaveBeenCalledWith("settings", "site_id");
-    expect(validation).toEqual(expect.any(Boolean));
-  });
-
-  test("`validateAll()` should call `validations.validateAll()` and return a boolean", () => {
+  test("`validate()` should call `validations.validateAll()` and return a boolean", () => {
     const store = Settings.create();
     const validateAll = jest.fn(() => false);
 
@@ -106,7 +93,7 @@ describe("Admin › Models › Validations › Settings", () => {
       value: { validateAll },
     });
 
-    const validation = store.validateAll();
+    const validation = store.validate();
     expect(validateAll).toHaveBeenCalledWith("settings");
     expect(validation).toEqual(expect.any(Boolean));
   });

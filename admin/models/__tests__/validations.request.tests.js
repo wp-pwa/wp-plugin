@@ -99,20 +99,7 @@ describe("Admin › Models › Validations › Request", () => {
     expect(clear).toHaveBeenCalledWith("request", "name");
   });
 
-  test("`validate()` should call `validations.validate()` and return a boolean", () => {
-    const store = Request.create();
-    const validate = jest.fn(() => true);
-
-    Object.defineProperty(store, "validations", {
-      value: { validate },
-    });
-
-    const validation = store.validate("name");
-    expect(validate).toHaveBeenCalledWith("request", "name");
-    expect(validation).toEqual(expect.any(Boolean));
-  });
-
-  test("`validateAll()` should call `validations.validateAll()` and return a boolean", () => {
+  test("`validate()` should call `validations.validateAll()` and return a boolean", () => {
     const store = Request.create();
     const validateAll = jest.fn(() => false);
 
@@ -120,7 +107,7 @@ describe("Admin › Models › Validations › Request", () => {
       value: { validateAll },
     });
 
-    const validation = store.validateAll();
+    const validation = store.validate();
     expect(validateAll).toHaveBeenCalledWith("request");
     expect(validation).toEqual(expect.any(Boolean));
   });

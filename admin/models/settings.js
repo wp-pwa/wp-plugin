@@ -23,7 +23,7 @@ export default types
       return self.root.general;
     },
     get validations() {
-      return self.root.validations.settings;
+      return self.root.validations;
     },
   }))
   .actions(self => ({
@@ -137,12 +137,21 @@ export default types
       }
     },
     async purgeHtmlPurifierCache() {
+      self.general.setPurgePurifierButtonStatus("busy");
+
       const data = new window.FormData();
       data.append("action", "frontity_purge_htmlpurifier_cache");
 
       await post(window.ajaxurl, data);
+
+      setTimeout(() => {
+        self.general.setPurgePurifierButtonStatus("done");
+        setTimeout(() => {
+          self.general.setPurgePurifierButtonStatus("idle");
+        }, 1000);
+      }, 500);
     },
     validate() {
-      return self.validations.validateAll();
+      return self.validations.validateAll("settings");
     },
   }));

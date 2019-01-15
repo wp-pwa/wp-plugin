@@ -37,10 +37,7 @@ export default types
     clear(field) {
       self.validations.clear("settings", field);
     },
-    validate(field) {
-      return self.validations.validate("settings", field);
-    },
-    validateAll() {
+    validate() {
       return self.validations.validateAll("settings");
     },
   }));

@@ -11,6 +11,15 @@ describe("Admin › Models › General", () => {
     expect(store.page).toBe("frontity-dashboard");
     expect(store.siteIdJustRequested).toBe(false);
     expect(store.saveButtonStatus).toBe("idle");
+    expect(store.purgePurifierButtonStatus).toBe("idle");
+  });
+
+  test("`setSiteIdJustRequested` should set a value for `siteIdJustRequested`", () => {
+    const store = Store.create();
+
+    expect(store.siteIdJustRequested).toBe(false);
+    store.setSiteIdJustRequested(true);
+    expect(store.siteIdJustRequested).toBe(true);
   });
 
   test("`setSaveButtonStatus` should set a value for `saveButtonStatus`", () => {
@@ -21,11 +30,11 @@ describe("Admin › Models › General", () => {
     expect(store.saveButtonStatus).toBe("busy");
   });
 
-  test("`setSiteIdJustRequested` should set a value for `siteIdJustRequested`", () => {
+  test("`setPurgePurifierButtonStatus` should set a value for `purgePurifierButtonStatus`", () => {
     const store = Store.create();
 
-    expect(store.siteIdJustRequested).toBe(false);
-    store.setSiteIdJustRequested(true);
-    expect(store.siteIdJustRequested).toBe(true);
+    expect(store.purgePurifierButtonStatus).toBe("idle");
+    store.setPurgePurifierButtonStatus("busy");
+    expect(store.purgePurifierButtonStatus).toBe("busy");
   });
 });
