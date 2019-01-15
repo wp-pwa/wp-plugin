@@ -11,16 +11,19 @@ export default types
     static_server: "",
     amp_server: "",
     frontpage_forced: false,
-    html_purifier_active: false,
+    html_purifier_active: true,
     excludes: types.array(types.string),
     api_filters: types.array(types.string),
   })
   .views(self => ({
+    get root() {
+      return getParent(self, 1);
+    },
     get general() {
-      return getParent(self, 1).general;
+      return self.root.general;
     },
     get validations() {
-      return getParent(self, 1).validations.settings;
+      return self.root.validations.settings;
     },
   }))
   .actions(self => ({
@@ -63,13 +66,10 @@ export default types
     },
     setSiteIdRequested(value) {
       self.site_id_requested = value;
+      if (self.validations.site_id) self.validations.clear("site_id");
       self.saveSettings();
-      self.validations.clear("site_id");
     },
-    async saveSettings(event) {
-      if (event) event.preventDefault();
-
-      // Clean fields before validation.
+    trimTextFields() {
       self.site_id = self.site_id.trim();
       self.ssr_server = self.ssr_server.trim();
       self.static_server = self.static_server.trim();
@@ -80,6 +80,11 @@ export default types
       self.api_filters = self.api_filters
         .map(filter => filter.trim())
         .filter(filter => filter);
+    },
+    async saveSettings(event) {
+      if (event) event.preventDefault();
+
+      self.trimTextFields();
 
       const clientSettings = getSnapshot(self);
 
@@ -106,18 +111,20 @@ export default types
           "site_id_requested",
           "pwa_active",
           "amp_active",
-        ].filter(
-          setting => clientSettings[setting] !== pluginSettings[setting]
-        );
+        ]
+          .filter(
+            setting => clientSettings[setting] !== pluginSettings[setting]
+          )
+          .reduce((result, setting) => {
+            result[setting] = clientSettings[setting];
+            return result;
+          }, {});
 
-        if (!settingsWithoutValidation.length) return;
+        if (!Object.keys(settingsWithoutValidation).length) return;
 
         const mergedSettings = {
           ...pluginSettings,
-          ...settingsWithoutValidation.reduce((result, setting) => {
-            result[setting] = clientSettings[setting];
-            return result;
-          }, {}),
+          ...settingsWithoutValidation,
         };
 
         const data = new window.FormData();

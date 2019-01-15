@@ -1,3 +1,4 @@
+import { types } from "mobx-state-tree";
 import { post } from "axios";
 import Store from "../request";
 
@@ -18,12 +19,35 @@ describe("Admin › Models › Request", () => {
     expect(store.traffic).toBe("");
   });
 
+  test("`root` should return the right value", () => {
+    const store = types
+      .model({
+        request: types.optional(Store, {}),
+      })
+      .create();
+
+    expect(store.request.root).toBe(store);
+  });
+
+  test("`validations` should return the right value", () => {
+    const store = types
+      .model({
+        request: types.optional(Store, {}),
+      })
+      .create();
+
+    Object.defineProperty(store, "validations", {
+      value: { request: "request" },
+    });
+
+    expect(store.request.validations).toBe("request");
+  });
+
   test("`setName` should set a value for `name` and clear the validation", () => {
     const store = Store.create();
     const clear = jest.fn();
 
     Object.defineProperty(store, "validations", {
-      writable: true,
       value: { name: "invalid", clear },
     });
 
@@ -37,7 +61,6 @@ describe("Admin › Models › Request", () => {
     const clear = jest.fn();
 
     Object.defineProperty(store, "validations", {
-      writable: true,
       value: { clear },
     });
 
@@ -51,7 +74,6 @@ describe("Admin › Models › Request", () => {
     const clear = jest.fn();
 
     Object.defineProperty(store, "validations", {
-      writable: true,
       value: { email: "invalid", clear },
     });
 
@@ -65,7 +87,6 @@ describe("Admin › Models › Request", () => {
     const clear = jest.fn();
 
     Object.defineProperty(store, "validations", {
-      writable: true,
       value: { clear },
     });
 
@@ -79,7 +100,6 @@ describe("Admin › Models › Request", () => {
     const clear = jest.fn();
 
     Object.defineProperty(store, "validations", {
-      writable: true,
       value: { url: "invalid", clear },
     });
 
@@ -93,7 +113,6 @@ describe("Admin › Models › Request", () => {
     const clear = jest.fn();
 
     Object.defineProperty(store, "validations", {
-      writable: true,
       value: { clear },
     });
 
@@ -107,7 +126,6 @@ describe("Admin › Models › Request", () => {
     const clear = jest.fn();
 
     Object.defineProperty(store, "validations", {
-      writable: true,
       value: { type: "invalid", clear },
     });
 
@@ -121,7 +139,6 @@ describe("Admin › Models › Request", () => {
     const clear = jest.fn();
 
     Object.defineProperty(store, "validations", {
-      writable: true,
       value: { clear },
     });
 
@@ -135,7 +152,6 @@ describe("Admin › Models › Request", () => {
     const clear = jest.fn();
 
     Object.defineProperty(store, "validations", {
-      writable: true,
       value: { traffic: "invalid", clear },
     });
 
@@ -149,7 +165,6 @@ describe("Admin › Models › Request", () => {
     const clear = jest.fn();
 
     Object.defineProperty(store, "validations", {
-      writable: true,
       value: { clear },
     });
 
@@ -167,7 +182,6 @@ describe("Admin › Models › Request", () => {
     const validate = jest.fn(() => false);
 
     Object.defineProperty(store, "validate", {
-      writable: true,
       value: validate,
     });
 
@@ -193,19 +207,11 @@ describe("Admin › Models › Request", () => {
     const setSiteIdRequested = jest.fn();
 
     Object.defineProperties(store, {
-      validate: {
-        writable: true,
-        value: validate,
-      },
+      validate: { value: validate },
       root: {
-        writable: true,
         value: {
-          general: {
-            setSiteIdJustRequested,
-          },
-          settings: {
-            setSiteIdRequested,
-          },
+          general: { setSiteIdJustRequested },
+          settings: { setSiteIdRequested },
         },
       },
     });
@@ -232,10 +238,7 @@ describe("Admin › Models › Request", () => {
     const validate = jest.fn(() => false);
 
     Object.defineProperties(store, {
-      validate: {
-        writable: true,
-        value: validate,
-      },
+      validate: { value: validate },
     });
 
     await store.sendRequest();
@@ -248,10 +251,7 @@ describe("Admin › Models › Request", () => {
     const validateAll = jest.fn();
 
     Object.defineProperty(store, "validations", {
-      writable: true,
-      value: {
-        validateAll,
-      },
+      value: { validateAll },
     });
 
     store.validate();
