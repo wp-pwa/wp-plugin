@@ -11,6 +11,9 @@ export default types
     traffic: types.maybe(types.enumeration(["valid", "invalid"])),
   })
   .views(self => ({
+    get validations() {
+      return getParent(self, 1);
+    },
     get request() {
       return getParent(self, 2).request;
     },
@@ -32,20 +35,12 @@ export default types
   }))
   .actions(self => ({
     clear(field) {
-      self[field] = undefined;
+      self.validations.clear("request", field);
     },
     validate(field) {
-      const value = self[`${field}IsValid`];
-      self[field] = value ? "valid" : "invalid";
-      return value;
+      return self.validations.validate("request", field);
     },
     validateAll() {
-      return [
-        self.validate("name"),
-        self.validate("email"),
-        self.validate("url"),
-        self.validate("type"),
-        self.validate("traffic"),
-      ].every(v => v);
+      return self.validations.validateAll("request");
     },
   }));

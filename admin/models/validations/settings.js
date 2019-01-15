@@ -13,6 +13,9 @@ export default types
     const isUrl = url => isURL(url, { require_tld: false });
 
     return {
+      get validations() {
+        return getParent(self, 1);
+      },
       get settings() {
         return getParent(self, 2).settings;
       },
@@ -32,19 +35,12 @@ export default types
   })
   .actions(self => ({
     clear(field) {
-      self[field] = undefined;
+      self.validations.clear("settings", field);
     },
     validate(field) {
-      const value = self[`${field}IsValid`];
-      self[field] = value ? "valid" : "invalid";
-      return value;
+      return self.validations.validate("settings", field);
     },
     validateAll() {
-      return [
-        self.validate("site_id"),
-        self.validate("ssr_server"),
-        self.validate("static_server"),
-        self.validate("amp_server"),
-      ].every(v => v);
+      return self.validations.validateAll("settings");
     },
   }));
