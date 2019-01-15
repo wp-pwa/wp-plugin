@@ -1,6 +1,6 @@
 import Store from "../general";
 
-describe("Admin › Stores › General", () => {
+describe("Admin › Models › General", () => {
   test("Props should be populated correcly", () => {
     const store = Store.create({
       site: "http://blog.frontity.io",
@@ -13,7 +13,7 @@ describe("Admin › Stores › General", () => {
     expect(store.saveButtonStatus).toBe("idle");
   });
 
-  test("`setSaveButtonStatus` should set `saveButtonStatus` value", () => {
+  test("`setSaveButtonStatus` should set a value for `saveButtonStatus`", () => {
     const store = Store.create();
 
     expect(store.saveButtonStatus).toBe("idle");
@@ -21,7 +21,7 @@ describe("Admin › Stores › General", () => {
     expect(store.saveButtonStatus).toBe("busy");
   });
 
-  test("`setSiteIdJustRequested` should set `siteIdJustRequested` value", () => {
+  test("`setSiteIdJustRequested` should set a value for `siteIdJustRequested`", () => {
     const store = Store.create();
 
     expect(store.siteIdJustRequested).toBe(false);

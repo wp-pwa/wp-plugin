@@ -1,7 +1,7 @@
 import Store from "../languages";
 import languages from "../../languages";
 
-describe("Admin › Stores › Languages", () => {
+describe("Admin › Models › Languages", () => {
   test("Props should be populated correctly", () => {
     const store = Store.create({ code: "en_US" });
 
