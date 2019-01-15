@@ -53,7 +53,7 @@ export default types
         "500.000 - 1 million": "B",
         "100.000 - 500.000": "C",
         "Less than 100.000": "D",
-        "I don't know": "Unknown",
+        "I don't know": "UNKNOWN",
       };
 
       self.name = self.name.trim();
@@ -69,7 +69,7 @@ export default types
             url: self.url,
             type: typeOptions[self.type],
             traffic: trafficOptions[self.traffic],
-            source: "plugin",
+            origin: "plugin",
           }
         );
 

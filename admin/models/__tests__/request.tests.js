@@ -226,7 +226,7 @@ describe("Admin › Models › Request", () => {
         url: "https://harrypotter.com",
         type: "blog",
         traffic: "A",
-        source: "plugin",
+        origin: "plugin",
       }
     );
     expect(setSiteIdJustRequested).toHaveBeenCalledWith(true);
