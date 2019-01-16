@@ -139,7 +139,6 @@ const Comment = styled(StyledParagraph)`
 `;
 
 const Separator = styled.div`
-  width: 608px;
   height: 2px;
   opacity: 0.08;
   background-color: #1f38c5;

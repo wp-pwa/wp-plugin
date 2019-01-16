@@ -5,20 +5,20 @@ import { Box } from "grommet";
 import WithSiteId from "./WithSiteId";
 import WithoutSiteId from "./WithoutSiteId";
 
-const Home = ({ siteIdStatus }) => (
-  <Box margin="auto" width="608px">
-    {siteIdStatus === "valid" ? <WithSiteId /> : <WithoutSiteId />}
+const Home = ({ siteIdValidation }) => (
+  <Box margin="auto" width="632px" pad={{ horizontal: "12px" }}>
+    {siteIdValidation === "valid" ? <WithSiteId /> : <WithoutSiteId />}
   </Box>
 );
 
 Home.propTypes = {
-  siteIdStatus: string,
+  siteIdValidation: string,
 };
 
 Home.defaultProps = {
-  siteIdStatus: undefined,
+  siteIdValidation: undefined,
 };
 
-export default inject(({ stores: { ui } }) => ({
-  siteIdStatus: ui.siteIdStatus,
+export default inject(({ stores: { validations } }) => ({
+  siteIdValidation: validations.settings.site_id,
 }))(Home);

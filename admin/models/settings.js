@@ -1,4 +1,4 @@
-import { types, getSnapshot } from "mobx-state-tree";
+import { types, getSnapshot, getParent } from "mobx-state-tree";
 import { post } from "axios";
 
 export default types
@@ -11,16 +11,25 @@ export default types
     static_server: "",
     amp_server: "",
     frontpage_forced: false,
-    html_purifier_active: false,
+    html_purifier_active: true,
     excludes: types.array(types.string),
     api_filters: types.array(types.string),
   })
+  .views(self => ({
+    get root() {
+      return getParent(self, 1);
+    },
+    get general() {
+      return self.root.general;
+    },
+    get validations() {
+      return self.root.validations;
+    },
+  }))
   .actions(self => ({
     setSiteId({ target }) {
       self.site_id = target.value;
-    },
-    setSiteIdRequested(value) {
-      self.site_id_requested = value;
+      if (self.validations.site_id) self.validations.clear("site_id");
     },
     setPwaActive({ target }) {
       self.pwa_active = target.checked;
@@ -32,12 +41,16 @@ export default types
     },
     setSsrServer({ target }) {
       self.ssr_server = target.value;
+      if (self.validations.ssr_server) self.validations.clear("ssr_server");
     },
     setStaticServer({ target }) {
       self.static_server = target.value;
+      if (self.validations.static_server)
+        self.validations.clear("static_server");
     },
     setAmpServer({ target }) {
       self.amp_server = target.value;
+      if (self.validations.amp_server) self.validations.clear("amp_server");
     },
     setFrontpageForced({ target }) {
       self.frontpage_forced = target.checked;
@@ -51,19 +64,94 @@ export default types
     setApiFilters({ target }) {
       self.api_filters = target.value.split("\n");
     },
-    async saveSettings() {
-      const data = new window.FormData();
-      data.append("action", "frontity_save_settings");
-      data.append("data", JSON.stringify(getSnapshot(self)));
+    setSiteIdRequested(value) {
+      self.site_id_requested = value;
+      if (self.validations.site_id) self.validations.clear("site_id");
+      self.saveSettings();
+    },
+    trimTextFields() {
+      self.site_id = self.site_id.trim();
+      self.ssr_server = self.ssr_server.trim();
+      self.static_server = self.static_server.trim();
+      self.amp_server = self.amp_server.trim();
+      self.excludes = self.excludes
+        .map(exclude => exclude.trim())
+        .filter(exclude => exclude);
+      self.api_filters = self.api_filters
+        .map(filter => filter.trim())
+        .filter(filter => filter);
+    },
+    async saveSettings(event) {
+      if (event) event.preventDefault();
 
-      await post(window.ajaxurl, data);
+      self.trimTextFields();
 
-      window.frontity.plugin.settings = getSnapshot(self);
+      const clientSettings = getSnapshot(self);
+
+      if (self.validate()) {
+        self.general.setSaveButtonStatus("busy");
+
+        const data = new window.FormData();
+        data.append("action", "frontity_save_settings");
+        data.append("data", JSON.stringify(clientSettings));
+
+        await post(window.ajaxurl, data);
+
+        window.frontity.plugin.settings = clientSettings;
+
+        setTimeout(() => {
+          self.general.setSaveButtonStatus("done");
+          setTimeout(() => {
+            self.general.setSaveButtonStatus("idle");
+          }, 1000);
+        }, 500);
+      } else {
+        const pluginSettings = window.frontity.plugin.settings;
+        const settingsWithoutValidation = [
+          "site_id_requested",
+          "pwa_active",
+          "amp_active",
+        ]
+          .filter(
+            setting => clientSettings[setting] !== pluginSettings[setting]
+          )
+          .reduce((result, setting) => {
+            result[setting] = clientSettings[setting];
+            return result;
+          }, {});
+
+        if (!Object.keys(settingsWithoutValidation).length) return;
+
+        const mergedSettings = {
+          ...pluginSettings,
+          ...settingsWithoutValidation,
+        };
+
+        const data = new window.FormData();
+        data.append("action", "frontity_save_settings");
+        data.append("data", JSON.stringify(mergedSettings));
+
+        await post(window.ajaxurl, data);
+
+        window.frontity.plugin.settings = mergedSettings;
+      }
     },
     async purgeHtmlPurifierCache() {
+      self.general.setPurgePurifierButtonStatus("busy");
+
       const data = new window.FormData();
       data.append("action", "frontity_purge_htmlpurifier_cache");
 
       await post(window.ajaxurl, data);
+
+      setTimeout(() => {
+        self.general.setPurgePurifierButtonStatus("done");
+        setTimeout(() => {
+          self.general.setPurgePurifierButtonStatus("idle");
+        }, 1000);
+      }, 500);
+    },
+    validate() {
+      return self.validations.validateAll("settings");
     },
   }));

@@ -43,12 +43,18 @@ const Settings = ({
   fieldExcludes,
   fieldApiFilters,
   saveButtonText,
-  siteIdStatus,
-  ssrServerStatus,
-  staticServerStatus,
-  ampServerStatus,
+  siteIdValidation,
+  ssrServerValidation,
+  staticServerValidation,
+  ampServerValidation,
+  saveButtonStatus,
+  purgePurifierButtonStatus,
 }) => (
-  <Box margin={{ horizontal: "auto", top: "40px" }} width="608px">
+  <Box
+    margin={{ horizontal: "auto", top: "40px" }}
+    width="632px"
+    pad={{ horizontal: "12px" }}
+  >
     <Notification align="center" margin={{ bottom: "20px" }}>
       <StyledParagraph margin={{ vertical: "0" }}>
         <strong>{notification.highlight} </strong>
@@ -60,101 +66,109 @@ const Settings = ({
         {formTitleText}
       </Header>
       <Form>
-        <FormField label={fieldSiteId.label}>
-          <StyledTextInput
-            status={siteIdStatus}
-            placeholder={fieldSiteId.placeholder}
-            value={siteId}
-            onChange={setSiteId}
-          />
-        </FormField>
-        <FormField label={fieldSsrServer.label}>
-          <StyledTextInput
-            status={ssrServerStatus}
-            placeholder={fieldSsrServer.placeholder}
-            value={ssrServer}
-            onChange={setSsrServer}
-          />
-        </FormField>
-        <FormField label={fieldStaticServer.label}>
-          <StyledTextInput
-            status={staticServerStatus}
-            placeholder={fieldStaticServer.placeholder}
-            value={staticServer}
-            onChange={setStaticServer}
-          />
-        </FormField>
-        <FormField label={fieldAmpServer.label}>
-          <StyledTextInput
-            status={ampServerStatus}
-            placeholder={fieldAmpServer.placeholder}
-            value={ampServer}
-            onChange={setAmpServer}
-          />
-        </FormField>
-        <Box
-          direction="row"
-          justify="between"
-          align="start"
-          margin={{ bottom: "18px" }}
-        >
-          <Box direction="row" justify="between" align="center" width="262px">
-            <Paragraph margin={{ vertical: "0", left: "12px", right: "20px" }}>
-              {fieldForceFrontpage.label}
-            </Paragraph>
-            <CheckBox
-              toggle
-              checked={frontpageForced}
-              onChange={setFrontpageForced}
+        <form id="settings-form" onSubmit={saveSettings}>
+          <FormField label={fieldSiteId.label}>
+            <StyledTextInput
+              validation={siteIdValidation}
+              placeholder={fieldSiteId.placeholder}
+              value={siteId}
+              onChange={setSiteId}
             />
-          </Box>
-          <Comment margin={{ vertical: "0" }}>
-            {fieldForceFrontpage.comment}
-          </Comment>
-        </Box>
-        <Box
-          direction="row"
-          justify="between"
-          align="center"
-          margin={{ bottom: "18px" }}
-        >
-          <Box direction="row" justify="between" align="center" width="262px">
-            <Paragraph margin={{ vertical: "0", left: "12px", right: "20px" }}>
-              {fieldHtmlPurifier.label}
-            </Paragraph>
-            <CheckBox
-              toggle
-              checked={htmlPurifierActive}
-              onChange={setHtmlPurifierActive}
+          </FormField>
+          <FormField label={fieldSsrServer.label}>
+            <StyledTextInput
+              validation={ssrServerValidation}
+              placeholder={fieldSsrServer.placeholder}
+              value={ssrServer}
+              onChange={setSsrServer}
             />
-          </Box>
-          <Button
-            label={fieldHtmlPurifier.button}
-            onClick={purgeHtmlPurifierCache}
-          />
-        </Box>
-        <FormField label={fieldExcludes.label}>
-          <TextArea
-            placeholder={fieldExcludes.placeholder}
-            value={excludes}
-            onChange={setExcludes}
-          />
-        </FormField>
-        <FormField label={fieldApiFilters.label}>
-          <TextArea
-            placeholder={fieldApiFilters.placeholder}
-            value={apiFilters}
-            onChange={setApiFilters}
-          />
-        </FormField>
+          </FormField>
+          <FormField label={fieldStaticServer.label}>
+            <StyledTextInput
+              validation={staticServerValidation}
+              placeholder={fieldStaticServer.placeholder}
+              value={staticServer}
+              onChange={setStaticServer}
+            />
+          </FormField>
+          <FormField label={fieldAmpServer.label}>
+            <StyledTextInput
+              validation={ampServerValidation}
+              placeholder={fieldAmpServer.placeholder}
+              value={ampServer}
+              onChange={setAmpServer}
+            />
+          </FormField>
+          <StyledBox
+            direction="row"
+            justify="between"
+            align="start"
+            margin={{ bottom: "18px" }}
+          >
+            <Box direction="row" justify="between" align="center" width="262px">
+              <Paragraph
+                margin={{ vertical: "0", left: "12px", right: "20px" }}
+              >
+                {fieldForceFrontpage.label}
+              </Paragraph>
+              <CheckBox
+                toggle
+                checked={frontpageForced}
+                onChange={setFrontpageForced}
+              />
+            </Box>
+            <Comment margin={{ vertical: "0" }}>
+              {fieldForceFrontpage.comment}
+            </Comment>
+          </StyledBox>
+          <StyledBox
+            direction="row"
+            justify="between"
+            align="center"
+            margin={{ bottom: "18px" }}
+          >
+            <Box direction="row" justify="between" align="center" width="262px">
+              <Paragraph
+                margin={{ vertical: "0", left: "12px", right: "20px" }}
+              >
+                {fieldHtmlPurifier.label}
+              </Paragraph>
+              <CheckBox
+                toggle
+                checked={htmlPurifierActive}
+                onChange={setHtmlPurifierActive}
+              />
+            </Box>
+            <PurgeButton
+              disabled={purgePurifierButtonStatus !== "idle"}
+              label={fieldHtmlPurifier.button[purgePurifierButtonStatus]}
+              onClick={purgeHtmlPurifierCache}
+            />
+          </StyledBox>
+          <FormField label={fieldExcludes.label}>
+            <TextArea
+              placeholder={fieldExcludes.placeholder}
+              value={excludes}
+              onChange={setExcludes}
+            />
+          </FormField>
+          <FormField label={fieldApiFilters.label}>
+            <TextArea
+              placeholder={fieldApiFilters.placeholder}
+              value={apiFilters}
+              onChange={setApiFilters}
+            />
+          </FormField>
+        </form>
       </Form>
     </Options>
-    <Button
+    <SaveButton
+      form="settings-form"
       primary
+      disabled={saveButtonStatus !== "idle"}
       margin={{ left: "auto" }}
       type="submit"
-      label={saveButtonText}
-      onClick={saveSettings}
+      label={saveButtonText[saveButtonStatus]}
     />
   </Box>
 );
@@ -185,78 +199,72 @@ Settings.propTypes = {
   fieldStaticServer: shape({ label: string, placeholder: string }).isRequired,
   fieldAmpServer: shape({ label: string, placeholder: string }).isRequired,
   fieldForceFrontpage: shape({ label: string, comment: string }).isRequired,
-  fieldHtmlPurifier: shape({ label: string, button: string }).isRequired,
+  fieldHtmlPurifier: shape({
+    label: string,
+    button: shape({ idle: string, busy: string, done: string }),
+  }).isRequired,
   fieldExcludes: shape({ label: string, placeholder: string }).isRequired,
   fieldApiFilters: shape({ label: string, placeholder: string }).isRequired,
-  saveButtonText: string.isRequired,
-  siteIdStatus: string,
-  ssrServerStatus: string,
-  staticServerStatus: string,
-  ampServerStatus: string,
+  saveButtonText: shape({ idle: string, busy: string, done: string })
+    .isRequired,
+  siteIdValidation: string,
+  ssrServerValidation: string,
+  staticServerValidation: string,
+  ampServerValidation: string,
+  saveButtonStatus: string.isRequired,
+  purgePurifierButtonStatus: string.isRequired,
 };
 
 Settings.defaultProps = {
-  siteIdStatus: undefined,
-  ssrServerStatus: undefined,
-  staticServerStatus: undefined,
-  ampServerStatus: undefined,
+  siteIdValidation: undefined,
+  ssrServerValidation: undefined,
+  staticServerValidation: undefined,
+  ampServerValidation: undefined,
 };
 
-export default inject(({ stores: { settings, languages, ui } }) => {
-  const form = "settings.form";
+export default inject(
+  ({ stores: { general, validations, settings, languages } }) => {
+    const form = "settings.form";
 
-  return {
-    siteId: settings.site_id,
-    ssrServer: settings.ssr_server,
-    staticServer: settings.static_server,
-    ampServer: settings.amp_server,
-    frontpageForced: settings.frontpage_forced,
-    htmlPurifierActive: settings.html_purifier_active,
-    excludes: settings.excludes.join("\n"),
-    apiFilters: settings.api_filters.join("\n"),
-    setSiteId: event => {
-      settings.setSiteId(event);
-      ui.setSiteIdStatus();
-    },
-    setSsrServer: event => {
-      settings.setSsrServer(event);
-      ui.setSsrServerStatus();
-    },
-    setStaticServer: event => {
-      settings.setStaticServer(event);
-      ui.setStaticServerStatus();
-    },
-    setAmpServer: event => {
-      settings.setAmpServer(event);
-      ui.setAmpServerStatus();
-    },
-    setFrontpageForced: settings.setFrontpageForced,
-    setHtmlPurifierActive: settings.setHtmlPurifierActive,
-    setExcludes: settings.setExcludes,
-    setApiFilters: settings.setApiFilters,
-    saveSettings: () => {
-      if (ui.validateSettings()) {
-        settings.saveSettings();
-      }
-    },
-    purgeHtmlPurifierCache: settings.purgeHtmlPurifierCache,
-    notification: languages.get("settings.notification"),
-    formTitleText: languages.get(`${form}.title`),
-    fieldSiteId: languages.get(`${form}.fieldSiteId`),
-    fieldSsrServer: languages.get(`${form}.fieldSsrServer`),
-    fieldStaticServer: languages.get(`${form}.fieldStaticServer`),
-    fieldAmpServer: languages.get(`${form}.fieldAmpServer`),
-    fieldForceFrontpage: languages.get(`${form}.fieldForceFrontpage`),
-    fieldHtmlPurifier: languages.get(`${form}.fieldHtmlPurifier`),
-    fieldExcludes: languages.get(`${form}.fieldExcludes`),
-    fieldApiFilters: languages.get(`${form}.fieldApiFilters`),
-    saveButtonText: languages.get("settings.saveButton"),
-    siteIdStatus: ui.siteIdStatus,
-    ssrServerStatus: ui.ssrServerStatus,
-    staticServerStatus: ui.staticServerStatus,
-    ampServerStatus: ui.ampServerStatus,
-  };
-})(Settings);
+    return {
+      siteId: settings.site_id,
+      ssrServer: settings.ssr_server,
+      staticServer: settings.static_server,
+      ampServer: settings.amp_server,
+      frontpageForced: settings.frontpage_forced,
+      htmlPurifierActive: settings.html_purifier_active,
+      excludes: settings.excludes.join("\n"),
+      apiFilters: settings.api_filters.join("\n"),
+      setSiteId: settings.setSiteId,
+      setSsrServer: settings.setSsrServer,
+      setStaticServer: settings.setStaticServer,
+      setAmpServer: settings.setAmpServer,
+      setFrontpageForced: settings.setFrontpageForced,
+      setHtmlPurifierActive: settings.setHtmlPurifierActive,
+      setExcludes: settings.setExcludes,
+      setApiFilters: settings.setApiFilters,
+      saveSettings: settings.saveSettings,
+      purgeHtmlPurifierCache: settings.purgeHtmlPurifierCache,
+      siteIdValidation: validations.settings.site_id,
+      ssrServerValidation: validations.settings.ssr_server,
+      staticServerValidation: validations.settings.static_server,
+      ampServerValidation: validations.settings.amp_server,
+      saveButtonStatus: general.saveButtonStatus,
+      purgePurifierButtonStatus: general.purgePurifierButtonStatus,
+      notification: languages.get("settings.notification"),
+      formTitleText: languages.get(`${form}.title`),
+      fieldSiteId: languages.get(`${form}.fieldSiteId`),
+      fieldSsrServer: languages.get(`${form}.fieldSsrServer`),
+      fieldStaticServer: languages.get(`${form}.fieldStaticServer`),
+      fieldAmpServer: languages.get(`${form}.fieldAmpServer`),
+      fieldForceFrontpage: languages.get(`${form}.fieldForceFrontpage`),
+      fieldHtmlPurifier: languages.get(`${form}.fieldHtmlPurifier`),
+      fieldExcludes: languages.get(`${form}.fieldExcludes`),
+      fieldApiFilters: languages.get(`${form}.fieldApiFilters`),
+      saveButtonText: languages.get("settings.saveButton"),
+    };
+  }
+)(Settings);
 
 const Notification = styled(Box)`
   border-radius: 4px;
@@ -298,6 +306,26 @@ const Comment = styled(Paragraph)`
 `;
 
 const StyledTextInput = styled(TextInput)`
-  ${({ status }) =>
-    status === "invalid" ? "background-color: #ea5a3555;" : ""}
+  ${({ validation }) =>
+    validation === "invalid" ? "background-color: #ea5a3555;" : ""}
+`;
+
+const SaveButton = styled(Button)`
+  width: 162px;
+`;
+const PurgeButton = styled(Button)`
+  width: 197px;
+`;
+
+const StyledBox = styled(Box)`
+  @media (max-width: 782px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    & > p,
+    & > button {
+      margin-left: 12px;
+      margin-top: 8px;
+    }
+  }
 `;
