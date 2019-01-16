@@ -139,7 +139,6 @@ const StyledParagraph = styled(Paragraph)`
 `;
 
 const Separator = styled.div`
-  width: 608px;
   height: 2px;
   opacity: 0.08;
   background-color: #1f38c5;
@@ -163,6 +162,11 @@ const Container = styled.div`
   display: flex;
   width: 100%;
   margin: 40px 0;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const InnerContainer = styled.div`
@@ -172,12 +176,22 @@ const InnerContainer = styled.div`
   &:first-of-type {
     width: 224px;
     margin-right: 32px;
+
+    @media (max-width: 500px) {
+      margin: 0;
+      margin-bottom: 32px;
+    }
   }
 `;
 
 const ViewDemoButton = styled(Button)`
   width: 140px;
   align-self: flex-end;
+
+  @media (max-width: 500px) {
+    align-self: center;
+    margin-top: 12px;
+  }
 `;
 
 const Footer = styled(Box)`

@@ -23,7 +23,7 @@ export default types
       return self.root.general;
     },
     get validations() {
-      return self.root.validations;
+      return self.root.validations.settings;
     },
   }))
   .actions(self => ({
@@ -66,8 +66,8 @@ export default types
     },
     setSiteIdRequested(value) {
       self.site_id_requested = value;
-      if (self.validations.site_id) self.validations.clear("site_id");
       self.saveSettings();
+      if (self.validations.site_id) self.validations.clear("site_id");
     },
     trimTextFields() {
       self.site_id = self.site_id.trim();
@@ -152,6 +152,6 @@ export default types
       }, 500);
     },
     validate() {
-      return self.validations.validateAll("settings");
+      return self.validations.validate();
     },
   }));

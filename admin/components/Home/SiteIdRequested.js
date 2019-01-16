@@ -82,11 +82,10 @@ const Container = styled(Box)`
 
 const Header = styled(Heading)`
   display: block;
-  line-height: 100px;
   background-color: #f6f9fa;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  padding: 0 32px;
+  padding: 32px;
   font-size: 24px;
   font-weight: 600;
 

@@ -78,6 +78,6 @@ export default types
       }
     },
     validate() {
-      return self.validations.validateAll();
+      return self.validations.validate();
     },
   }));

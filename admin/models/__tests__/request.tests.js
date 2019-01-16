@@ -246,15 +246,15 @@ describe("Admin › Models › Request", () => {
     expect(post).not.toHaveBeenCalled();
   });
 
-  test("`validate` should call `validations.validateAll()`", () => {
+  test("`validate` should call `validations.validate()`", () => {
     const store = Store.create();
-    const validateAll = jest.fn();
+    const validate = jest.fn();
 
     Object.defineProperty(store, "validations", {
-      value: { validateAll },
+      value: { validate },
     });
 
     store.validate();
-    expect(validateAll).toHaveBeenCalled();
+    expect(validate).toHaveBeenCalled();
   });
 });

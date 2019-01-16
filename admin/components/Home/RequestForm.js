@@ -67,7 +67,11 @@ const RequestForm = ({
           onChange={setUrl}
         />
       </FormField>
-      <Box margin={{ top: "24px" }} direction="row" justify="between">
+      <RadioContainer
+        margin={{ top: "24px" }}
+        direction="row"
+        justify="between"
+      >
         <RadioBox status={typeValidation}>
           <RadioHead>{requestFieldType.label}</RadioHead>
           {requestFieldType.options.map(value => (
@@ -92,7 +96,7 @@ const RequestForm = ({
             />
           ))}
         </RadioBox>
-      </Box>
+      </RadioContainer>
     </Body>
   </Container>
 );
@@ -186,11 +190,10 @@ const Body = styled(Box)`
 
 const Header = styled(Heading)`
   display: block;
-  line-height: 100px;
   background-color: #f6f9fa;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  padding: 0 32px;
+  padding: 32px;
   font-size: 24px;
   font-weight: 600;
 
@@ -199,7 +202,19 @@ const Header = styled(Heading)`
   }
 `;
 
+const RadioContainer = styled(Box)`
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+`;
+
 const RadioBox = styled(Box)`
+  &:first-of-type {
+    @media (max-width: 600px) {
+      margin-bottom: 16px;
+    }
+  }
+
   label[class^="StyledRadioButton"] {
     margin-bottom: 8px;
   }
@@ -213,6 +228,10 @@ const RadioHead = styled(Paragraph)`
   width: 200px;
   margin-top: 0;
   margin-bottom: 12px;
+
+  @media (max-width: 600px) {
+    width: auto;
+  }
 `;
 
 const StyledTextInput = styled(TextInput)`
