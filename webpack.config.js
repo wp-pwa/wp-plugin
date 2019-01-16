@@ -17,20 +17,6 @@ module.exports = {
         test: /\.js$/,
         use: "babel-loader",
       },
-      {
-        test: /\.(jpg|png)$/,
-        use: {
-          loader: "file-loader",
-          options: {
-            name: "[name].[hash].[ext]",
-            outputPath: "assets/",
-            publicPath: path.resolve(
-              (__dirname.match(/\/wp-content\/.+/, "i") || [""])[0],
-              "admin/dist/assets/"
-            ),
-          },
-        },
-      },
     ],
   },
   plugins: process.env.ANALYZE

@@ -8,8 +8,6 @@ import SiteIdJustRequested from "./SiteIdJustRequested";
 import SiteIdRequested from "./SiteIdRequested";
 import RequestForm from "./RequestForm";
 
-import frontityThemeImage from "../../assets/frontity-theme.png";
-
 const WithoutSiteId = ({
   siteUrl,
   siteIdRequested,
@@ -32,7 +30,10 @@ const WithoutSiteId = ({
     <>
       <Container>
         <InnerContainer>
-          <Image alt="Frontity Theme" src={`${siteUrl}${frontityThemeImage}`} />
+          <Image
+            alt="Frontity Theme"
+            src={`${siteUrl}/wp-content/plugins/wp-pwa/admin/assets/frontity-theme.png`}
+          />
           <Footer>
             <Paragraph margin={{ vertical: "0" }}>
               {descriptionImageFooterText}
