@@ -812,6 +812,7 @@ function frontity() {
 	}
 
 	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
+	$GLOBALS['wp_pwa_url'] = plugin_dir_url(__FILE__);
 
 	return $frontity;
 }

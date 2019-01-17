@@ -8,10 +8,8 @@ import SiteIdJustRequested from "./SiteIdJustRequested";
 import SiteIdRequested from "./SiteIdRequested";
 import RequestForm from "./RequestForm";
 
-import frontityThemeImage from "../../assets/frontity-theme.png";
-
 const WithoutSiteId = ({
-  siteUrl,
+  pluginDirUrl,
   siteIdRequested,
   siteIdJustRequested,
   sendRequest,
@@ -32,7 +30,10 @@ const WithoutSiteId = ({
     <>
       <Container>
         <InnerContainer>
-          <Image alt="Frontity Theme" src={`${siteUrl}${frontityThemeImage}`} />
+          <Image
+            alt="Frontity Theme"
+            src={`${pluginDirUrl}admin/assets/frontity-theme.png`}
+          />
           <Footer>
             <Paragraph margin={{ vertical: "0" }}>
               {descriptionImageFooterText}
@@ -87,7 +88,7 @@ const WithoutSiteId = ({
 };
 
 WithoutSiteId.propTypes = {
-  siteUrl: string.isRequired,
+  pluginDirUrl: string.isRequired,
   siteIdRequested: bool.isRequired,
   siteIdJustRequested: bool.isRequired,
   sendRequest: func.isRequired,
@@ -110,7 +111,7 @@ export default inject(
     const requestForm = "home.withoutSiteId.requestForm";
 
     return {
-      siteUrl: general.site,
+      pluginDirUrl: general.pluginDirUrl,
       siteIdRequested: settings.site_id_requested,
       siteIdJustRequested: general.siteIdJustRequested,
       sendRequest: request.sendRequest,
