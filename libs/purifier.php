@@ -10,7 +10,7 @@ function load_purifier() {
   $htmlpurifier_dir = $upload['basedir'] . DS . 'frontity' . DS . 'htmlpurifier';
   
   if (is_dir($htmlpurifier_dir)) {
-    $config->set('Cache', 'SerializerPath', $htmlpurifier_dir);
+    $config->set('Cache.SerializerPath', $htmlpurifier_dir);
   } else {
     $config->set('Core', 'DefinitionCache', null);
   }
@@ -32,11 +32,11 @@ function load_purifier() {
   $config->set('URI.SafeIframeRegexp', '/.+/');
 
   // Rule: <font>, <center> and <br> not allowed.
-  $config->set('HTML', 'ForbiddenElements', array('font', 'center', 'br'));
+  $config->set('HTML.ForbiddenElements', array('font', 'center', 'br'));
 
   // Rule: Remove empty elements.
-  $config->set('AutoFormat', 'RemoveEmpty', true);
-  $config->set('AutoFormat', 'RemoveEmpty.Predicate', array(
+  $config->set('AutoFormat.RemoveEmpty', true);
+  $config->set('AutoFormat.RemoveEmpty.Predicate', array(
     'div' => array(0 => 'class'),
     'span' => array(0 => 'class'),
     'iframe' => array(0 => 'src'),
@@ -44,8 +44,8 @@ function load_purifier() {
     'th' => array(),
     'td' => array(),
   ));
-  $config->set('AutoFormat', 'RemoveEmpty.RemoveNbsp', true);
-  $config->set('AutoFormat', 'AutoParagraph', true);
+  $config->set('AutoFormat.RemoveEmpty.RemoveNbsp', true);
+  $config->set('AutoFormat.AutoParagraph', true);
 
   // IMG Attributes
   // This is defined in HTML5Definitions.php line 108 (DON'T OVERWRITE IT!!)
