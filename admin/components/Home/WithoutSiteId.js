@@ -9,7 +9,7 @@ import SiteIdRequested from "./SiteIdRequested";
 import RequestForm from "./RequestForm";
 
 const WithoutSiteId = ({
-  siteUrl,
+  pluginDirUrl,
   siteIdRequested,
   siteIdJustRequested,
   sendRequest,
@@ -32,7 +32,7 @@ const WithoutSiteId = ({
         <InnerContainer>
           <Image
             alt="Frontity Theme"
-            src={`${siteUrl}/wp-content/plugins/wp-pwa/admin/assets/frontity-theme.png`}
+            src={`${pluginDirUrl}admin/assets/frontity-theme.png`}
           />
           <Footer>
             <Paragraph margin={{ vertical: "0" }}>
@@ -88,7 +88,7 @@ const WithoutSiteId = ({
 };
 
 WithoutSiteId.propTypes = {
-  siteUrl: string.isRequired,
+  pluginDirUrl: string.isRequired,
   siteIdRequested: bool.isRequired,
   siteIdJustRequested: bool.isRequired,
   sendRequest: func.isRequired,
@@ -111,7 +111,7 @@ export default inject(
     const requestForm = "home.withoutSiteId.requestForm";
 
     return {
-      siteUrl: general.site,
+      pluginDirUrl: general.pluginDirUrl,
       siteIdRequested: settings.site_id_requested,
       siteIdJustRequested: general.siteIdJustRequested,
       sendRequest: request.sendRequest,

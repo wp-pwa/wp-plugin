@@ -8,7 +8,7 @@ import "@babel/polyfill";
 
 const stores = Stores.create({
   general: {
-    site: window.frontity.plugin.site_url,
+    pluginDirUrl: window.frontity.plugin.plugin_dir_url,
     page: new URLSearchParams(window.location.search).get("page"),
   },
   settings: window.frontity.plugin.settings,
