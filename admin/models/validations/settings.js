@@ -1,5 +1,6 @@
 import { types, getParent } from "mobx-state-tree";
-import { isEmpty, isURL } from "validator";
+import isEmpty from "validator/lib/isEmpty";
+import isURL from "validator/lib/isURL";
 
 export default types
   .model("Settings")
