@@ -3,7 +3,7 @@ import { types } from "mobx-state-tree";
 export default types
   .model("General")
   .props({
-    site: "",
+    pluginDirUrl: "",
     page: "",
     siteIdJustRequested: false,
     saveButtonStatus: "idle",

@@ -4,7 +4,7 @@ Plugin Name: Frontity
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 GitHub Plugin URI: https://github.com/frontity/wp-plugin
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.10.7
+Version: 1.11.0
 Author: Frontity
 Author URI: https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description
 License: GPL v3
@@ -23,7 +23,7 @@ if (!defined('DS')) {
 if (!class_exists('frontity')) :
 
 class Frontity {
-	public $plugin_version = '1.10.7';
+	public $plugin_version = '1.11.0';
 
 	function __construct() {
 		// Migrates settings when the plugin updates.
@@ -202,21 +202,13 @@ class Frontity {
 
 	// Register our own routes.
 	function rest_routes() {
-		register_rest_route('wp-pwa/v1', '/siteid/', array(
+		register_rest_route('frontity/v1', '/info/', array(
 			'methods' => 'GET',
-			'callback' => array($this, 'get_site_id')
+			'callback' => array($this, 'get_info'),
 		));
-		register_rest_route('wp-pwa/v1', '/discover/', array(
+		register_rest_route('frontity/v1', '/discover/', array(
 			'methods' => 'GET',
 			'callback' => array($this, 'discover_url')
-		));
-		register_rest_route('wp-pwa/v1', '/plugin-version/', array(
-			'methods' => 'GET',
-			'callback' => array($this, 'get_plugin_version')
-		));
-		register_rest_route('wp-pwa/v1', '/site-info/', array(
-			'methods' => 'GET',
-			'callback' => array($this, 'get_site_info')
 		));
 		register_rest_route('wp/v2', '/latest/', array(
 			'methods' => 'GET',
@@ -233,6 +225,26 @@ class Frontity {
 				)
 			)
 		));
+	}
+
+	// Get plugin info from the database. Used in the REST API.
+	function get_info() {
+		$plugin = array(
+			'version' => $this->plugin_version,
+			'settings' => get_option("frontity_settings"),
+		);
+
+		$site = array(
+			'locale' => get_locale(),
+			'timezone' => get_option('timezone_string'),
+			'gmt_offset' => intval(get_option('gmt_offset')),
+			'per_page' => intval(get_option('posts_per_page')),
+		);
+
+		return array(
+			'plugin' => $plugin,
+			'site' => $site,
+		);
 	}
 
 	// Get latest info of each custom post type.
@@ -591,52 +603,6 @@ class Frontity {
 		);
 	}
 
-	// Get site id from the database. Used in the REST API.
-	function get_site_id() {
-		$settings = get_option("frontity_settings");
-
-		if (isset($settings["site_id"])) {
-			$site_id = $settings["site_id"];
-		} else {
-			$site_id = null;
-		}
-
-		return array('siteId' => $site_id);
-	}
-
-	// Populates plugin version in REST API.
-	function get_plugin_version() {
-		return array('plugin_version' => $this->plugin_version);
-	}
-
-	// Populates certain info in the REST API.
-	function get_site_info() {
-		$homepage_title = get_bloginfo('name');
-		$homepage_metadesc = get_bloginfo('description');
-		$homepage_url = get_bloginfo('url');
-		$per_page = get_option('posts_per_page');
-
-		$site_info = array(
-			'homepage_title' => $homepage_title,
-			'homepage_metadesc' => $homepage_metadesc,
-			'homepage_url' => $homepage_url,
-			'per_page' => $per_page
-		);
-
-		if (has_filter('get_site_info')) {
-			$site_info = apply_filters('get_site_info', $site_info);
-		}
-
-		return array(
-			'home' => array(
-				'title' => $site_info['homepage_title'],
-				'description' => $site_info['homepage_metadesc'],
-				'url' => $site_info['homepage_url']
-			),
-			'perPage' => $site_info['per_page']
-		);
-	}
-
 	// Our first implementation of url discovery.
 	function discover_url($request)	{
 		$first_folder = $request['first_folder'];
@@ -829,6 +795,7 @@ function frontity() {
 	}
 
 	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
+	$GLOBALS['wp_pwa_url'] = plugin_dir_url(__FILE__);
 
 	return $frontity;
 }

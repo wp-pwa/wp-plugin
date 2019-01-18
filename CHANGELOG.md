@@ -1,3 +1,24 @@
+# [1.11.0](https://github.com/frontity/wp-plugin/compare/v1.10.7...v1.11.0) (2019-01-18)
+
+
+### Bug Fixes
+
+* **babel:** fixes browsers support versions ([7c87d93](https://github.com/frontity/wp-plugin/commit/7c87d93))
+* **dashboard:** changes solution for screenshot in dashboard ([15114f4](https://github.com/frontity/wp-plugin/commit/15114f4))
+* **dashboard:** maskes dashboard responsive ([e943d58](https://github.com/frontity/wp-plugin/commit/e943d58))
+* **image:** fixes dashboard screenshot not found ([ad405eb](https://github.com/frontity/wp-plugin/commit/ad405eb))
+* **purge-button:** adds feedback to PurgeButton ([b5535c0](https://github.com/frontity/wp-plugin/commit/b5535c0))
+* **purifier:** fixes deprecated warnings ([f4199f6](https://github.com/frontity/wp-plugin/commit/f4199f6))
+* **stores:** fixes site_id validation on start ([dc34bfd](https://github.com/frontity/wp-plugin/commit/dc34bfd))
+* **stores:** refactor and fixes saving invalid settings ([fe2111b](https://github.com/frontity/wp-plugin/commit/fe2111b))
+* **styles:** fixes styles to be responsive ([bfc0f6e](https://github.com/frontity/wp-plugin/commit/bfc0f6e))
+* **styles:** fixes WP padding on mobile ([8913efd](https://github.com/frontity/wp-plugin/commit/8913efd))
+
+
+### Features
+
+* **rest-api:** expose settings on the rest api ([bc15236](https://github.com/frontity/wp-plugin/commit/bc15236))
+
 ## [1.10.7](https://github.com/frontity/wp-plugin/compare/v1.10.6...v1.10.7) (2019-01-04)
 
 

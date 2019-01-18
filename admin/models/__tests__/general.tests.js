@@ -3,11 +3,13 @@ import Store from "../general";
 describe("Admin › Models › General", () => {
   test("Props should be populated correcly", () => {
     const store = Store.create({
-      site: "http://blog.frontity.io",
+      pluginDirUrl: "http://blog.frontity.io/wp-content/plugins/wp-pwa",
       page: "frontity-dashboard",
     });
 
-    expect(store.site).toBe("http://blog.frontity.io");
+    expect(store.pluginDirUrl).toBe(
+      "http://blog.frontity.io/wp-content/plugins/wp-pwa"
+    );
     expect(store.page).toBe("frontity-dashboard");
     expect(store.siteIdJustRequested).toBe(false);
     expect(store.saveButtonStatus).toBe("idle");
