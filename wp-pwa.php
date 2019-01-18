@@ -380,7 +380,7 @@ class Frontity {
 	}
 
 	// Add data-attachment-id to content images.
-	function add_image_ids($data, $post_type, $request)	{
+	function add_image_ids($response, $post_type, $request)	{
 		global $wpdb;
 
 		$purge = $request->get_param('purgeContentMediaTransients') === 'true';
@@ -395,11 +395,18 @@ class Frontity {
 				
 				// fix featured media if necessary
 		if ($fixForbiddenMedia)
-			$this->fix_forbidden_media($data->data['featured_media']);
+			$this->fix_forbidden_media($response->data['featured_media']);
 
 		$dom = new simple_html_dom();
-		$dom->load($data->data['content']['rendered']);
+
+		$dom->load(
+			isset($response->data['content']['rendered']) ?
+			$response->data['content']['rendered'] :
+			""
+		);
+
 		$imgIds = [];
+
 		foreach ($dom->find('img') as $image) {
 			$dataAttachmentId = $image->getAttribute('data-attachment-id');
 			$class = $image->getAttribute('class');
@@ -433,7 +440,7 @@ class Frontity {
 				),
 				rest_url('wp/v2/media')
 			);
-			$data->add_links(array(
+			$response->add_links(array(
 				'wp:contentmedia' => array(
 					'href' => $media_url,
 					'embeddable' => true,
@@ -441,36 +448,46 @@ class Frontity {
 			));
 		}
 		$html = $dom->save();
-		if ($html) $data->data['content']['rendered'] = $html;
-		$data->data['content_media'] = $imgIds;
-		return $data;
+		if ($html) $response->data['content']['rendered'] = $html;
+		$response->data['content_media'] = $imgIds;
+		return $response;
 	}
 
 	// Use HTML Purifier in the content.
-	function purify_html($data, $post_type, $request)	{
+	function purify_html($response, $post_type, $request)	{
 		$disableHtmlPurifier = $request->get_param('disableHtmlPurifier');
 		$settings = get_option('frontity_settings');
 
-		if (
-			$disableHtmlPurifier === 'true' ||
-			!$settings['html_purifier_active']
-		) {
-			return $data;
+		// Removes HTML tags from 'title.rendered' and
+		// saves the result in a new field called 'text'.
+		if (isset($response->data['title']['rendered'])) {
+			$response->data['title']['text'] =
+			strip_tags(html_entity_decode($response->data['title']['rendered']));
 		}
 
-		$data->data['title']['text'] =
-			strip_tags(html_entity_decode($data->data['title']['rendered']));
-		$data->data['excerpt']['text'] =
-			strip_tags(html_entity_decode($data->data['excerpt']['rendered']));
+		// Removes HTML tags from 'excerpt.rendered' and
+		// saves the result in a new field called 'text'.
+		if (isset($response->data['excerpt']['rendered'])) {
+			$response->data['excerpt']['text'] =
+			strip_tags(html_entity_decode($response->data['excerpt']['rendered']));
+		}
+
+		if ($disableHtmlPurifier === 'true' || !$settings['html_purifier_active']) {
+			return $response;
+		}
 
 		require_once(plugin_dir_path(__FILE__) . '/libs/purifier.php');
-		$purifier = load_purifier();
-		$purifiedContent = $purifier->purify($data->data['content']['rendered']);
-		if (!empty($purifiedContent)) {
-			$data->data['content']['rendered'] = $purifiedContent;
+
+		if (isset($response->data['content']['rendered'])) {
+			$purifier = load_purifier();
+			$purifiedContent = $purifier->purify($response->data['content']['rendered']);
+
+			if (!empty($purifiedContent)) {
+				$response->data['content']['rendered'] = $purifiedContent;
+			}
 		}
 
-		return $data;
+		return $response;
 	}
 
 	// Delete directory. Used when purging HTML Purifier files.
