@@ -441,7 +441,7 @@ class Frontity {
 			}
 		}
 		if (sizeof($imgIds) > 0) {
-					// Fix content media if necessary
+			// Fix content media if necessary
 			if ($fixForbiddenMedia)
 				foreach ($imgIds as $imgId) $this->fix_forbidden_media($imgId);
 
@@ -546,7 +546,7 @@ class Frontity {
 	}
 
 	// Load React in admin pages.
-	public function register_frontity_scripts($hook) {
+	function register_frontity_scripts($hook) {
 		if (
 			'toplevel_page_frontity-dashboard' === $hook ||
 			'frontity_page_frontity-settings' === $hook
@@ -561,7 +561,6 @@ class Frontity {
 			wp_enqueue_script('frontity_admin_js');
 		}
 	}
-
 
 	// Adds the admin pages to the menu.
 	function render_frontity_admin() {
@@ -788,11 +787,8 @@ function frontity() {
 	global $frontity;
 
 	if (!isset($frontity)) $frontity = new Frontity();
-	
 
-	if (class_exists('WP_REST_Controller')) {
-		require_once('libs/class-rest-api-filter-fields.php');
-	}
+	require_once('includes/filter-fields.php');
 
 	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
 	$GLOBALS['wp_pwa_url'] = plugin_dir_url(__FILE__);
