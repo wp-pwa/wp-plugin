@@ -812,7 +812,6 @@ function frontity_initialize_settings() {
 		"frontpage_forced" => false,
 		"html_purifier_active" => true,
 		"excludes" => array(),
-		"api_filters" => array(),
 	);
 	
 	$settings = get_option('frontity_settings');
@@ -864,9 +863,6 @@ function frontity_update_settings() {
 		}
 		if (isset($old_settings['wp_pwa_excludes'])) {
 			$settings['excludes'] = $old_settings['wp_pwa_excludes'];
-		}
-		if (isset($old_settings['wp_pwa_api_fields'])) {
-			$settings['api_filters'] = $old_settings['wp_pwa_api_fields'];
 		}
 
 		update_option('frontity_settings', $settings);
