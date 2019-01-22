@@ -1,0 +1,22 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "edge": "16",
+          "firefox": "50",
+          "chrome": "50",
+          "safari": "10"
+        },
+        "useBuiltIns": "entry"
+      }
+    ],
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    "styled-components",
+    "@babel/proposal-object-rest-spread",
+    "@babel/proposal-class-properties"
+  ]
+}

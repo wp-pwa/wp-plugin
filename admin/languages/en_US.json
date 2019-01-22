@@ -145,7 +145,11 @@
       },
       "fieldHtmlPurifier": {
         "label": "Activate HTML Purifier",
-        "button": "Purge HtmlPurifier"
+        "button": {
+          "idle": "Purge HtmlPurifier",
+          "busy": "Purging...",
+          "done": "Purged"
+        }
       },
       "fieldExcludes": {
         "label": "Exclude URLs in the PWA",
@@ -156,6 +160,10 @@
         "placeholder": "_links\ntitle.rendered"
       }
     },
-    "saveButton": "Save changes"
+    "saveButton": {
+      "idle": "Save changes",
+      "busy": "Saving...",
+      "done": "Saved"
+    }
   }
 }

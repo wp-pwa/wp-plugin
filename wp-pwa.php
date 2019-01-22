@@ -4,7 +4,7 @@ Plugin Name: Frontity
 Plugin URI: https://wordpress.org/plugins/wordpress-pwa/
 GitHub Plugin URI: https://github.com/frontity/wp-plugin
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.10.7
+Version: 1.11.0
 Author: Frontity
 Author URI: https://frontity.com/?utm_source=plugin-repository&utm_medium=link&utm_campaign=plugin-description
 License: GPL v3
@@ -23,10 +23,7 @@ if (!defined('DS')) {
 if (!class_exists('frontity')) :
 
 class Frontity {
-	public $plugin_version = '1.10.7';
-	public $rest_api_installed = false;
-	public $rest_api_active = false;
-	public $rest_api_working = false;
+	public $plugin_version = '1.11.0';
 
 	function __construct() {
 		// Migrates settings when the plugin updates.
@@ -43,8 +40,6 @@ class Frontity {
 		// Purges HTMLPurifier cache.
 		add_action('wp_ajax_frontity_purge_htmlpurifier_cache', array($this,'purge_htmlpurifier_cache'));
 
-		add_action('plugins_loaded', array($this, 'wp_rest_api_plugin_is_installed'));
-		add_action('plugins_loaded', array($this, 'wp_rest_api_plugin_is_active'));
 		add_action('plugins_loaded', array($this, 'update_settings'));
 
 		add_action('init', array($this, 'allow_origin'));
@@ -230,21 +225,13 @@ class Frontity {
 
 	// Register our own routes.
 	function rest_routes() {
-		register_rest_route('wp-pwa/v1', '/siteid/', array(
+		register_rest_route('frontity/v1', '/info/', array(
 			'methods' => 'GET',
-			'callback' => array($this, 'get_site_id')
+			'callback' => array($this, 'get_info'),
 		));
-		register_rest_route('wp-pwa/v1', '/discover/', array(
+		register_rest_route('frontity/v1', '/discover/', array(
 			'methods' => 'GET',
 			'callback' => array($this, 'discover_url')
-		));
-		register_rest_route('wp-pwa/v1', '/plugin-version/', array(
-			'methods' => 'GET',
-			'callback' => array($this, 'get_plugin_version')
-		));
-		register_rest_route('wp-pwa/v1', '/site-info/', array(
-			'methods' => 'GET',
-			'callback' => array($this, 'get_site_info')
 		));
 		register_rest_route('wp/v2', '/latest/', array(
 			'methods' => 'GET',
@@ -261,6 +248,26 @@ class Frontity {
 				)
 			)
 		));
+	}
+
+	// Get plugin info from the database. Used in the REST API.
+	function get_info() {
+		$plugin = array(
+			'version' => $this->plugin_version,
+			'settings' => get_option("frontity_settings"),
+		);
+
+		$site = array(
+			'locale' => get_locale(),
+			'timezone' => get_option('timezone_string'),
+			'gmt_offset' => intval(get_option('gmt_offset')),
+			'per_page' => intval(get_option('posts_per_page')),
+		);
+
+		return array(
+			'plugin' => $plugin,
+			'site' => $site,
+		);
 	}
 
 	// Get latest info of each custom post type.
@@ -602,52 +609,6 @@ class Frontity {
 		);
 	}
 
-	// Get site id from the database. Used in the REST API.
-	function get_site_id() {
-		$settings = get_option("frontity_settings");
-
-		if (isset($settings["site_id"])) {
-			$site_id = $settings["site_id"];
-		} else {
-			$site_id = null;
-		}
-
-		return array('siteId' => $site_id);
-	}
-
-	// Populates plugin version in REST API.
-	function get_plugin_version() {
-		return array('plugin_version' => $this->plugin_version);
-	}
-
-	// Populates certain info in the REST API.
-	function get_site_info() {
-		$homepage_title = get_bloginfo('name');
-		$homepage_metadesc = get_bloginfo('description');
-		$homepage_url = get_bloginfo('url');
-		$per_page = get_option('posts_per_page');
-
-		$site_info = array(
-			'homepage_title' => $homepage_title,
-			'homepage_metadesc' => $homepage_metadesc,
-			'homepage_url' => $homepage_url,
-			'per_page' => $per_page
-		);
-
-		if (has_filter('get_site_info')) {
-			$site_info = apply_filters('get_site_info', $site_info);
-		}
-
-		return array(
-			'home' => array(
-				'title' => $site_info['homepage_title'],
-				'description' => $site_info['homepage_metadesc'],
-				'url' => $site_info['homepage_url']
-			),
-			'perPage' => $site_info['per_page']
-		);
-	}
-
 	// Our first implementation of url discovery.
 	function discover_url($request)	{
 		$first_folder = $request['first_folder'];
@@ -769,60 +730,9 @@ class Frontity {
 		return array('Error' => $last_folder . ' not found');
 	}
 
-	// Checks if the rest-api plugin is installed. I don't think it's used anymore.
-	public function wp_rest_api_plugin_is_installed() {
-		if (!function_exists('get_plugins')) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-		$plugins = get_plugins();
-
-		$this->rest_api_installed = isset($plugins['rest-api/plugin.php']);
-	}
-
-	// Checks if the rest-api plugin is active. I don't think it's used anymore.
-	public function wp_rest_api_plugin_is_active() {
-		$this->rest_api_active = class_exists('WP_REST_Controller');
-	}
-
-	// Generates the url to 'auto-activate' the rest-api plugin. I don't think it's used anymore.
-	public function get_activate_wp_rest_api_plugin_url() {
-		$plugin = 'rest-api/plugin.php';
-		$plugin_escaped = str_replace('/', '%2F', $plugin);
-
-		$activateUrl = sprintf(admin_url('plugins.php?action=activate&plugin=%s&plugin_status=all&paged=1&s'), $plugin_escaped);
-
-				// change the plugin request to the plugin to pass the nonce check
-		$_REQUEST['plugin'] = $plugin;
-		$activateUrl = wp_nonce_url($activateUrl, 'activate-plugin_' . $plugin);
-
-		return $activateUrl;
-	}
-
 	// Adds Cross origin * to the header
 	function allow_origin() {
 		if (!headers_sent()) header("Access-Control-Allow-Origin: *");
-	}
-
-	// Checks if the json posts endpoint is responding correctly.  I don't think it's used anymore.
-	function wp_rest_api_endpoint_works() {
-		$rest_api_url = get_site_url() . '/wp-json/wp/v2/posts';
-		$args = array('timeout' => 10, 'httpversion' => '1.1');
-
-		$response = wp_remote_get($rest_api_url, $args);
-
-		if (is_array($response)) {
-			$body = $response['body'];
-			$code = $reponse['reponse']['code'];
-			$message = $reponse['reponse']['message'];
-			$json_reponse = json_decode($body);
-
-			//CHECKS
-			// $code != 200
-			// json valid
-			// json without error message { code: "rest_no_route" }
-		} else {
-			return false;
-		}
 	}
 
 	// Injects the AMP URL to the header.
@@ -891,6 +801,7 @@ function frontity() {
 	}
 
 	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
+	$GLOBALS['wp_pwa_url'] = plugin_dir_url(__FILE__);
 
 	return $frontity;
 }

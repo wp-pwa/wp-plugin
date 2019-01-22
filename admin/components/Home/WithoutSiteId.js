@@ -8,9 +8,8 @@ import SiteIdJustRequested from "./SiteIdJustRequested";
 import SiteIdRequested from "./SiteIdRequested";
 import RequestForm from "./RequestForm";
 
-import frontityThemeImage from "../../assets/frontity-theme.png";
-
 const WithoutSiteId = ({
+  pluginDirUrl,
   siteIdRequested,
   siteIdJustRequested,
   sendRequest,
@@ -23,7 +22,6 @@ const WithoutSiteId = ({
   notifications,
   requestAlreadyLinkText,
   requestButtonText,
-  siteUrl,
 }) => {
   if (siteIdRequested)
     return siteIdJustRequested ? <SiteIdJustRequested /> : <SiteIdRequested />;
@@ -32,7 +30,10 @@ const WithoutSiteId = ({
     <>
       <Container>
         <InnerContainer>
-          <Image alt="Frontity Theme" src={`${siteUrl}${frontityThemeImage}`} />
+          <Image
+            alt="Frontity Theme"
+            src={`${pluginDirUrl}admin/assets/frontity-theme.png`}
+          />
           <Footer>
             <Paragraph margin={{ vertical: "0" }}>
               {descriptionImageFooterText}
@@ -87,6 +88,7 @@ const WithoutSiteId = ({
 };
 
 WithoutSiteId.propTypes = {
+  pluginDirUrl: string.isRequired,
   siteIdRequested: bool.isRequired,
   siteIdJustRequested: bool.isRequired,
   sendRequest: func.isRequired,
@@ -101,39 +103,30 @@ WithoutSiteId.propTypes = {
     .isRequired,
   requestAlreadyLinkText: string.isRequired,
   requestButtonText: string.isRequired,
-  siteUrl: string.isRequired,
 };
 
-export default inject(({ stores: { general, settings, ui, languages } }) => {
-  const description = "home.withoutSiteId.description";
-  const requestForm = "home.withoutSiteId.requestForm";
+export default inject(
+  ({ stores: { general, settings, request, languages } }) => {
+    const description = "home.withoutSiteId.description";
+    const requestForm = "home.withoutSiteId.requestForm";
 
-  return {
-    siteIdRequested: settings.site_id_requested,
-    siteIdJustRequested: ui.siteIdJustRequested,
-    sendRequest: async () => {
-      if (ui.validateRequestForm()) {
-        await ui.sendRequest();
-        settings.setSiteIdRequested(true);
-        ui.setSiteIdJustRequested(true);
-        settings.saveSettings();
-      }
-    },
-    setSiteIdRequested: () => {
-      settings.setSiteIdRequested(true);
-      settings.saveSettings();
-    },
-    descriptionTitleText: languages.get(`${description}.title`),
-    descriptionContentText: languages.get(`${description}.content`),
-    descriptionFeatures: languages.get(`${description}.features`),
-    descriptionImageFooterText: languages.get(`${description}.imageFooter`),
-    descriptionButtonText: languages.get(`${description}.viewDemoButton`),
-    notifications: languages.get("home.withoutSiteId.notifications"),
-    requestAlreadyLinkText: languages.get(`${requestForm}.alreadyLink`),
-    requestButtonText: languages.get(`${requestForm}.requestButton`),
-    siteUrl: general.site,
-  };
-})(WithoutSiteId);
+    return {
+      pluginDirUrl: general.pluginDirUrl,
+      siteIdRequested: settings.site_id_requested,
+      siteIdJustRequested: general.siteIdJustRequested,
+      sendRequest: request.sendRequest,
+      setSiteIdRequested: () => settings.setSiteIdRequested(true),
+      descriptionTitleText: languages.get(`${description}.title`),
+      descriptionContentText: languages.get(`${description}.content`),
+      descriptionFeatures: languages.get(`${description}.features`),
+      descriptionImageFooterText: languages.get(`${description}.imageFooter`),
+      descriptionButtonText: languages.get(`${description}.viewDemoButton`),
+      notifications: languages.get("home.withoutSiteId.notifications"),
+      requestAlreadyLinkText: languages.get(`${requestForm}.alreadyLink`),
+      requestButtonText: languages.get(`${requestForm}.requestButton`),
+    };
+  }
+)(WithoutSiteId);
 
 const Notification = styled(Box)`
   border-radius: 4px;
@@ -147,7 +140,6 @@ const StyledParagraph = styled(Paragraph)`
 `;
 
 const Separator = styled.div`
-  width: 608px;
   height: 2px;
   opacity: 0.08;
   background-color: #1f38c5;
@@ -171,6 +163,11 @@ const Container = styled.div`
   display: flex;
   width: 100%;
   margin: 40px 0;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const InnerContainer = styled.div`
@@ -180,12 +177,22 @@ const InnerContainer = styled.div`
   &:first-of-type {
     width: 224px;
     margin-right: 32px;
+
+    @media (max-width: 500px) {
+      margin: 0;
+      margin-bottom: 32px;
+    }
   }
 `;
 
 const ViewDemoButton = styled(Button)`
   width: 140px;
   align-self: flex-end;
+
+  @media (max-width: 500px) {
+    align-self: center;
+    margin-top: 12px;
+  }
 `;
 
 const Footer = styled(Box)`

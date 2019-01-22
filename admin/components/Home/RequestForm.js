@@ -12,21 +12,21 @@ import {
 } from "grommet";
 
 const RequestForm = ({
-  requestFormName,
-  requestFormEmail,
-  requestFormUrl,
-  requestFormType,
-  requestFormTraffic,
-  requestFormNameStatus,
-  requestFormEmailStatus,
-  requestFormUrlStatus,
-  requestFormTypeStatus,
-  requestFormTrafficStatus,
-  setRequestFormName,
-  setRequestFormEmail,
-  setRequestFormUrl,
-  setRequestFormType,
-  setRequestFormTraffic,
+  name,
+  email,
+  url,
+  type,
+  traffic,
+  nameValidation,
+  emailValidation,
+  urlValidation,
+  typeValidation,
+  trafficValidation,
+  setName,
+  setEmail,
+  setUrl,
+  setType,
+  setTraffic,
   requestTitleText,
   requestContentText,
   requestFieldName,
@@ -45,74 +45,78 @@ const RequestForm = ({
       </Comment>
       <FormField label={requestFieldName.label}>
         <StyledTextInput
-          status={requestFormNameStatus}
+          status={nameValidation}
           placeholder={requestFieldName.placeholder}
-          value={requestFormName}
-          onChange={setRequestFormName}
+          value={name}
+          onChange={setName}
         />
       </FormField>
       <FormField label={requestFieldEmail.label}>
         <StyledTextInput
-          status={requestFormEmailStatus}
+          status={emailValidation}
           placeholder={requestFieldEmail.placeholder}
-          value={requestFormEmail}
-          onChange={setRequestFormEmail}
+          value={email}
+          onChange={setEmail}
         />
       </FormField>
       <FormField label={requestFieldUrl.label}>
         <StyledTextInput
-          status={requestFormUrlStatus}
+          status={urlValidation}
           placeholder={requestFieldUrl.placeholder}
-          value={requestFormUrl}
-          onChange={setRequestFormUrl}
+          value={url}
+          onChange={setUrl}
         />
       </FormField>
-      <Box margin={{ top: "24px" }} direction="row" justify="between">
-        <RadioBox status={requestFormTypeStatus}>
+      <RadioContainer
+        margin={{ top: "24px" }}
+        direction="row"
+        justify="between"
+      >
+        <RadioBox status={typeValidation}>
           <RadioHead>{requestFieldType.label}</RadioHead>
           {requestFieldType.options.map(value => (
             <RadioButton
               key={value}
               label={value}
               name={value}
-              checked={requestFormType === value}
-              onChange={setRequestFormType}
+              checked={type === value}
+              onChange={setType}
             />
           ))}
         </RadioBox>
-        <RadioBox status={requestFormTrafficStatus}>
+        <RadioBox status={trafficValidation}>
           <RadioHead>{requestFieldTraffic.label}</RadioHead>
           {requestFieldTraffic.options.map(option => (
             <RadioButton
               key={option}
               label={option}
               name={option}
-              checked={requestFormTraffic === option}
-              onChange={setRequestFormTraffic}
+              checked={traffic === option}
+              onChange={setTraffic}
             />
           ))}
         </RadioBox>
-      </Box>
+      </RadioContainer>
     </Body>
   </Container>
 );
 
 RequestForm.propTypes = {
-  requestFormName: string.isRequired,
-  requestFormEmail: string.isRequired,
-  requestFormUrl: string.isRequired,
-  requestFormType: string.isRequired,
-  requestFormTraffic: string.isRequired,
-  requestFormNameStatus: string,
-  requestFormEmailStatus: string,
-  requestFormUrlStatus: string,
-  requestFormTypeStatus: string,
-  requestFormTrafficStatus: string,
-  setRequestFormName: func.isRequired,
-  setRequestFormEmail: func.isRequired,
-  setRequestFormUrl: func.isRequired,
-  setRequestFormType: func.isRequired,
-  setRequestFormTraffic: func.isRequired,
+  name: string.isRequired,
+  email: string.isRequired,
+  url: string.isRequired,
+  type: string.isRequired,
+  traffic: string.isRequired,
+  nameValidation: string,
+  emailValidation: string,
+  urlValidation: string,
+  typeValidation: string,
+  trafficValidation: string,
+  setName: func.isRequired,
+  setEmail: func.isRequired,
+  setUrl: func.isRequired,
+  setType: func.isRequired,
+  setTraffic: func.isRequired,
   requestTitleText: string.isRequired,
   requestContentText: string.isRequired,
   requestFieldName: shape({ label: string, placeholder: string }).isRequired,
@@ -125,47 +129,32 @@ RequestForm.propTypes = {
 };
 
 RequestForm.defaultProps = {
-  requestFormNameStatus: undefined,
-  requestFormEmailStatus: undefined,
-  requestFormUrlStatus: undefined,
-  requestFormTypeStatus: undefined,
-  requestFormTrafficStatus: undefined,
+  nameValidation: undefined,
+  emailValidation: undefined,
+  urlValidation: undefined,
+  typeValidation: undefined,
+  trafficValidation: undefined,
 };
 
-export default inject(({ stores: { ui, languages } }) => {
+export default inject(({ stores: { request, validations, languages } }) => {
   const requestForm = "home.withoutSiteId.requestForm";
 
   return {
-    requestFormName: ui.requestFormName,
-    requestFormEmail: ui.requestFormEmail,
-    requestFormUrl: ui.requestFormUrl,
-    requestFormType: ui.requestFormType,
-    requestFormTraffic: ui.requestFormTraffic,
-    requestFormNameStatus: ui.requestFormNameStatus,
-    requestFormEmailStatus: ui.requestFormEmailStatus,
-    requestFormUrlStatus: ui.requestFormUrlStatus,
-    requestFormTypeStatus: ui.requestFormTypeStatus,
-    requestFormTrafficStatus: ui.requestFormTrafficStatus,
-    setRequestFormName: event => {
-      ui.setRequestFormNameStatus();
-      ui.setRequestFormName(event);
-    },
-    setRequestFormEmail: event => {
-      ui.setRequestFormEmailStatus();
-      ui.setRequestFormEmail(event);
-    },
-    setRequestFormUrl: event => {
-      ui.setRequestFormUrlStatus();
-      ui.setRequestFormUrl(event);
-    },
-    setRequestFormType: event => {
-      ui.setRequestFormTypeStatus();
-      ui.setRequestFormType(event);
-    },
-    setRequestFormTraffic: event => {
-      ui.setRequestFormTrafficStatus();
-      ui.setRequestFormTraffic(event);
-    },
+    name: request.name,
+    email: request.email,
+    url: request.url,
+    type: request.type,
+    traffic: request.traffic,
+    nameValidation: validations.request.name,
+    emailValidation: validations.request.email,
+    urlValidation: validations.request.url,
+    typeValidation: validations.request.type,
+    trafficValidation: validations.request.traffic,
+    setName: request.setName,
+    setEmail: request.setEmail,
+    setUrl: request.setUrl,
+    setType: request.setType,
+    setTraffic: request.setTraffic,
     requestTitleText: languages.get(`${requestForm}.title`),
     requestContentText: languages.get(`${requestForm}.content`),
     requestFieldName: languages.get(`${requestForm}.fieldName`),
@@ -201,11 +190,10 @@ const Body = styled(Box)`
 
 const Header = styled(Heading)`
   display: block;
-  line-height: 100px;
   background-color: #f6f9fa;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  padding: 0 32px;
+  padding: 32px;
   font-size: 24px;
   font-weight: 600;
 
@@ -214,7 +202,19 @@ const Header = styled(Heading)`
   }
 `;
 
+const RadioContainer = styled(Box)`
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+`;
+
 const RadioBox = styled(Box)`
+  &:first-of-type {
+    @media (max-width: 600px) {
+      margin-bottom: 16px;
+    }
+  }
+
   label[class^="StyledRadioButton"] {
     margin-bottom: 8px;
   }
@@ -228,6 +228,10 @@ const RadioHead = styled(Paragraph)`
   width: 200px;
   margin-top: 0;
   margin-bottom: 12px;
+
+  @media (max-width: 600px) {
+    width: auto;
+  }
 `;
 
 const StyledTextInput = styled(TextInput)`

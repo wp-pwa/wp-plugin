@@ -38,17 +38,17 @@ SiteIdJustRequested.propTypes = {
   setSiteIdJustRequested: func.isRequired,
 };
 
-export default inject(({ stores: { ui, languages } }) => {
+export default inject(({ stores: { general, languages } }) => {
   const siteIdJustRequested = "home.siteIdJustRequested";
 
   return {
+    setSiteIdJustRequested: () => {
+      general.setSiteIdJustRequested(false);
+    },
     emojiText: languages.get(`${siteIdJustRequested}.emoji`),
     titleText: languages.get(`${siteIdJustRequested}.title`),
     contentText: languages.get(`${siteIdJustRequested}.content`),
     linkText: languages.get(`${siteIdJustRequested}.link`),
-    setSiteIdJustRequested: () => {
-      ui.setSiteIdJustRequested(false);
-    },
   };
 })(SiteIdJustRequested);
 
@@ -61,11 +61,10 @@ const Container = styled(Box)`
 
 const Header = styled(Heading)`
   display: block;
-  line-height: 100px;
   background-color: #f6f9fa;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  padding: 0 32px;
+  padding: 32px;
   font-size: 24px;
   font-weight: 600;
 

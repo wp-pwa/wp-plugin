@@ -2,6 +2,7 @@
 import React from "react";
 import { string, func } from "prop-types";
 import { inject } from "mobx-react";
+import styled from "styled-components";
 import { Box, Button } from "grommet";
 
 const Links = ({
@@ -11,7 +12,7 @@ const Links = ({
   openContactAndHelp,
   openDocumentation,
 }) => (
-  <Box direction="row" align="center" justify="between">
+  <StyledBox direction="row" align="center" justify="between">
     <Button
       label={contactAndHelpText}
       focusIndicator={false}
@@ -31,7 +32,7 @@ const Links = ({
       href="https://frontity.com/demo?utm_source=plugin-dashboard&utm_medium=cta-button&utm_campaign=plugin-dashboard"
       target="_blank"
     />
-  </Box>
+  </StyledBox>
 );
 
 Links.propTypes = {
@@ -54,3 +55,17 @@ export default inject(({ stores: { languages } }) => ({
   openDocumentation: () =>
     window.open("https://support.frontity.com/", "_blank"),
 }))(Links);
+
+const StyledBox = styled(Box)`
+  @media (max-width: 582px) {
+    align-items: center;
+    flex-direction: column;
+    & > * {
+      margin: 0;
+    }
+
+    & > button:nth-of-type(2) {
+      margin: 8px 0;
+    }
+  }
+`;

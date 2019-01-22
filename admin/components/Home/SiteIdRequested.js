@@ -15,7 +15,7 @@ const SiteIdRequested = ({
   fieldSiteId,
   linkText,
   confirmButtonText,
-  siteIdStatus,
+  siteIdValidation,
 }) => (
   <form onSubmit={saveSettings}>
     <Container margin={{ top: "40px", bottom: "24px" }}>
@@ -24,7 +24,7 @@ const SiteIdRequested = ({
         <Comment>{contentText}</Comment>
         <FormField label={fieldSiteId.label}>
           <StyledTextInput
-            status={siteIdStatus}
+            status={siteIdValidation}
             placeholder={fieldSiteId.placeholder}
             value={siteId}
             onChange={setSiteId}
@@ -49,37 +49,27 @@ SiteIdRequested.propTypes = {
   fieldSiteId: shape({ label: string, placeholder: string }).isRequired,
   linkText: string.isRequired,
   confirmButtonText: string.isRequired,
-  siteIdStatus: string,
+  siteIdValidation: string,
 };
 
 SiteIdRequested.defaultProps = {
-  siteIdStatus: undefined,
+  siteIdValidation: undefined,
 };
 
-export default inject(({ stores: { settings, languages, ui } }) => {
+export default inject(({ stores: { settings, validations, languages } }) => {
   const siteIdRequested = "home.siteIdRequested";
 
   return {
     siteId: settings.site_id,
-    setSiteId: event => {
-      ui.setSiteIdStatus();
-      settings.setSiteId(event);
-    },
-    saveSettings: event => {
-      event.preventDefault();
-      ui.validateSettings();
-      settings.saveSettings();
-    },
-    setSiteIdRequested: () => {
-      settings.setSiteIdRequested(false);
-      settings.saveSettings();
-    },
+    setSiteId: settings.setSiteId,
+    saveSettings: settings.saveSettings,
+    setSiteIdRequested: () => settings.setSiteIdRequested(false),
     titleText: languages.get(`${siteIdRequested}.title`),
     contentText: languages.get(`${siteIdRequested}.content`),
     fieldSiteId: languages.get(`${siteIdRequested}.fieldSiteId`),
     linkText: languages.get(`${siteIdRequested}.link`),
     confirmButtonText: languages.get(`${siteIdRequested}.confirmButton`),
-    siteIdStatus: ui.siteIdStatus,
+    siteIdValidation: validations.settings.site_id,
   };
 })(SiteIdRequested);
 
@@ -92,11 +82,10 @@ const Container = styled(Box)`
 
 const Header = styled(Heading)`
   display: block;
-  line-height: 100px;
   background-color: #f6f9fa;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  padding: 0 32px;
+  padding: 32px;
   font-size: 24px;
   font-weight: 600;
 
