@@ -25,7 +25,6 @@ describe("Admin › Models › Settings", () => {
     expect(store.frontpage_forced).toBe(false);
     expect(store.html_purifier_active).toBe(true);
     expect(store.excludes).toEqual([]);
-    expect(store.api_filters).toEqual([]);
   });
 
   test("`general` should return the right value", () => {
@@ -211,17 +210,6 @@ describe("Admin › Models › Settings", () => {
     expect(store.excludes).toEqual(["something", "something else"]);
   });
 
-  test("`setApiFilters` should set a value for `api_filters`", () => {
-    const store = Store.create();
-
-    store.setApiFilters({
-      target: {
-        value: "something\nsomething else",
-      },
-    });
-    expect(store.api_filters).toEqual(["something", "something else"]);
-  });
-
   test("`setSiteIdRequested` should set a value for `site_id_requested`, clear the validation of `site_id` and call `saveSettings()`", () => {
     const store = Store.create();
     const saveSettings = jest.fn();
@@ -261,7 +249,6 @@ describe("Admin › Models › Settings", () => {
       static_server: "   https://static.wp-pwa.com   ",
       amp_server: "   https://amp.wp-pwa.com   ",
       excludes: ["   ", "   something   ", "   something else   "],
-      api_filters: ["   ", "   something   ", "   something else   "],
     });
 
     await store.trimTextFields();
@@ -270,7 +257,6 @@ describe("Admin › Models › Settings", () => {
     expect(store.static_server).toBe("https://static.wp-pwa.com");
     expect(store.amp_server).toBe("https://amp.wp-pwa.com");
     expect(store.excludes).toEqual(["something", "something else"]);
-    expect(store.api_filters).toEqual(["something", "something else"]);
   });
 
   test("`saveSettings` should call `trimTextFields()`, send a request to save the settings and update `saveButtonStatus`", async () => {
@@ -330,7 +316,6 @@ describe("Admin › Models › Settings", () => {
           frontpage_forced: false,
           html_purifier_active: true,
           excludes: [],
-          api_filters: [],
         },
       },
     };
@@ -346,7 +331,6 @@ describe("Admin › Models › Settings", () => {
       frontpage_forced: false,
       html_purifier_active: true,
       excludes: [],
-      api_filters: [],
     };
 
     const data = new window.FormData();
@@ -384,7 +368,6 @@ describe("Admin › Models › Settings", () => {
           frontpage_forced: false,
           html_purifier_active: true,
           excludes: [],
-          api_filters: [],
         },
       },
     };
