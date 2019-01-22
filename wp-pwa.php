@@ -34,50 +34,23 @@ class Frontity {
 		add_action('admin_init', array($this, 'frontity_register_settings'));
 		// Displays the validation erros and update messages.
 		add_action('admin_notices', array($this, 'frontity_admin_notices'));
-
 		// Saves a snapshot of settings in WP db.
 		add_action('wp_ajax_frontity_save_settings', array($this, 'save_settings'));
 		// Purges HTMLPurifier cache.
 		add_action('wp_ajax_frontity_purge_htmlpurifier_cache', array($this,'purge_htmlpurifier_cache'));
-
+		// Updates settings if plugin has been updated.
 		add_action('plugins_loaded', array($this, 'update_settings'));
-
 		add_action('init', array($this, 'allow_origin'));
-
 		// Loads React for admin pages.
 		add_action('admin_enqueue_scripts', array($this, 'register_frontity_scripts'));
+		// Adds custom routes to REST API.
 		add_action('rest_api_init', array($this, 'rest_routes'));
+		// Adds filters for custom post types.
 		add_action('registered_post_type', array($this, 'add_custom_post_types_filters'));
-
-		add_action('wp_head', array($this, 'amp_add_canonical'));
-
 		add_action('embed_footer', array($this, 'send_post_embed_height'));
-
 		add_filter('wp_get_attachment_link', array($this, 'add_id_to_gallery_images'), 10, 2);
 		add_filter('wp_get_attachment_image_attributes', array($this, 'add_id_to_gallery_image_attributes'), 10, 2);
-
-		add_action('get_header', function() {
-			ob_start();
-		});
-
-		add_action('wp_head', function() {
-			$final = '';
-	
-			// We'll need to get the number of ob levels we're in, so that we can iterate over each, collecting
-			// that buffer's output into the final output.
-			$levels = ob_get_level();
-	
-			for ($i = 0; $i < $levels; $i++) {
-					$final .= ob_get_clean();
-			}
-	
-			// Apply any filters to the final output
-			echo apply_filters('frontity_html_for_injector', $final);
-		}, 0);
-
-		add_filter('frontity_html_for_injector', function($html) {
-			return str_replace('<head>', '<head><script src="hola amigos"></script>', $html);
-		});
+		add_action('wp_head', array($this, 'amp_add_canonical'));
 
 		/** 
 		 * Used to test plugin_updated_complete function.
@@ -811,6 +784,7 @@ function frontity() {
 
 	if (!isset($frontity)) $frontity = new Frontity();
 
+	require_once('includes/auto-injector.php');
 	require_once('includes/filter-fields.php');
 
 	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
