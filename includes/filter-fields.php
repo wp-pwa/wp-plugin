@@ -45,8 +45,6 @@ class Frontity_Filter_Fields
     // Also enable filtering 'categories', 'comments', 'taxonomies', 'terms' and 'users'.
     add_filter('rest_prepare_comment', array($this, 'filter'), 20, 3);
     add_filter('rest_prepare_taxonomy', array($this, 'filter'), 20, 3);
-    add_filter('rest_prepare_term', array($this, 'filter'), 20, 3);
-    add_filter('rest_prepare_category', array($this, 'filter'), 20, 3);
     add_filter('rest_prepare_user', array($this, 'filter'), 20, 3);
   }
 
