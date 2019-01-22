@@ -13,7 +13,6 @@ export default types
     frontpage_forced: false,
     html_purifier_active: true,
     excludes: types.array(types.string),
-    api_filters: types.array(types.string),
   })
   .views(self => ({
     get root() {
@@ -61,9 +60,6 @@ export default types
     setExcludes({ target }) {
       self.excludes = target.value.split("\n");
     },
-    setApiFilters({ target }) {
-      self.api_filters = target.value.split("\n");
-    },
     setSiteIdRequested(value) {
       self.site_id_requested = value;
       self.saveSettings();
@@ -77,9 +73,6 @@ export default types
       self.excludes = self.excludes
         .map(exclude => exclude.trim())
         .filter(exclude => exclude);
-      self.api_filters = self.api_filters
-        .map(filter => filter.trim())
-        .filter(filter => filter);
     },
     async saveSettings(event) {
       if (event) event.preventDefault();

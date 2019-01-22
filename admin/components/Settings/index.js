@@ -21,7 +21,6 @@ const Settings = ({
   frontpageForced,
   htmlPurifierActive,
   excludes,
-  apiFilters,
   setSiteId,
   setSsrServer,
   setStaticServer,
@@ -29,7 +28,6 @@ const Settings = ({
   setFrontpageForced,
   setHtmlPurifierActive,
   setExcludes,
-  setApiFilters,
   saveSettings,
   purgeHtmlPurifierCache,
   notification,
@@ -41,7 +39,6 @@ const Settings = ({
   fieldForceFrontpage,
   fieldHtmlPurifier,
   fieldExcludes,
-  fieldApiFilters,
   saveButtonText,
   siteIdValidation,
   ssrServerValidation,
@@ -152,13 +149,6 @@ const Settings = ({
               onChange={setExcludes}
             />
           </FormField>
-          <FormField label={fieldApiFilters.label}>
-            <TextArea
-              placeholder={fieldApiFilters.placeholder}
-              value={apiFilters}
-              onChange={setApiFilters}
-            />
-          </FormField>
         </form>
       </Form>
     </Options>
@@ -181,7 +171,6 @@ Settings.propTypes = {
   frontpageForced: bool.isRequired,
   htmlPurifierActive: bool.isRequired,
   excludes: string.isRequired,
-  apiFilters: string.isRequired,
   setSiteId: func.isRequired,
   setSsrServer: func.isRequired,
   setStaticServer: func.isRequired,
@@ -189,7 +178,6 @@ Settings.propTypes = {
   setFrontpageForced: func.isRequired,
   setHtmlPurifierActive: func.isRequired,
   setExcludes: func.isRequired,
-  setApiFilters: func.isRequired,
   saveSettings: func.isRequired,
   purgeHtmlPurifierCache: func.isRequired,
   notification: shape({ highlight: string, content: string }).isRequired,
@@ -204,7 +192,6 @@ Settings.propTypes = {
     button: shape({ idle: string, busy: string, done: string }),
   }).isRequired,
   fieldExcludes: shape({ label: string, placeholder: string }).isRequired,
-  fieldApiFilters: shape({ label: string, placeholder: string }).isRequired,
   saveButtonText: shape({ idle: string, busy: string, done: string })
     .isRequired,
   siteIdValidation: string,
@@ -234,7 +221,6 @@ export default inject(
       frontpageForced: settings.frontpage_forced,
       htmlPurifierActive: settings.html_purifier_active,
       excludes: settings.excludes.join("\n"),
-      apiFilters: settings.api_filters.join("\n"),
       setSiteId: settings.setSiteId,
       setSsrServer: settings.setSsrServer,
       setStaticServer: settings.setStaticServer,
@@ -242,7 +228,6 @@ export default inject(
       setFrontpageForced: settings.setFrontpageForced,
       setHtmlPurifierActive: settings.setHtmlPurifierActive,
       setExcludes: settings.setExcludes,
-      setApiFilters: settings.setApiFilters,
       saveSettings: settings.saveSettings,
       purgeHtmlPurifierCache: settings.purgeHtmlPurifierCache,
       siteIdValidation: validations.settings.site_id,
@@ -260,7 +245,6 @@ export default inject(
       fieldForceFrontpage: languages.get(`${form}.fieldForceFrontpage`),
       fieldHtmlPurifier: languages.get(`${form}.fieldHtmlPurifier`),
       fieldExcludes: languages.get(`${form}.fieldExcludes`),
-      fieldApiFilters: languages.get(`${form}.fieldApiFilters`),
       saveButtonText: languages.get("settings.saveButton"),
     };
   }

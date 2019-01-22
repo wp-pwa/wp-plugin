@@ -392,7 +392,7 @@ class Frontity {
 	}
 
 	// Add data-attachment-id to content images.
-	function add_image_ids($data, $post_type, $request)	{
+	function add_image_ids($response, $post_type, $request)	{
 		global $wpdb;
 
 		$purge = $request->get_param('purgeContentMediaTransients') === 'true';
@@ -407,11 +407,18 @@ class Frontity {
 				
 				// fix featured media if necessary
 		if ($fixForbiddenMedia)
-			$this->fix_forbidden_media($data->data['featured_media']);
+			$this->fix_forbidden_media($response->data['featured_media']);
 
 		$dom = new simple_html_dom();
-		$dom->load($data->data['content']['rendered']);
+
+		$dom->load(
+			isset($response->data['content']['rendered']) ?
+			$response->data['content']['rendered'] :
+			""
+		);
+
 		$imgIds = [];
+
 		foreach ($dom->find('img') as $image) {
 			$dataAttachmentId = $image->getAttribute('data-attachment-id');
 			$class = $image->getAttribute('class');
@@ -434,7 +441,7 @@ class Frontity {
 			}
 		}
 		if (sizeof($imgIds) > 0) {
-					// Fix content media if necessary
+			// Fix content media if necessary
 			if ($fixForbiddenMedia)
 				foreach ($imgIds as $imgId) $this->fix_forbidden_media($imgId);
 
@@ -445,7 +452,7 @@ class Frontity {
 				),
 				rest_url('wp/v2/media')
 			);
-			$data->add_links(array(
+			$response->add_links(array(
 				'wp:contentmedia' => array(
 					'href' => $media_url,
 					'embeddable' => true,
@@ -453,36 +460,46 @@ class Frontity {
 			));
 		}
 		$html = $dom->save();
-		if ($html) $data->data['content']['rendered'] = $html;
-		$data->data['content_media'] = $imgIds;
-		return $data;
+		if ($html) $response->data['content']['rendered'] = $html;
+		$response->data['content_media'] = $imgIds;
+		return $response;
 	}
 
 	// Use HTML Purifier in the content.
-	function purify_html($data, $post_type, $request)	{
+	function purify_html($response, $post_type, $request)	{
 		$disableHtmlPurifier = $request->get_param('disableHtmlPurifier');
 		$settings = get_option('frontity_settings');
 
-		if (
-			$disableHtmlPurifier === 'true' ||
-			!$settings['html_purifier_active']
-		) {
-			return $data;
+		// Removes HTML tags from 'title.rendered' and
+		// saves the result in a new field called 'text'.
+		if (isset($response->data['title']['rendered'])) {
+			$response->data['title']['text'] =
+			strip_tags(html_entity_decode($response->data['title']['rendered']));
 		}
 
-		$data->data['title']['text'] =
-			strip_tags(html_entity_decode($data->data['title']['rendered']));
-		$data->data['excerpt']['text'] =
-			strip_tags(html_entity_decode($data->data['excerpt']['rendered']));
+		// Removes HTML tags from 'excerpt.rendered' and
+		// saves the result in a new field called 'text'.
+		if (isset($response->data['excerpt']['rendered'])) {
+			$response->data['excerpt']['text'] =
+			strip_tags(html_entity_decode($response->data['excerpt']['rendered']));
+		}
+
+		if ($disableHtmlPurifier === 'true' || !$settings['html_purifier_active']) {
+			return $response;
+		}
 
 		require_once(plugin_dir_path(__FILE__) . '/libs/purifier.php');
-		$purifier = load_purifier();
-		$purifiedContent = $purifier->purify($data->data['content']['rendered']);
-		if (!empty($purifiedContent)) {
-			$data->data['content']['rendered'] = $purifiedContent;
+
+		if (isset($response->data['content']['rendered'])) {
+			$purifier = load_purifier();
+			$purifiedContent = $purifier->purify($response->data['content']['rendered']);
+
+			if (!empty($purifiedContent)) {
+				$response->data['content']['rendered'] = $purifiedContent;
+			}
 		}
 
-		return $data;
+		return $response;
 	}
 
 	// Delete directory. Used when purging HTML Purifier files.
@@ -529,7 +546,7 @@ class Frontity {
 	}
 
 	// Load React in admin pages.
-	public function register_frontity_scripts($hook) {
+	function register_frontity_scripts($hook) {
 		if (
 			'toplevel_page_frontity-dashboard' === $hook ||
 			'frontity_page_frontity-settings' === $hook
@@ -544,7 +561,6 @@ class Frontity {
 			wp_enqueue_script('frontity_admin_js');
 		}
 	}
-
 
 	// Adds the admin pages to the menu.
 	function render_frontity_admin() {
@@ -771,11 +787,8 @@ function frontity() {
 	global $frontity;
 
 	if (!isset($frontity)) $frontity = new Frontity();
-	
 
-	if (class_exists('WP_REST_Controller')) {
-		require_once('libs/class-rest-api-filter-fields.php');
-	}
+	require_once('includes/filter-fields.php');
 
 	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
 	$GLOBALS['wp_pwa_url'] = plugin_dir_url(__FILE__);
@@ -799,7 +812,6 @@ function frontity_initialize_settings() {
 		"frontpage_forced" => false,
 		"html_purifier_active" => true,
 		"excludes" => array(),
-		"api_filters" => array(),
 	);
 	
 	$settings = get_option('frontity_settings');
@@ -851,9 +863,6 @@ function frontity_update_settings() {
 		}
 		if (isset($old_settings['wp_pwa_excludes'])) {
 			$settings['excludes'] = $old_settings['wp_pwa_excludes'];
-		}
-		if (isset($old_settings['wp_pwa_api_fields'])) {
-			$settings['api_filters'] = $old_settings['wp_pwa_api_fields'];
 		}
 
 		update_option('frontity_settings', $settings);

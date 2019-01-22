@@ -154,10 +154,6 @@
       "fieldExcludes": {
         "label": "Exclude URLs in the PWA",
         "placeholder": "http://sample.com/page/\nhttp://v2.sample.com/page/"
-      },
-      "fieldApiFilters": {
-        "label": "Filter WP API fields",
-        "placeholder": "_links\ntitle.rendered"
       }
     },
     "saveButton": {
