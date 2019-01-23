@@ -11,7 +11,7 @@ License: GPL v3
 Copyright: Worona Labs SL
  */
 
-// Define the directory seperator if it isn't already
+// Define the directory seperator if it hasn't already.
 if (!defined('DS')) {
 	if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
 		define('DS', '\\');
@@ -20,29 +20,31 @@ if (!defined('DS')) {
 	}
 }
 
-if (!class_exists('frontity')) :
+// Define Frontity constants.
+define('FRONTITY_VERSION', '1.11.0');
+define('FRONTITY_PATH', plugin_dir_path(__FILE__));
+define('FRONTITY_URL', plugin_dir_url(__FILE__));
 
-class Frontity {
-	public $plugin_version = '1.11.0';
+class Frontity
+{
+	protected $plugin_version;
+	protected $type;
+	protected $id;
+	protected $page;
 
-	function __construct() {
+	function __construct()
+	{
 		// Migrates settings when the plugin updates.
 		add_action('upgrader_process_complete', array($this, 'plugin_update_completed'));
-		// Adds the admin pages to the menu.
-		add_action('admin_menu', array($this, 'render_frontity_admin'));
 		// Resgisters the settings.
 		add_action('admin_init', array($this, 'frontity_register_settings'));
-		// Displays the validation erros and update messages.
-		add_action('admin_notices', array($this, 'frontity_admin_notices'));
 		// Saves a snapshot of settings in WP db.
 		add_action('wp_ajax_frontity_save_settings', array($this, 'save_settings'));
 		// Purges HTMLPurifier cache.
-		add_action('wp_ajax_frontity_purge_htmlpurifier_cache', array($this,'purge_htmlpurifier_cache'));
+		add_action('wp_ajax_frontity_purge_htmlpurifier_cache', array($this, 'purge_htmlpurifier_cache'));
 		// Updates settings if plugin has been updated.
 		add_action('plugins_loaded', array($this, 'update_settings'));
 		add_action('init', array($this, 'allow_origin'));
-		// Loads React for admin pages.
-		add_action('admin_enqueue_scripts', array($this, 'register_frontity_scripts'));
 		// Adds custom routes to REST API.
 		add_action('rest_api_init', array($this, 'rest_routes'));
 		// Adds filters for custom post types.
@@ -61,30 +63,29 @@ class Frontity {
 	}
 
 	/**
-		* 	Used to test the plugin_update_completed function.
-		* 
-		*	function upgrade_plugin() {
-		*		$plugin = plugin_basename(__FILE__);
-		*		$this->plugin_update_completed(null, array(
-		*			'action' => 'update',
-		*			'type' => 'plugin',
-		*			'bulk' => 1,
-		*			'plugins' => array($plugin)
-		*		));
-		*	} 
-		*
-		* */
+	 * 	Used to test the plugin_update_completed function.
+	 * 
+	 *	function upgrade_plugin() {
+	 *		$plugin = plugin_basename(__FILE__);
+	 *		$this->plugin_update_completed(null, array(
+	 *			'action' => 'update',
+	 *			'type' => 'plugin',
+	 *			'bulk' => 1,
+	 *			'plugins' => array($plugin)
+	 *		));
+	 *	} 
+	 *
+	 * */
 
 	// Sets transient to check if plugin has been updated.
-	function plugin_update_completed($upgrader_object, $data) {
+	function plugin_update_completed($upgrader_object, $data)
+	{
 		$our_plugin = plugin_basename(__FILE__);
 
 		// Check if our plugin is being updated.
-		if (
-			$data['action'] === 'update' &&
+		if ($data['action'] === 'update' &&
 			$data['type'] === 'plugin' &&
-			isset($data['plugins'])
-		) {
+			isset($data['plugins'])) {
 			foreach ($data['plugins'] as $plugin) {
 				if ($plugin == $our_plugin) {
 					set_transient('frontity_update', $this->plugin_version);
@@ -94,7 +95,8 @@ class Frontity {
 	}
 
 	// Updates settings if plugin has been updated.
-	function update_settings() {
+	function update_settings()
+	{
 		$should_update = false;
 		$frontity_update_transient = get_transient('frontity_update');
 
@@ -111,7 +113,8 @@ class Frontity {
 	}
 
 	// Updates settings in WP db after user input.
-	function save_settings() {
+	function save_settings()
+	{
 		$data = json_decode(stripslashes($_POST["data"]), true);
 
 		if ($data) {
@@ -124,28 +127,27 @@ class Frontity {
 		wp_send_json($data);
 	}
 
-	// Add resizement to wp-embedded iframes.
-	function send_post_embed_height() {
-?>
-		<script>
-			window.parent.postMessage({
-				sentinel: 'amp',
-				type: 'embed-size',
-				height: document.body.scrollHeight
-			}, '*');
-		</script>
-<?php
+	// Adds resizement to WP embedded posts.
+	function send_post_embed_height()
+	{
+		echo "<script>"
+			. "window.parent.postMessage({"
+			. "sentinel:'amp',type:'embed-size',height:document.body.scrollHeight"
+			. "},'*');"
+			. "</script>";
 	}
 
 	// Save the image id transient keys for future purges.
-	function update_image_id_transient_keys($new_transient_key) {
+	function update_image_id_transient_keys($new_transient_key)
+	{
 		$transient_keys = get_option('image_id_transient_keys');
 		$transient_keys[] = $new_transient_key;
 		update_option('image_id_transient_keys', $transient_keys);
 	}
 
 	// Purge (delete) all the image id transients.
-	function purge_image_id_transient_keys() {
+	function purge_image_id_transient_keys()
+	{
 		$transient_keys = get_option('image_id_transient_keys');
 		foreach ($transient_keys as $t) {
 			delete_transient($t);
@@ -154,14 +156,16 @@ class Frontity {
 	}
 
 	// Add data-attachment-ids to galleries using the wp_get_attachment_image_attributes hook.
-	function add_id_to_gallery_image_attributes($attrs, $attachment) {
+	function add_id_to_gallery_image_attributes($attrs, $attachment)
+	{
 		$attrs['data-attachment-id'] = $attachment->ID;
 		$attrs['data-attachment-id-source'] = 'image-attributes-hook';
 		return $attrs;
 	}
 
 	// Add data-attachment-ids to galleries using the wp_get_attachment_link hook.	
-	function add_id_to_gallery_images($html, $attachment_id) {
+	function add_id_to_gallery_images($html, $attachment_id)
+	{
 		$attachment_id = intval($attachment_id);
 		$html = str_replace(
 			'<img ',
@@ -176,7 +180,8 @@ class Frontity {
 	}
 
 	// Add hooks for each custom post type.
-	function add_custom_post_types_filters($post_type) {
+	function add_custom_post_types_filters($post_type)
+	{
 		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9, 3);
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'), 10);
 		add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids'), 10, 3);
@@ -191,13 +196,15 @@ class Frontity {
 	}
 
 	// Add latest hook.
-	function wp_api_get_latest($p) {
+	function wp_api_get_latest($p)
+	{
 		$types = apply_filters('add_custom_post_types_to_latest', array($p['type']));
 		return $types;
 	}
 
 	// Register our own routes.
-	function rest_routes() {
+	function rest_routes()
+	{
 		register_rest_route('frontity/v1', '/info/', array(
 			'methods' => 'GET',
 			'callback' => array($this, 'get_info'),
@@ -224,7 +231,8 @@ class Frontity {
 	}
 
 	// Get plugin info from the database. Used in the REST API.
-	function get_info() {
+	function get_info()
+	{
 		$plugin = array(
 			'version' => $this->plugin_version,
 			'settings' => get_option("frontity_settings"),
@@ -244,7 +252,8 @@ class Frontity {
 	}
 
 	// Get latest info of each custom post type.
-	function get_latest_from_cpt($cpts) {
+	function get_latest_from_cpt($cpts)
+	{
 		$result = array();
 		foreach ($cpts as &$cpt) {
 			if (post_type_exists($cpt)) {
@@ -274,7 +283,8 @@ class Frontity {
 	}
 
 	// Return latest info on the individual endpoint.
-	function latest_individual_endpoint($data) {
+	function latest_individual_endpoint($data)
+	{
 		$cpts = apply_filters(
 			'add_custom_post_types_to_latest',
 			array($cpt = $data->get_url_params()['id'])
@@ -283,7 +293,8 @@ class Frontity {
 	}
 
 	// Return latest info on the general endpoint.
-	function latest_general_endpoint($data)	{
+	function latest_general_endpoint($data)
+	{
 		$params = $data->get_params();
 		foreach ($params as $params_cpt => $params_id) {
 			if (post_type_exists($params_cpt)) {
@@ -299,7 +310,8 @@ class Frontity {
 	}
 
 	// Add latest info in the _links section of each post.
-	function add_latest_to_links($data)	{
+	function add_latest_to_links($data)
+	{
 		$type = $data->data['type'];
 		$id = $data->data['id'];
 		$terms_url = add_query_arg(
@@ -318,7 +330,8 @@ class Frontity {
 	}
 
 	// Try to get the image id from the database and store it using transients.
-	function get_attachment_id($url) {
+	function get_attachment_id($url)
+	{
 		$transient_name = 'frt_' . md5($url);
 		$attachment_id = get_transient($transient_name);
 		$transient_miss = $attachment_id === false;
@@ -369,7 +382,8 @@ class Frontity {
 	}
 
 	// If an image doesn't have permissions to be shown in the database, fix it.
-	function fix_forbidden_media($id)	{
+	function fix_forbidden_media($id)
+	{
 		if (!$id) return;
 
 		$id = (int)$id;
@@ -388,7 +402,8 @@ class Frontity {
 	}
 
 	// Add data-attachment-id to content images.
-	function add_image_ids($response, $post_type, $request)	{
+	function add_image_ids($response, $post_type, $request)
+	{
 		global $wpdb;
 
 		$purge = $request->get_param('purgeContentMediaTransients') === 'true';
@@ -409,8 +424,8 @@ class Frontity {
 
 		$dom->load(
 			isset($response->data['content']['rendered']) ?
-			$response->data['content']['rendered'] :
-			""
+				$response->data['content']['rendered'] :
+				""
 		);
 
 		$imgIds = [];
@@ -462,7 +477,8 @@ class Frontity {
 	}
 
 	// Use HTML Purifier in the content.
-	function purify_html($response, $post_type, $request)	{
+	function purify_html($response, $post_type, $request)
+	{
 		$disableHtmlPurifier = $request->get_param('disableHtmlPurifier');
 		$settings = get_option('frontity_settings');
 
@@ -470,14 +486,14 @@ class Frontity {
 		// saves the result in a new field called 'text'.
 		if (isset($response->data['title']['rendered'])) {
 			$response->data['title']['text'] =
-			strip_tags(html_entity_decode($response->data['title']['rendered']));
+				strip_tags(html_entity_decode($response->data['title']['rendered']));
 		}
 
 		// Removes HTML tags from 'excerpt.rendered' and
 		// saves the result in a new field called 'text'.
 		if (isset($response->data['excerpt']['rendered'])) {
 			$response->data['excerpt']['text'] =
-			strip_tags(html_entity_decode($response->data['excerpt']['rendered']));
+				strip_tags(html_entity_decode($response->data['excerpt']['rendered']));
 		}
 
 		if ($disableHtmlPurifier === 'true' || !$settings['html_purifier_active']) {
@@ -499,7 +515,8 @@ class Frontity {
 	}
 
 	// Delete directory. Used when purging HTML Purifier files.
-	function rrmdir($dir)	{
+	function rrmdir($dir)
+	{
 		if (is_dir($dir)) {
 			$objects = scandir($dir);
 			foreach ($objects as $object) {
@@ -517,7 +534,8 @@ class Frontity {
 	}
 
 	// Purge the Html Purifier files.
-	function purge_htmlpurifier_cache()	{
+	function purge_htmlpurifier_cache()
+	{
 		$upload = wp_upload_dir();
 		$upload_base = $upload['basedir'];
 		$htmlpurifier_dir = $upload_base . DS . 'frontity' . DS . 'htmlpurifier';
@@ -529,77 +547,18 @@ class Frontity {
 		));
 	}
 
-	function frontity_admin_notices()	{
-		settings_errors();
-	}
-
-	function frontity_register_settings()	{
+	function frontity_register_settings()
+	{
 		register_setting(
 			'frontity_settings',
 			'frontity_settings',
 			array($this, 'frontity_settings_validator')
 		);
-	}
-
-	// Load React in admin pages.
-	function register_frontity_scripts($hook) {
-		if (
-			'toplevel_page_frontity-dashboard' === $hook ||
-			'frontity_page_frontity-settings' === $hook
-		) {
-			wp_register_script(
-				'frontity_admin_js',
-				plugin_dir_url(__FILE__) . 'admin/dist/main.js',
-				array(),
-				$this->plugin_version,
-				true
-			);
-			wp_enqueue_script('frontity_admin_js');
-		}
-	}
-
-	// Adds the admin pages to the menu.
-	function render_frontity_admin() {
-		$icon_url = trailingslashit(plugin_dir_url(__FILE__)) . "admin/assets/frontity_20x20.png";
-		$position = 64.999989; //Right before the "Plugins"
-
-		add_menu_page(
-			'Frontity',
-			'Frontity',
-			'manage_options',
-			'frontity-dashboard',
-			function() {
-				include('admin/index.php');
-			},
-			$icon_url,
-			$position
-		);
-
-		add_submenu_page(
-			'frontity-dashboard',
-			'Dashboard',
-			'Dashboard',
-			'manage_options',
-			'frontity-dashboard',
-			function() {
-				include('admin/index.php');
-			}
-		);
-
-		add_submenu_page(
-			'frontity-dashboard',
-			'Advanced Settings',
-			'Advanced Settings',
-			'manage_options',
-			'frontity-settings',
-			function() {
-				include('admin/index.php');
-			}
-		);
-	}
+	}	
 
 	// Our first implementation of url discovery.
-	function discover_url($request)	{
+	function discover_url($request)
+	{
 		$first_folder = $request['first_folder'];
 		$last_folder = $request['last_folder'];
 
@@ -720,12 +679,14 @@ class Frontity {
 	}
 
 	// Adds Cross origin * to the header
-	function allow_origin() {
+	function allow_origin()
+	{
 		if (!headers_sent()) header("Access-Control-Allow-Origin: *");
 	}
 
 	// Injects the AMP URL to the header.
-	public function amp_add_canonical() {
+	function amp_add_canonical()
+	{
 		$settings = get_option('frontity_settings');
 		$prettyPermalinks = get_option('permalink_structure') !== '';
 		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']
@@ -778,26 +739,9 @@ class Frontity {
 	}
 }
 
-// This initializates the frontity class and sets the global path.
-function frontity() {
-	global $frontity;
-
-	if (!isset($frontity)) $frontity = new Frontity();
-
-	require_once('includes/auto-injector.php');
-	require_once('includes/filter-fields.php');
-
-	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
-	$GLOBALS['wp_pwa_url'] = plugin_dir_url(__FILE__);
-
-	return $frontity;
-}
-
-// Initialize frontity.
-frontity();
-
 // Initialize frontity_settings if they don't exist.
-function frontity_initialize_settings() {
+function frontity_initialize_settings()
+{
 	$defaults = array(
 		"site_id_requested" => false,
 		"site_id" => "",
@@ -810,20 +754,21 @@ function frontity_initialize_settings() {
 		"html_purifier_active" => true,
 		"excludes" => array(),
 	);
-	
+
 	$settings = get_option('frontity_settings');
-	
+
 	if ($settings) {
 		// Remove deprecated settings.
 		$valid_settings = array_intersect_key($settings, $defaults);
 		// Replace defaults with existing settings.
 		$defaults = array_replace($defaults, $valid_settings);
 	}
-	
+
 	update_option('frontity_settings', $defaults);
 }
 
-function frontity_update_settings() {
+function frontity_update_settings()
+{
 	$settings = get_option('frontity_settings');
 	$old_settings = get_option('wp_pwa_settings');
 
@@ -867,7 +812,8 @@ function frontity_update_settings() {
 	}
 }
 
-function frontity_activation() {
+function frontity_activation()
+{
 	frontity_update_settings();
 	flush_rewrite_rules();
 
@@ -888,16 +834,37 @@ function frontity_activation() {
 	}
 }
 
-function frontity_deactivation() {
+function frontity_deactivation()
+{
 	delete_transient('frontity_update');
 }
 
-function frontity_uninstallation() {
+function frontity_uninstallation()
+{
 	delete_option('frontity_settings');
 }
 
 register_activation_hook(__FILE__, 'frontity_activation');
 register_deactivation_hook(__FILE__, 'frontity_deactivation');
-register_uninstall_hook( __FILE__, 'frontity_uninstallation' );
+register_uninstall_hook(__FILE__, 'frontity_uninstallation');
 
-endif; // class_exists check
+
+// Initializes the frontity class and sets global variables.
+function frontity()
+{
+	// This global should be removed in favor of the constant FRONTITY_PATH.
+	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
+
+	global $frontity;
+
+	require_once FRONTITY_PATH . 'includes/Frontity_Admin.php';
+	require_once FRONTITY_PATH . 'includes/Frontity_Injector.php';
+	require_once FRONTITY_PATH . 'includes/Frontity_Filter_Fields.php';
+
+	if (!isset($frontity)) $frontity = new Frontity();
+	new Frontity_Admin();
+	new Frontity_Injector();
+	new Frontity_Filter_Fields();
+}
+
+frontity();

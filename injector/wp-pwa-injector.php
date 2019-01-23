@@ -3,27 +3,17 @@
 // Copy on header.php, just after <head> the following code:
 // if (isset($GLOBALS['wp_pwa_path'])) { require(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] .'/injector/wp-pwa-injector.php'); }
 
-$siteId = null;
 $type = null;
 $id = null;
 $page = null;
-$env = 'prod';
-$perPage = get_option('posts_per_page');
-$ssr = 'https://ssr.wp-pwa.com';
-$static = 'https://static.wp-pwa.com';
 $inject = false;
 $pwa = false;
 $exclusion = false;
-$dev = 'false';
 $break = false;
 $prettyPermalinks = get_option('permalink_structure') !== '';
 $url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']
   . $_SERVER['REQUEST_URI'];
 $initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
-$settings = get_option('frontity_settings');
-$pwa_active = $settings['pwa_active'];
-$forceFrontpage = $settings['frontpage_forced'];
-$excludes = isset($settings['excludes']) ? $settings['excludes'] : array();
 
 if (($forceFrontpage === true && is_front_page()) || is_home()) {
   $type = 'latest';
@@ -88,13 +78,6 @@ if (isset($_GET['pwa']) && $_GET['pwa'] === 'true') {
   $pwa = true;
 }
 
-if (isset($_GET['pwa']) || isset($_GET['server']) || isset($_GET['staticUrl']) ||
-  isset($_GET['ssrUrl']) || isset($_GET['env']) || isset($_GET['siteId'])) {
-  $dev = 'true';
-}
-if (isset($_GET['dev'])) {
-  $dev = $_GET['dev'];
-}
 if (isset($_GET['break']) && ($_GET['break'] === 'true')) {
   $break = true;
 }
@@ -119,23 +102,5 @@ if ($siteId && $type && $id) {
   }
 }
 
-?>
-
-<?php if ($inject) { ?>
-  <script type='text/javascript'>window['wp-pwa']={siteId:'<?php echo $siteId; ?>',type:'<?php echo $type; ?>',id:'<?php echo $id; ?>',<?php if ($page) echo 'page:\'' . $page . '\',' ?>env:'<?php echo $env; ?>',dev:'<?php echo $dev; ?>',perPage:'<?php echo $perPage; ?>',ssr:'<?php echo $ssr; ?>',initialUrl:'<?php echo $initialUrl; ?>',static:'<?php echo $static; ?>'<?php if ($break) echo ',break:true' ?><?php if (sizeof($excludes) !== 0) echo ',excludes:["' . str_replace('\\\\', '\\', implode('", "', $excludes)) . '"]' ?>};
-  <?php if ($break) {
-    echo 'debugger;';
-    ob_start();
-    include(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.js');
-    $buffer = ob_get_clean();
-    $buffer = apply_filters('frontity_javascript_injector', $buffer);
-    echo $buffer;
-  } else {
-    ob_start();
-    include(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.min.js');
-    $buffer = ob_get_clean();
-    $buffer = apply_filters('frontity_javascript_injector', $buffer);
-    echo $buffer;
-  } ?></script>
-<?php 
-} ?>
+require_once FRONTITY_PATH . 'includes/Frontity_Injector.php';
+echo Frontity_Injector::to_string();

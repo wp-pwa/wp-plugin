@@ -1,15 +1,16 @@
 <?php
+
 class Frontity_Filter_Fields
 {
   public $latest_filters = array();
 
-  public function __construct()
+  function __construct()
   {
     add_action('rest_api_init', array($this, 'init'), 20);
   }
 
   // Register the fields functionality for all posts.
-  public function init()
+  function init()
   {
     // Get all public post types, default includes 'post','page','attachment' and custom types added before 'init'.
     $post_types = get_post_types(array('public' => true), 'objects');
@@ -48,7 +49,7 @@ class Frontity_Filter_Fields
     add_filter('rest_prepare_user', array($this, 'filter'), 20, 3);
   }
 
-  public function filter($response, $post, $request)
+  function filter($response, $post, $request)
   {
     $embed = is_string($request->get_param('_embed'));
     $context = $request->get_param('context');
@@ -94,5 +95,3 @@ class Frontity_Filter_Fields
     unset($temp[end($path)]);
   }
 }
-
-new Frontity_Filter_Fields();

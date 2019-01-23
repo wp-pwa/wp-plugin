@@ -1,5 +1,5 @@
 <?php
-$plugin_dir_url = $GLOBALS['wp_pwa_url'];
+$plugin_dir_url = FRONTITY_URL;
 $locale = get_locale();
 $settings = get_option('frontity_settings');
 ?>
