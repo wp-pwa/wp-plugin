@@ -2,16 +2,7 @@
 
 class Frontity_Admin
 {
-  function __construct()
-  {
-    // Displays the validation erros and update messages.
-    add_action('admin_notices', array($this, 'render_notices'));
-    // Adds the admin pages to the menu.
-    add_action('admin_menu', array($this, 'register_menu'));
-    // Loads React for admin pages.
-    add_action('admin_enqueue_scripts', array($this, 'register_script'));
-  }
-
+  // Renders any error from settings.
   function render_notices()
   {
     settings_errors();

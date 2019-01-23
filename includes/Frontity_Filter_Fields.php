@@ -2,7 +2,7 @@
 
 class Frontity_Filter_Fields
 {
-  public $latest_filters = array();
+  protected $latest_filters = array();
 
   function __construct()
   {
