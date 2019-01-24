@@ -27,10 +27,6 @@ define('FRONTITY_URL', plugin_dir_url(__FILE__));
 
 // class Frontity
 // {
-// 	protected $plugin_version;
-// 	protected $type;
-// 	protected $id;
-// 	protected $page;
 
 // 	function __construct()
 // 	{
@@ -52,7 +48,6 @@ define('FRONTITY_URL', plugin_dir_url(__FILE__));
 // 		add_action('embed_footer', array($this, 'send_post_embed_height'));
 // 		add_filter('wp_get_attachment_link', array($this, 'add_id_to_gallery_images'), 10, 2);
 // 		add_filter('wp_get_attachment_image_attributes', array($this, 'add_id_to_gallery_image_attributes'), 10, 2);
-// 		add_action('wp_head', array($this, 'amp_add_canonical'));
 
 // 		/** 
 // 		 * Used to test plugin_updated_complete function.
@@ -683,76 +678,22 @@ define('FRONTITY_URL', plugin_dir_url(__FILE__));
 // 	{
 // 		if (!headers_sent()) header("Access-Control-Allow-Origin: *");
 // 	}
-
-// 	// Injects the AMP URL to the header.
-// 	function amp_add_canonical()
-// 	{
-// 		$settings = get_option('frontity_settings');
-// 		$prettyPermalinks = get_option('permalink_structure') !== '';
-// 		$url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']
-// 			. $_SERVER['REQUEST_URI'];
-// 		$initialUrl = $prettyPermalinks ? strtok($url, '?') : $url;
-// 		$amp_active = $settings['amp_active'];
-// 		$amp_server = $settings['amp_server'];
-// 		$ampForced = false;
-// 		$dev = 'false';
-// 		$excludes = isset($settings['excludes']) ? $settings['excludes'] : array();
-// 		$exclusion = false;
-
-// 		if (sizeof($excludes) !== 0) {
-// 			foreach ($excludes as $regex) {
-// 				$output = array();
-// 				$regex = str_replace('/', '\/', $regex);
-// 				preg_match('/' . $regex . '/', $url, $output);
-// 				if (sizeof($output) > 0) {
-// 					$exclusion = true;
-// 				}
-// 			}
-// 		}
-
-// 		if (isset($_GET['amp']) && $_GET['amp'] === 'true') {
-// 			$ampForced = true;
-// 			$dev = 'true';
-// 		}
-// 		if (isset($_GET['ampUrl'])) {
-// 			$amp_server = $_GET['ampUrl'];
-// 			$dev = 'true';
-// 		}
-// 		if (isset($_GET['dev'])) $dev = $_GET['dev'];
-
-// 				//posts
-// 		if ($ampForced || (isset($amp_active) && ($amp_active) && (is_single()) && $exclusion === false)) {
-// 			$id = get_queried_object()->ID;
-// 			$type = get_queried_object()->post_type;
-// 			$permalink = get_permalink($id);
-// 			$path = parse_url($permalink, PHP_URL_PATH);
-// 			$query = '?siteId=' . $settings["site_id"]
-// 				. '&dev=' . $dev
-// 				. '&type=' . $type
-// 				. '&id=' . $id
-// 				. '&initialUrl=' . $initialUrl;
-// 			$amp_url = $amp_server . $path . $query;
-
-// 			printf('<link rel="amphtml" href="%s" />', $amp_url);
-// 			printf("\n");
-// 		}
-// 	}
 // }
 
 // Initialize frontity_settings if they don't exist.
 function frontity_initialize_settings()
 {
 	$defaults = array(
-		"site_id_requested" => false,
-		"site_id" => "",
-		"pwa_active" => false,
-		"amp_active" => false,
-		"ssr_server" => "https://ssr.wp-pwa.com",
-		"static_server" => "https://static.wp-pwa.com",
-		"amp_server" => "https://amp.wp-pwa.com",
-		"frontpage_forced" => false,
-		"html_purifier_active" => true,
-		"excludes" => array(),
+		'site_id_requested' => false,
+		'site_id' => '',
+		'pwa_active' => false,
+		'amp_active' => false,
+		'ssr_server' => 'https://ssr.wp-pwa.com',
+		'static_server' => 'https://static.wp-pwa.com',
+		'amp_server' => 'https://amp.wp-pwa.com',
+		'frontpage_forced' => false,
+		'html_purifier_active' => true,
+		'excludes' => array(),
 	);
 
 	$settings = get_option('frontity_settings');

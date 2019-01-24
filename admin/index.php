@@ -8,8 +8,8 @@ $settings = get_option('frontity_settings');
 <script>
 	window.frontity = {
 		plugin: {
-			plugin_dir_url: <?php echo json_encode($plugin_dir_url ? $plugin_dir_url : ""); ?>,
-			locale: <?php echo json_encode($locale ? $locale : ""); ?>,
+			plugin_dir_url: <?php echo json_encode($plugin_dir_url ? $plugin_dir_url : ''); ?>,
+			locale: <?php echo json_encode($locale ? $locale : ''); ?>,
 			settings: <?php echo json_encode($settings ? $settings : new stdClass()); ?>,
 		}
 	};
