@@ -99,13 +99,8 @@ class Frontity_Injector
     return $html;
   }
 
-  static function should_inject()
+  static function get($key)
   {
-    return self::$should_inject;
-  }
-
-  static function get_injector_string()
-  {
-    return self::$injector_string;
+    return self::${"$key"};
   }
 }

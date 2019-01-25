@@ -2,14 +2,12 @@
 
 class Frontity
 {
-  protected $plugin_name;
   protected $version;
   protected $loader;
 
   function __construct()
   {
     $this->version = FRONTITY_VERSION;
-    $this->plugin_name = 'Frontity';
 
     $this->load_dependencies();
     $this->define_admin_hooks();
@@ -20,6 +18,7 @@ class Frontity
   {
     require_once FRONTITY_PATH . 'includes/Frontity_Loader.php';
     require_once FRONTITY_PATH . 'includes/Frontity_Admin.php';
+    require_once FRONTITY_PATH . 'includes/Frontity_Settings.php';
     require_once FRONTITY_PATH . 'includes/Frontity_Request.php';
     require_once FRONTITY_PATH . 'includes/Frontity_Injector.php';
     require_once FRONTITY_PATH . 'includes/Frontity_Amp.php';
@@ -30,11 +29,16 @@ class Frontity
   // Sorted by firing order.
   private function define_admin_hooks()
   {
+    $this->loader->add_action('upgrader_process_complete', $this, 'plugin_update_completed');
+
     $frontity_admin = new Frontity_Admin();
     $this->loader->add_action('admin_menu', $frontity_admin, 'register_menu');
     $this->loader->add_action('admin_enqueue_scripts', $frontity_admin, 'register_script');
     $this->loader->add_action('admin_notices', $frontity_admin, 'render_notices');
 
+    $frontity_settings = new Frontity_Settings();
+    $this->loader->add_action('wp_ajax_frontity_save_settings', $frontity_settings, 'save_settings');
+    $this->loader->add_action('plugins_loaded', $frontity_settings, 'keep_settings_updated');
   }
 
   // Sorted by firing order.
@@ -54,21 +58,6 @@ class Frontity
     $this->loader->add_action('wp', $frontity_amp, 'check_if_should_inject');
     $this->loader->add_action('wp', $frontity_amp, 'generate_link_string');
     $this->loader->add_action('wp_head', $frontity_amp, 'inject_header_html');
-  }
-
-  function get_plugin_name()
-  {
-    return $this->plugin_name;
-  }
-
-  function get_version()
-  {
-    return $this->version;
-  }
-
-  function get_loader()
-  {
-    return $this->loader;
   }
 
   function run()
