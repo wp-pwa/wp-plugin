@@ -22,6 +22,7 @@ class Frontity
     require_once FRONTITY_PATH . 'includes/Frontity_Request.php';
     require_once FRONTITY_PATH . 'includes/Frontity_Injector.php';
     require_once FRONTITY_PATH . 'includes/Frontity_Amp.php';
+    require_once FRONTITY_PATH . 'includes/Frontity_Rest_Api.php';
 
     $this->loader = new Frontity_Loader();
   }
@@ -58,6 +59,10 @@ class Frontity
     $this->loader->add_action('wp', $frontity_amp, 'check_if_should_inject');
     $this->loader->add_action('wp', $frontity_amp, 'generate_link_string');
     $this->loader->add_action('wp_head', $frontity_amp, 'inject_header_html');
+
+    $frontity_rest_api = new Frontity_Rest_Api();
+    $this->loader->add_action('rest_api_init', $frontity_rest_api, 'register_frontity_routes');
+    $this->loader->add_action('rest_api_init', $frontity_rest_api, 'register_wp_routes');
   }
 
   function run()
