@@ -24,6 +24,7 @@ $settings = get_option('frontity_settings');
 $pwa_active = $settings['pwa_active'];
 $forceFrontpage = $settings['frontpage_forced'];
 $excludes = isset($settings['excludes']) ? $settings['excludes'] : array();
+$injection_type = $settings['injection_type'];
 
 if (($forceFrontpage === true && is_front_page()) || is_home()) {
   $type = 'latest';
@@ -125,17 +126,33 @@ if ($siteId && $type && $id) {
   <script type='text/javascript'>window['wp-pwa']={siteId:'<?php echo $siteId; ?>',type:'<?php echo $type; ?>',id:'<?php echo $id; ?>',<?php if ($page) echo 'page:\'' . $page . '\',' ?>env:'<?php echo $env; ?>',dev:'<?php echo $dev; ?>',perPage:'<?php echo $perPage; ?>',ssr:'<?php echo $ssr; ?>',initialUrl:'<?php echo $initialUrl; ?>',static:'<?php echo $static; ?>'<?php if ($break) echo ',break:true' ?><?php if (sizeof($excludes) !== 0) echo ',excludes:["' . str_replace('\\\\', '\\', implode('", "', $excludes)) . '"]' ?>};
   <?php if ($break) {
     echo 'debugger;';
-    ob_start();
-    include(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.js');
-    $buffer = ob_get_clean();
-    $buffer = apply_filters('frontity_javascript_injector', $buffer);
-    echo $buffer;
+    if ($injection_type === 'inline') {
+      ob_start();
+      include(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.js');
+      $buffer = ob_get_clean();
+      $buffer = apply_filters('frontity_javascript_injector', $buffer);
+      echo $buffer;
+      ?>
+      </script>
+      <?php
+
+    } else {
+      ?></script><script src="<?php echo $GLOBALS['wp_pwa_url'] . 'injector/inject.js'; ?>"></script>
+      <?php 
+    }
   } else {
-    ob_start();
-    include(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.min.js');
-    $buffer = ob_get_clean();
-    $buffer = apply_filters('frontity_javascript_injector', $buffer);
-    echo $buffer;
-  } ?></script>
-<?php 
-} ?>
+    if ($injection_type === 'inline') {
+      ob_start();
+      include(WP_PLUGIN_DIR . $GLOBALS['wp_pwa_path'] . '/injector/injector.min.js');
+      $buffer = ob_get_clean();
+      $buffer = apply_filters('frontity_javascript_injector', $buffer);
+      echo $buffer;
+      ?>
+      </script>
+      <?php 
+    } else {
+      ?></script><script type="text/javascript" src="<?php echo $GLOBALS['wp_pwa_url'] . 'injector/injector.min.js'; ?>"></script>
+      <?php 
+    }
+  }
+}

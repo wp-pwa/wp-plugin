@@ -154,6 +154,10 @@
       "fieldExcludes": {
         "label": "Exclude URLs in the PWA",
         "placeholder": "http://sample.com/page/\nhttp://v2.sample.com/page/"
+      },
+      "fieldInjectionType": {
+        "label": "Injection type",
+        "options": ["Inline", "External"]
       }
     },
     "saveButton": {

@@ -812,6 +812,7 @@ function frontity_initialize_settings() {
 		"frontpage_forced" => false,
 		"html_purifier_active" => true,
 		"excludes" => array(),
+		"injection_type" => "inline"
 	);
 	
 	$settings = get_option('frontity_settings');

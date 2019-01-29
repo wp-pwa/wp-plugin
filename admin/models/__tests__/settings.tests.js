@@ -25,6 +25,7 @@ describe("Admin › Models › Settings", () => {
     expect(store.frontpage_forced).toBe(false);
     expect(store.html_purifier_active).toBe(true);
     expect(store.excludes).toEqual([]);
+    expect(store.injection_type).toBe("inline");
   });
 
   test("`general` should return the right value", () => {
@@ -210,6 +211,17 @@ describe("Admin › Models › Settings", () => {
     expect(store.excludes).toEqual(["something", "something else"]);
   });
 
+  test("`setInjectionType` should set a value for `injection_type`", () => {
+    const store = Store.create();
+
+    store.setInjectionType({
+      target: {
+        value: "external",
+      },
+    });
+    expect(store.injection_type).toEqual("external");
+  });
+
   test("`setSiteIdRequested` should set a value for `site_id_requested`, clear the validation of `site_id` and call `saveSettings()`", () => {
     const store = Store.create();
     const saveSettings = jest.fn();
@@ -316,6 +328,7 @@ describe("Admin › Models › Settings", () => {
           frontpage_forced: false,
           html_purifier_active: true,
           excludes: [],
+          injection_type: "inline",
         },
       },
     };
@@ -331,6 +344,7 @@ describe("Admin › Models › Settings", () => {
       frontpage_forced: false,
       html_purifier_active: true,
       excludes: [],
+      injection_type: "inline",
     };
 
     const data = new window.FormData();
@@ -368,6 +382,7 @@ describe("Admin › Models › Settings", () => {
           frontpage_forced: false,
           html_purifier_active: true,
           excludes: [],
+          injection_type: "inline",
         },
       },
     };
