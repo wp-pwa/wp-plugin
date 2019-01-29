@@ -2,6 +2,12 @@
 
 class Frontity_Rest_Api_Fields
 {
+  function add_post_type_filters($post_type)
+  {
+    add_filter('rest_prepare_' . $post_type, array($this, 'add_title_text_field'), 9, 1);
+    add_filter('rest_prepare_' . $post_type, array($this, 'add_excerpt_text_field'), 9, 1);
+  }
+  
   // Adds the `latest` field to every post_type.
   function add_latest_field_to_post_type($post_type)
   {
@@ -19,5 +25,27 @@ class Frontity_Rest_Api_Fields
   function wp_api_get_latest($post_type)
   {
     return apply_filters('add_custom_post_types_to_latest', array($post_type['type']));
+  }
+
+  // Removes HTML tags from 'title.rendered' and
+  // saves the result in a new field called 'text'
+  // in every post_type.
+  function add_title_text_field($response)
+  {
+    if (isset($response->data['title']['rendered']))
+      $response->data['title']['text'] = strip_tags(html_entity_decode($response->data['title']['rendered']));
+
+    return $response;
+  }
+
+  // Removes HTML tags from 'excerpt.rendered' and
+  // saves the result in a new field called 'text'
+  // in every post_type.
+  function add_excerpt_text_field($response)
+  {
+    if (isset($response->data['excerpt']['rendered']))
+      $response->data['excerpt']['text'] = strip_tags(html_entity_decode($response->data['excerpt']['rendered']));
+
+    return $response;
   }
 }

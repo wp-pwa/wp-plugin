@@ -24,6 +24,7 @@ class Frontity
     require_once FRONTITY_PATH . 'includes/Frontity_Amp.php';
     require_once FRONTITY_PATH . 'includes/Frontity_Rest_Api_Routes.php';
     require_once FRONTITY_PATH . 'includes/Frontity_Rest_Api_Fields.php';
+    require_once FRONTITY_PATH . 'includes/Frontity_Purifier.php';
 
     $this->loader = new Frontity_Loader();
   }
@@ -67,6 +68,10 @@ class Frontity
 
     $frontity_rest_api_fields = new Frontity_Rest_Api_Fields();
     $this->loader->add_action('registered_post_type', $frontity_rest_api_fields, 'add_latest_field_to_post_type');
+    $this->loader->add_action('registered_post_type', $frontity_rest_api_fields, 'add_post_type_filters');
+
+    $frontity_purifier = new Frontity_Purifier();
+    $this->loader->add_action('registered_post_type', $frontity_purifier, 'add_post_type_filters');
   }
 
   function run()
