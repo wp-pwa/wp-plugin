@@ -117,7 +117,7 @@ class Frontity {
 	// Updates settings in WP db after user input.
 	function save_settings() {
 		$data = json_decode(stripslashes($_POST["data"]), true);
-
+		var_dump($data);
 		if ($data) {
 			update_option(
 				'frontity_settings',
@@ -812,6 +812,7 @@ function frontity_initialize_settings() {
 		"frontpage_forced" => false,
 		"html_purifier_active" => true,
 		"excludes" => array(),
+		"injection_type" => "inline"
 	);
 	
 	$settings = get_option('frontity_settings');
