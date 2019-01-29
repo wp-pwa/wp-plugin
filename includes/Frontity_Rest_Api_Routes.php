@@ -1,6 +1,6 @@
 <?php
 
-class Frontity_Rest_Api
+class Frontity_Rest_Api_Routes
 {
   // Registers custom routes in /wp-json/frontity/v1/.
   function register_frontity_routes()

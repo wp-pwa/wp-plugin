@@ -22,7 +22,8 @@ class Frontity
     require_once FRONTITY_PATH . 'includes/Frontity_Request.php';
     require_once FRONTITY_PATH . 'includes/Frontity_Injector.php';
     require_once FRONTITY_PATH . 'includes/Frontity_Amp.php';
-    require_once FRONTITY_PATH . 'includes/Frontity_Rest_Api.php';
+    require_once FRONTITY_PATH . 'includes/Frontity_Rest_Api_Routes.php';
+    require_once FRONTITY_PATH . 'includes/Frontity_Rest_Api_Fields.php';
 
     $this->loader = new Frontity_Loader();
   }
@@ -60,9 +61,12 @@ class Frontity
     $this->loader->add_action('wp', $frontity_amp, 'generate_link_string');
     $this->loader->add_action('wp_head', $frontity_amp, 'inject_header_html');
 
-    $frontity_rest_api = new Frontity_Rest_Api();
-    $this->loader->add_action('rest_api_init', $frontity_rest_api, 'register_frontity_routes');
-    $this->loader->add_action('rest_api_init', $frontity_rest_api, 'register_wp_routes');
+    $frontity_rest_api_routes = new Frontity_Rest_Api_Routes();
+    $this->loader->add_action('rest_api_init', $frontity_rest_api_routes, 'register_frontity_routes');
+    $this->loader->add_action('rest_api_init', $frontity_rest_api_routes, 'register_wp_routes');
+
+    $frontity_rest_api_fields = new Frontity_Rest_Api_Fields();
+    $this->loader->add_action('registered_post_type', $frontity_rest_api_fields, 'add_latest_field_to_post_type');
   }
 
   function run()

@@ -25,340 +25,326 @@ define('FRONTITY_VERSION', '1.11.0');
 define('FRONTITY_PATH', plugin_dir_path(__FILE__));
 define('FRONTITY_URL', plugin_dir_url(__FILE__));
 
-// class Frontity
-// {
-// 	function __construct()
-// 	{
-// 		// Purges HTMLPurifier cache.
-// 		add_action('wp_ajax_frontity_purge_htmlpurifier_cache', array($this, 'purge_htmlpurifier_cache'));
-// 		// Updates settings if plugin has been updated.
-// 		add_action('init', array($this, 'allow_origin'));
-// 		// Adds filters for custom post types.
-// 		add_action('registered_post_type', array($this, 'add_custom_post_types_filters'));
-// 		add_action('embed_footer', array($this, 'send_post_embed_height'));
-// 		add_filter('wp_get_attachment_link', array($this, 'add_id_to_gallery_images'), 10, 2);
-// 		add_filter('wp_get_attachment_image_attributes', array($this, 'add_id_to_gallery_image_attributes'), 10, 2);
-// 	}
+class Frontity
+{
+	function __construct()
+	{
+		// Purges HTMLPurifier cache.
+		add_action('wp_ajax_frontity_purge_htmlpurifier_cache', array($this, 'purge_htmlpurifier_cache'));
+		// Updates settings if plugin has been updated.
+		add_action('init', array($this, 'allow_origin'));
+		// Adds filters for custom post types.
+		add_action('registered_post_type', array($this, 'add_custom_post_types_filters'));
+		add_action('embed_footer', array($this, 'send_post_embed_height'));
+		add_filter('wp_get_attachment_link', array($this, 'add_id_to_gallery_images'), 10, 2);
+		add_filter('wp_get_attachment_image_attributes', array($this, 'add_id_to_gallery_image_attributes'), 10, 2);
+	}
 
-// 	// Adds resizement to WP embedded posts.
-// 	function send_post_embed_height()
-// 	{
-// 		echo "<script>"
-// 			. "window.parent.postMessage({"
-// 			. "sentinel:'amp',type:'embed-size',height:document.body.scrollHeight"
-// 			. "},'*');"
-// 			. "</script>";
-// 	}
+	// Adds resizement to WP embedded posts.
+	function send_post_embed_height()
+	{
+		echo "<script>"
+			. "window.parent.postMessage({"
+			. "sentinel:'amp',type:'embed-size',height:document.body.scrollHeight"
+			. "},'*');"
+			. "</script>";
+	}
 
-// 	// Save the image id transient keys for future purges.
-// 	function update_image_id_transient_keys($new_transient_key)
-// 	{
-// 		$transient_keys = get_option('image_id_transient_keys');
-// 		$transient_keys[] = $new_transient_key;
-// 		update_option('image_id_transient_keys', $transient_keys);
-// 	}
+	// Save the image id transient keys for future purges.
+	function update_image_id_transient_keys($new_transient_key)
+	{
+		$transient_keys = get_option('image_id_transient_keys');
+		$transient_keys[] = $new_transient_key;
+		update_option('image_id_transient_keys', $transient_keys);
+	}
 
-// 	// Purge (delete) all the image id transients.
-// 	function purge_image_id_transient_keys()
-// 	{
-// 		$transient_keys = get_option('image_id_transient_keys');
-// 		foreach ($transient_keys as $t) {
-// 			delete_transient($t);
-// 		}
-// 		update_option('image_id_transient_keys', array());
-// 	}
+	// Purge (delete) all the image id transients.
+	function purge_image_id_transient_keys()
+	{
+		$transient_keys = get_option('image_id_transient_keys');
+		foreach ($transient_keys as $t) {
+			delete_transient($t);
+		}
+		update_option('image_id_transient_keys', array());
+	}
 
-// 	// Add data-attachment-ids to galleries using the wp_get_attachment_image_attributes hook.
-// 	function add_id_to_gallery_image_attributes($attrs, $attachment)
-// 	{
-// 		$attrs['data-attachment-id'] = $attachment->ID;
-// 		$attrs['data-attachment-id-source'] = 'image-attributes-hook';
-// 		return $attrs;
-// 	}
+	// Add data-attachment-ids to galleries using the wp_get_attachment_image_attributes hook.
+	function add_id_to_gallery_image_attributes($attrs, $attachment)
+	{
+		$attrs['data-attachment-id'] = $attachment->ID;
+		$attrs['data-attachment-id-source'] = 'image-attributes-hook';
+		return $attrs;
+	}
 
-// 	// Add data-attachment-ids to galleries using the wp_get_attachment_link hook.	
-// 	function add_id_to_gallery_images($html, $attachment_id)
-// 	{
-// 		$attachment_id = intval($attachment_id);
-// 		$html = str_replace(
-// 			'<img ',
-// 			sprintf(
-// 				'<img data-attachment-id="%1$d" data-attachment-id-source="attachment-link-hook"',
-// 				$attachment_id
-// 			),
-// 			$html
-// 		);
-// 		$html = apply_filters('jp_carousel_add_data_to_images', $html, $attachment_id);
-// 		return $html;
-// 	}
+	// Add data-attachment-ids to galleries using the wp_get_attachment_link hook.	
+	function add_id_to_gallery_images($html, $attachment_id)
+	{
+		$attachment_id = intval($attachment_id);
+		$html = str_replace(
+			'<img ',
+			sprintf(
+				'<img data-attachment-id="%1$d" data-attachment-id-source="attachment-link-hook"',
+				$attachment_id
+			),
+			$html
+		);
+		$html = apply_filters('jp_carousel_add_data_to_images', $html, $attachment_id);
+		return $html;
+	}
 
-// 	// Add hooks for each custom post type.
-// 	function add_custom_post_types_filters($post_type)
-// 	{
-// 		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9, 3);
-// 		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'), 10);
-// 		add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids'), 10, 3);
-// 		register_rest_field(
-// 			$post_type,
-// 			'latest',
-// 			array(
-// 				'get_callback' => array($this, 'wp_api_get_latest'),
-// 				'schema' => null,
-// 			)
-// 		);
-// 	}
+	// Add hooks for each custom post type.
+	function add_custom_post_types_filters($post_type)
+	{
+		add_filter('rest_prepare_' . $post_type, array($this, 'purify_html'), 9, 3);
+		add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'), 10);
+		add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids'), 10, 3);
+	}
 
-// 	// Add latest hook.
-// 	function wp_api_get_latest($p)
-// 	{
-// 		$types = apply_filters('add_custom_post_types_to_latest', array($p['type']));
-// 		return $types;
-// 	}
+	// Add latest info in the _links section of each post.
+	function add_latest_to_links($data)
+	{
+		$type = $data->data['type'];
+		$id = $data->data['id'];
+		$terms_url = add_query_arg(
+			$type,
+			$id,
+			rest_url('wp/v2/latest')
+		);
+		$data->add_links(array(
+			'https://api.w.org/term' => array(
+				'href' => $terms_url,
+				'taxonomy' => 'latest',
+				'embeddable' => true,
+			)
+		));
+		return $data;
+	}
 
-// 	// Add latest info in the _links section of each post.
-// 	function add_latest_to_links($data)
-// 	{
-// 		$type = $data->data['type'];
-// 		$id = $data->data['id'];
-// 		$terms_url = add_query_arg(
-// 			$type,
-// 			$id,
-// 			rest_url('wp/v2/latest')
-// 		);
-// 		$data->add_links(array(
-// 			'https://api.w.org/term' => array(
-// 				'href' => $terms_url,
-// 				'taxonomy' => 'latest',
-// 				'embeddable' => true,
-// 			)
-// 		));
-// 		return $data;
-// 	}
+	// Try to get the image id from the database and store it using transients.
+	function get_attachment_id($url)
+	{
+		$transient_name = 'frt_' . md5($url);
+		$attachment_id = get_transient($transient_name);
+		$transient_miss = $attachment_id === false;
 
-// 	// Try to get the image id from the database and store it using transients.
-// 	function get_attachment_id($url)
-// 	{
-// 		$transient_name = 'frt_' . md5($url);
-// 		$attachment_id = get_transient($transient_name);
-// 		$transient_miss = $attachment_id === false;
+		if ($transient_miss) {
+			$attachment_id = 0;
+			$dir = wp_upload_dir();
+			$uploadsPath = parse_url($dir['baseurl'])['path'];
+			$isInUploadDirectory = strpos($url, $uploadsPath . '/') !== false;
+			$wpHost = parse_url($dir['baseurl'])['host'];
+			$isNotExternalDomain = strpos($url, $wpHost . '/') !== false;
+			if ($isInUploadDirectory && $isNotExternalDomain) {
+				$file = basename(urldecode($url));
+				$query_args = array(
+					'post_type' => 'attachment',
+					'post_status' => 'inherit',
+					'fields' => 'ids',
+					'meta_query' => array(
+						array(
+							'value' => $file,
+							'compare' => 'LIKE',
+							'key' => '_wp_attachment_metadata',
+						),
+					)
+				);
+				$query = new WP_Query($query_args);
+				if ($query->have_posts()) {
+					foreach ($query->posts as $post_id) {
+						$meta = wp_get_attachment_metadata($post_id);
+						$original_file = basename($meta['file']);
+						$cropped_image_files = wp_list_pluck($meta['sizes'], 'file');
+						if ($original_file === $file || in_array($file, $cropped_image_files)) {
+							$attachment_id = $post_id;
+							break;
+						}
+					}
+				}
+			}
 
-// 		if ($transient_miss) {
-// 			$attachment_id = 0;
-// 			$dir = wp_upload_dir();
-// 			$uploadsPath = parse_url($dir['baseurl'])['path'];
-// 			$isInUploadDirectory = strpos($url, $uploadsPath . '/') !== false;
-// 			$wpHost = parse_url($dir['baseurl'])['host'];
-// 			$isNotExternalDomain = strpos($url, $wpHost . '/') !== false;
-// 			if ($isInUploadDirectory && $isNotExternalDomain) {
-// 				$file = basename(urldecode($url));
-// 				$query_args = array(
-// 					'post_type' => 'attachment',
-// 					'post_status' => 'inherit',
-// 					'fields' => 'ids',
-// 					'meta_query' => array(
-// 						array(
-// 							'value' => $file,
-// 							'compare' => 'LIKE',
-// 							'key' => '_wp_attachment_metadata',
-// 						),
-// 					)
-// 				);
-// 				$query = new WP_Query($query_args);
-// 				if ($query->have_posts()) {
-// 					foreach ($query->posts as $post_id) {
-// 						$meta = wp_get_attachment_metadata($post_id);
-// 						$original_file = basename($meta['file']);
-// 						$cropped_image_files = wp_list_pluck($meta['sizes'], 'file');
-// 						if ($original_file === $file || in_array($file, $cropped_image_files)) {
-// 							$attachment_id = $post_id;
-// 							break;
-// 						}
-// 					}
-// 				}
-// 			}
+			set_transient($transient_name, $attachment_id, 0); // never expires
+			$this->update_image_id_transient_keys($transient_name);
+		}
 
-// 			set_transient($transient_name, $attachment_id, 0); // never expires
-// 			$this->update_image_id_transient_keys($transient_name);
-// 		}
+		return array(
+			'id' => intval($attachment_id),
+			'miss' => $transient_miss,
+		);
+	}
 
-// 		return array(
-// 			'id' => intval($attachment_id),
-// 			'miss' => $transient_miss,
-// 		);
-// 	}
+	// If an image doesn't have permissions to be shown in the database, fix it.
+	function fix_forbidden_media($id)
+	{
+		if (!$id) return;
 
-// 	// If an image doesn't have permissions to be shown in the database, fix it.
-// 	function fix_forbidden_media($id)
-// 	{
-// 		if (!$id) return;
+		$id = (int)$id;
+		$attachment = get_post($id);
+		if ($attachment->post_type !== 'attachment') return;
 
-// 		$id = (int)$id;
-// 		$attachment = get_post($id);
-// 		if ($attachment->post_type !== 'attachment') return;
+		$parent = get_post($attachment->post_parent);
+		if ($parent && $parent->post_status !== 'publish') {
+			wp_update_post(
+				array(
+					'ID' => $id,
+					'post_parent' => 0,
+				)
+			);
+		}
+	}
 
-// 		$parent = get_post($attachment->post_parent);
-// 		if ($parent && $parent->post_status !== 'publish') {
-// 			wp_update_post(
-// 				array(
-// 					'ID' => $id,
-// 					'post_parent' => 0,
-// 				)
-// 			);
-// 		}
-// 	}
+	// Add data-attachment-id to content images.
+	function add_image_ids($response, $post_type, $request)
+	{
+		global $wpdb;
 
-// 	// Add data-attachment-id to content images.
-// 	function add_image_ids($response, $post_type, $request)
-// 	{
-// 		global $wpdb;
+		$purge = $request->get_param('purgeContentMediaTransients') === 'true';
+		$fixForbiddenMedia = $request->get_param('fixForbiddenMedia') === 'true';
 
-// 		$purge = $request->get_param('purgeContentMediaTransients') === 'true';
-// 		$fixForbiddenMedia = $request->get_param('fixForbiddenMedia') === 'true';
-
-// 		if (!class_exists('simple_html_dom')) {
-// 			require_once('libs/simple_html_dom.php');
-// 		}
+		if (!class_exists('simple_html_dom')) {
+			require_once('libs/simple_html_dom.php');
+		}
 				
-// 				// remove image ids stored in transients if requested
-// 		if ($purge) $this->purge_image_id_transient_keys();
+				// remove image ids stored in transients if requested
+		if ($purge) $this->purge_image_id_transient_keys();
 				
-// 				// fix featured media if necessary
-// 		if ($fixForbiddenMedia)
-// 			$this->fix_forbidden_media($response->data['featured_media']);
+				// fix featured media if necessary
+		if ($fixForbiddenMedia)
+			$this->fix_forbidden_media($response->data['featured_media']);
 
-// 		$dom = new simple_html_dom();
+		$dom = new simple_html_dom();
 
-// 		$dom->load(
-// 			isset($response->data['content']['rendered']) ?
-// 				$response->data['content']['rendered'] :
-// 				""
-// 		);
+		$dom->load(
+			isset($response->data['content']['rendered']) ?
+				$response->data['content']['rendered'] :
+				""
+		);
 
-// 		$imgIds = [];
+		$imgIds = [];
 
-// 		foreach ($dom->find('img') as $image) {
-// 			$dataAttachmentId = $image->getAttribute('data-attachment-id');
-// 			$class = $image->getAttribute('class');
-// 			preg_match('/\bwp-image-(\d+)\b/', $class, $wpImage);
-// 			if ($dataAttachmentId) {
-// 				$imgIds[] = intval($dataAttachmentId);
-// 			} elseif ($wpImage && isset($wpImage[1])) {
-// 				$image->setAttribute('data-attachment-id', $wpImage[1]);
-// 				$image->setAttribute('data-attachment-id-source', 'wp-image-class');
-// 				$imgIds[] = intval($wpImage[1]);
-// 			} else {
-// 				$result = $this->get_attachment_id($image->src);
-// 				$id = $result['id'];
-// 				$miss = $result['miss'];
-// 				$image->setAttribute('data-attachment-id-source', 'wp-query-transient-' . ($miss ? 'miss' : 'hit'));
-// 				if ($id !== 0) {
-// 					$image->setAttribute('data-attachment-id', $id);
-// 					$imgIds[] = intval($id);
-// 				}
-// 			}
-// 		}
-// 		if (sizeof($imgIds) > 0) {
-// 			// Fix content media if necessary
-// 			if ($fixForbiddenMedia)
-// 				foreach ($imgIds as $imgId) $this->fix_forbidden_media($imgId);
+		foreach ($dom->find('img') as $image) {
+			$dataAttachmentId = $image->getAttribute('data-attachment-id');
+			$class = $image->getAttribute('class');
+			preg_match('/\bwp-image-(\d+)\b/', $class, $wpImage);
+			if ($dataAttachmentId) {
+				$imgIds[] = intval($dataAttachmentId);
+			} elseif ($wpImage && isset($wpImage[1])) {
+				$image->setAttribute('data-attachment-id', $wpImage[1]);
+				$image->setAttribute('data-attachment-id-source', 'wp-image-class');
+				$imgIds[] = intval($wpImage[1]);
+			} else {
+				$result = $this->get_attachment_id($image->src);
+				$id = $result['id'];
+				$miss = $result['miss'];
+				$image->setAttribute('data-attachment-id-source', 'wp-query-transient-' . ($miss ? 'miss' : 'hit'));
+				if ($id !== 0) {
+					$image->setAttribute('data-attachment-id', $id);
+					$imgIds[] = intval($id);
+				}
+			}
+		}
 
-// 			$media_url = add_query_arg(
-// 				array(
-// 					'include' => join(',', $imgIds),
-// 					'per_page' => sizeof($imgIds),
-// 				),
-// 				rest_url('wp/v2/media')
-// 			);
-// 			$response->add_links(array(
-// 				'wp:contentmedia' => array(
-// 					'href' => $media_url,
-// 					'embeddable' => true,
-// 				)
-// 			));
-// 		}
-// 		$html = $dom->save();
-// 		if ($html) $response->data['content']['rendered'] = $html;
-// 		$response->data['content_media'] = $imgIds;
-// 		return $response;
-// 	}
+		if (sizeof($imgIds) > 0) {
+			// Fix content media if necessary
+			if ($fixForbiddenMedia)
+				foreach ($imgIds as $imgId) $this->fix_forbidden_media($imgId);
 
-// 	// Use HTML Purifier in the content.
-// 	function purify_html($response, $post_type, $request)
-// 	{
-// 		$disableHtmlPurifier = $request->get_param('disableHtmlPurifier');
-// 		$settings = get_option('frontity_settings');
+			$media_url = add_query_arg(
+				array(
+					'include' => join(',', $imgIds),
+					'per_page' => sizeof($imgIds),
+				),
+				rest_url('wp/v2/media')
+			);
+			$response->add_links(array(
+				'wp:contentmedia' => array(
+					'href' => $media_url,
+					'embeddable' => true,
+				)
+			));
+		}
+		$html = $dom->save();
+		if ($html) $response->data['content']['rendered'] = $html;
+		$response->data['content_media'] = $imgIds;
+		return $response;
+	}
 
-// 		// Removes HTML tags from 'title.rendered' and
-// 		// saves the result in a new field called 'text'.
-// 		if (isset($response->data['title']['rendered'])) {
-// 			$response->data['title']['text'] =
-// 				strip_tags(html_entity_decode($response->data['title']['rendered']));
-// 		}
+	// Use HTML Purifier in the content.
+	function purify_html($response, $post_type, $request)
+	{
+		$disableHtmlPurifier = $request->get_param('disableHtmlPurifier');
+		$settings = get_option('frontity_settings');
 
-// 		// Removes HTML tags from 'excerpt.rendered' and
-// 		// saves the result in a new field called 'text'.
-// 		if (isset($response->data['excerpt']['rendered'])) {
-// 			$response->data['excerpt']['text'] =
-// 				strip_tags(html_entity_decode($response->data['excerpt']['rendered']));
-// 		}
+		// Removes HTML tags from 'title.rendered' and
+		// saves the result in a new field called 'text'.
+		if (isset($response->data['title']['rendered'])) {
+			$response->data['title']['text'] =
+				strip_tags(html_entity_decode($response->data['title']['rendered']));
+		}
 
-// 		if ($disableHtmlPurifier === 'true' || !$settings['html_purifier_active']) {
-// 			return $response;
-// 		}
+		// Removes HTML tags from 'excerpt.rendered' and
+		// saves the result in a new field called 'text'.
+		if (isset($response->data['excerpt']['rendered'])) {
+			$response->data['excerpt']['text'] =
+				strip_tags(html_entity_decode($response->data['excerpt']['rendered']));
+		}
 
-// 		require_once(plugin_dir_path(__FILE__) . '/libs/purifier.php');
+		if ($disableHtmlPurifier === 'true' || !$settings['html_purifier_active']) {
+			return $response;
+		}
 
-// 		if (isset($response->data['content']['rendered'])) {
-// 			$purifier = load_purifier();
-// 			$purifiedContent = $purifier->purify($response->data['content']['rendered']);
+		require_once(plugin_dir_path(__FILE__) . '/libs/purifier.php');
 
-// 			if (!empty($purifiedContent)) {
-// 				$response->data['content']['rendered'] = $purifiedContent;
-// 			}
-// 		}
+		if (isset($response->data['content']['rendered'])) {
+			$purifier = load_purifier();
+			$purifiedContent = $purifier->purify($response->data['content']['rendered']);
 
-// 		return $response;
-// 	}
+			if (!empty($purifiedContent)) {
+				$response->data['content']['rendered'] = $purifiedContent;
+			}
+		}
 
-// 	// Delete directory. Used when purging HTML Purifier files.
-// 	function rrmdir($dir)
-// 	{
-// 		if (is_dir($dir)) {
-// 			$objects = scandir($dir);
-// 			foreach ($objects as $object) {
-// 				if ($object != "." && $object != "..") {
-// 					if (filetype($dir . DS . $object) == "dir") {
-// 						rrmdir($dir . DS . $object);
-// 					} else {
-// 						unlink($dir . DS . $object);
-// 					}
-// 				}
-// 			}
-// 			reset($objects);
-// 			rmdir($dir);
-// 		}
-// 	}
+		return $response;
+	}
 
-// 	// Purge the Html Purifier files.
-// 	function purge_htmlpurifier_cache()
-// 	{
-// 		$upload = wp_upload_dir();
-// 		$upload_base = $upload['basedir'];
-// 		$htmlpurifier_dir = $upload_base . DS . 'frontity' . DS . 'htmlpurifier';
-// 		$this->rrmdir($htmlpurifier_dir . DS . 'HTML');
-// 		$this->rrmdir($htmlpurifier_dir . DS . 'CSS');
-// 		$this->rrmdir($htmlpurifier_dir . DS . 'URI');
-// 		wp_send_json(array(
-// 			'status' => 'ok',
-// 		));
-// 	}
+	// Delete directory. Used when purging HTML Purifier files.
+	function rrmdir($dir)
+	{
+		if (is_dir($dir)) {
+			$objects = scandir($dir);
+			foreach ($objects as $object) {
+				if ($object != "." && $object != "..") {
+					if (filetype($dir . DS . $object) == "dir") {
+						rrmdir($dir . DS . $object);
+					} else {
+						unlink($dir . DS . $object);
+					}
+				}
+			}
+			reset($objects);
+			rmdir($dir);
+		}
+	}
 
-// 	// Adds Cross origin * to the header
-// 	function allow_origin()
-// 	{
-// 		if (!headers_sent()) header("Access-Control-Allow-Origin: *");
-// 	}
-// }
+	// Purge the Html Purifier files.
+	function purge_htmlpurifier_cache()
+	{
+		$upload = wp_upload_dir();
+		$upload_base = $upload['basedir'];
+		$htmlpurifier_dir = $upload_base . DS . 'frontity' . DS . 'htmlpurifier';
+		$this->rrmdir($htmlpurifier_dir . DS . 'HTML');
+		$this->rrmdir($htmlpurifier_dir . DS . 'CSS');
+		$this->rrmdir($htmlpurifier_dir . DS . 'URI');
+		wp_send_json(array(
+			'status' => 'ok',
+		));
+	}
+
+	// Adds Cross origin * to the header
+	function allow_origin()
+	{
+		if (!headers_sent()) header("Access-Control-Allow-Origin: *");
+	}
+}
 
 function frontity_activation()
 {
