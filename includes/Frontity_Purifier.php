@@ -40,4 +40,37 @@ class Frontity_Purifier
 
     return $response;
   }
+
+  // Purges HTMLPurifier files.
+  function purge_cache()
+  {
+    $upload = wp_upload_dir();
+    $upload_base = $upload['basedir'];
+    $htmlpurifier_dir = $upload_base . DS . 'frontity' . DS . 'htmlpurifier';
+    $this->rrmdir($htmlpurifier_dir . DS . 'HTML');
+    $this->rrmdir($htmlpurifier_dir . DS . 'CSS');
+    $this->rrmdir($htmlpurifier_dir . DS . 'URI');
+    wp_send_json(array(
+      'status' => 'ok',
+    ));
+  }
+
+  // Deletes directory. Used when purging HTMLPurifier files.
+  private function rrmdir($dir)
+  {
+    if (is_dir($dir)) {
+      $objects = scandir($dir);
+      foreach ($objects as $object) {
+        if ($object != "." && $object != "..") {
+          if (filetype($dir . DS . $object) == "dir") {
+            rrmdir($dir . DS . $object);
+          } else {
+            unlink($dir . DS . $object);
+          }
+        }
+      }
+      reset($objects);
+      rmdir($dir);
+    }
+  }
 }

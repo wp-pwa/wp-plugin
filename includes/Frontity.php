@@ -72,6 +72,7 @@ class Frontity
 
     $frontity_purifier = new Frontity_Purifier();
     $this->loader->add_action('registered_post_type', $frontity_purifier, 'add_post_type_filters');
+    $this->loader->add_action('wp_ajax_frontity_purge_htmlpurifier_cache', $frontity_purifier, 'purge_cache');
   }
 
   function run()
