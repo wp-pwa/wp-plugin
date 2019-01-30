@@ -828,15 +828,9 @@ function frontity_initialize_settings() {
 }
 
 function frontity_update_settings() {
+	frontity_initialize_settings();
 	$settings = get_option('frontity_settings');
 	$old_settings = get_option('wp_pwa_settings');
-
-	// Initialize settings when the plugin is updated
-	// but was already activated (update doesn't trigger activation hook).
-	if (!$settings) {
-		frontity_initialize_settings();
-		$settings = get_option('frontity_settings');
-	}
 
 	// If there are settings from the previous versions of the plugin
 	// map them into the new settings and delete the old settings.
