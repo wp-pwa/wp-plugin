@@ -1,3 +1,10 @@
+## [1.12.1](https://github.com/frontity/wp-plugin/compare/v1.12.0...v1.12.1) (2019-01-30)
+
+
+### Bug Fixes
+
+* **update:** fixes update settings ([7632455](https://github.com/frontity/wp-plugin/commit/7632455))
+
 # [1.12.0](https://github.com/frontity/wp-plugin/compare/v1.11.0...v1.12.0) (2019-01-29)
 
 
