@@ -25,6 +25,7 @@ class Frontity
     require_once FRONTITY_PATH . 'includes/Frontity_Rest_Api_Routes.php';
     require_once FRONTITY_PATH . 'includes/Frontity_Rest_Api_Fields.php';
     require_once FRONTITY_PATH . 'includes/Frontity_Purifier.php';
+    require_once FRONTITY_PATH . 'includes/Frontity_Images.php';
 
     $this->loader = new Frontity_Loader();
   }
@@ -73,6 +74,10 @@ class Frontity
     $frontity_purifier = new Frontity_Purifier();
     $this->loader->add_action('registered_post_type', $frontity_purifier, 'add_post_type_filters');
     $this->loader->add_action('wp_ajax_frontity_purge_htmlpurifier_cache', $frontity_purifier, 'purge_cache');
+
+    $frontity_images = new Frontity_Images();
+    $this->loader->add_action('wp', $frontity_images, 'purge_content_media_transients');
+    $this->loader->add_action('registered_post_type', $frontity_images, 'add_post_type_filters');
   }
 
   function run()

@@ -6,6 +6,7 @@ class Frontity_Rest_Api_Fields
   {
     add_filter('rest_prepare_' . $post_type, array($this, 'add_title_text_field'), 9, 1);
     add_filter('rest_prepare_' . $post_type, array($this, 'add_excerpt_text_field'), 9, 1);
+    add_filter('rest_prepare_' . $post_type, array($this, 'add_latest_to_links'), 10);
   }
   
   // Adds the `latest` field to every post_type.
@@ -45,6 +46,28 @@ class Frontity_Rest_Api_Fields
   {
     if (isset($response->data['excerpt']['rendered']))
       $response->data['excerpt']['text'] = strip_tags(html_entity_decode($response->data['excerpt']['rendered']));
+
+    return $response;
+  }
+
+  // Adds `latest` field to _links.
+  function add_latest_to_links($response)
+  {
+    $type = $response->data['type'];
+    $id = $response->data['id'];
+    $terms_url = add_query_arg(
+      $type,
+      $id,
+      rest_url('wp/v2/latest')
+    );
+
+    $response->add_links(array(
+      'https://api.w.org/term' => array(
+        'href' => $terms_url,
+        'taxonomy' => 'latest',
+        'embeddable' => true,
+      )
+    ));
 
     return $response;
   }
