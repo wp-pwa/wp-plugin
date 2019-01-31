@@ -6,7 +6,7 @@ class Frontity_Filter_Fields
 
   function __construct()
   {
-    $this->$latest_filters = array();
+    $this->latest_filters = array();
   }
 
   function add_post_type_filters($post_type)

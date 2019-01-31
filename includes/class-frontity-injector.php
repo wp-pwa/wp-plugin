@@ -60,7 +60,7 @@ class Frontity_Injector
  
     // Save the injector string in the class property.
     self::$injector_string = '<script id="frontity-injector" type="text/javascript">'
-      . 'window.frontity=' . $window_frontity . ';'
+      . 'window["wp-pwa"]=' . $window_frontity . ';'
       . ($debug_injector ? 'debugger;' : '')
       . $injector
       . '</script>';
