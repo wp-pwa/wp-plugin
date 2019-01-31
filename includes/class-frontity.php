@@ -16,16 +16,16 @@ class Frontity
 
   private function load_dependencies()
   {
-    require_once FRONTITY_PATH . 'includes/Frontity_Loader.php';
-    require_once FRONTITY_PATH . 'includes/Frontity_Admin.php';
-    require_once FRONTITY_PATH . 'includes/Frontity_Settings.php';
-    require_once FRONTITY_PATH . 'includes/Frontity_Request.php';
-    require_once FRONTITY_PATH . 'includes/Frontity_Injector.php';
-    require_once FRONTITY_PATH . 'includes/Frontity_Amp.php';
-    require_once FRONTITY_PATH . 'includes/Frontity_Rest_Api_Routes.php';
-    require_once FRONTITY_PATH . 'includes/Frontity_Rest_Api_Fields.php';
-    require_once FRONTITY_PATH . 'includes/Frontity_Purifier.php';
-    require_once FRONTITY_PATH . 'includes/Frontity_Images.php';
+    require_once FRONTITY_PATH . 'includes/class-frontity-loader.php';
+    require_once FRONTITY_PATH . 'includes/class-frontity-admin.php';
+    require_once FRONTITY_PATH . 'includes/class-frontity-settings.php';
+    require_once FRONTITY_PATH . 'includes/class-frontity-request.php';
+    require_once FRONTITY_PATH . 'includes/class-frontity-injector.php';
+    require_once FRONTITY_PATH . 'includes/class-frontity-amp.php';
+    require_once FRONTITY_PATH . 'includes/class-frontity-rest-api-routes.php';
+    require_once FRONTITY_PATH . 'includes/class-frontity-rest-api-fields.php';
+    require_once FRONTITY_PATH . 'includes/class-frontity-purifier.php';
+    require_once FRONTITY_PATH . 'includes/class-frontity-images.php';
 
     $this->loader = new Frontity_Loader();
   }
@@ -33,8 +33,6 @@ class Frontity
   // Sorted by firing order.
   private function define_admin_hooks()
   {
-    $this->loader->add_action('upgrader_process_complete', $this, 'plugin_update_completed');
-
     $frontity_admin = new Frontity_Admin();
     $this->loader->add_action('admin_menu', $frontity_admin, 'register_menu');
     $this->loader->add_action('admin_enqueue_scripts', $frontity_admin, 'register_script');

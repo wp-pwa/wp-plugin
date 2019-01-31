@@ -210,7 +210,7 @@ define('FRONTITY_URL', plugin_dir_url(__FILE__));
 
 function frontity_activation()
 {
-	require_once FRONTITY_PATH . 'includes/Frontity_Settings.php';
+	require_once FRONTITY_PATH . 'includes/class-frontity-settings.php';
 	$frontity_settings = new Frontity_Settings();
 	$frontity_settings->keep_settings_updated();
 
@@ -255,7 +255,7 @@ function frontity()
 	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
  
 	// Require Frontity main class.
-	require_once FRONTITY_PATH . 'includes/Frontity.php';
+	require_once FRONTITY_PATH . 'includes/class-frontity.php';
 
 	if (!isset($frontity)) $frontity = new Frontity();
 
