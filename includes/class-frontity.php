@@ -24,6 +24,7 @@ class Frontity
     require_once FRONTITY_PATH . 'includes/class-frontity-amp.php';
     require_once FRONTITY_PATH . 'includes/class-frontity-rest-api-routes.php';
     require_once FRONTITY_PATH . 'includes/class-frontity-rest-api-fields.php';
+    require_once FRONTITY_PATH . 'includes/class-frontity-filter-fields.php';
     require_once FRONTITY_PATH . 'includes/class-frontity-purifier.php';
     require_once FRONTITY_PATH . 'includes/class-frontity-images.php';
     require_once FRONTITY_PATH . 'includes/class-frontity-miscellanea.php';
@@ -69,6 +70,14 @@ class Frontity
     $frontity_rest_api_fields = new Frontity_Rest_Api_Fields();
     $this->loader->add_action('registered_post_type', $frontity_rest_api_fields, 'add_latest_field_to_post_type');
     $this->loader->add_action('registered_post_type', $frontity_rest_api_fields, 'add_post_type_filters');
+
+    $frontity_filter_fields = new Frontity_Filter_Fields();
+    $this->loader->add_action('registered_post_type', $frontity_filter_fields, 'add_post_type_filters');
+    $this->loader->add_action('registered_taxonomy', $frontity_filter_fields, 'add_taxonomy_filters');
+    $this->loader->add_filter('rest_prepare_comment', $frontity_filter_fields, 'filter', 20, 3);
+    $this->loader->add_filter('rest_prepare_taxonomy', $frontity_filter_fields, 'filter', 20, 3);
+    $this->loader->add_filter('rest_prepare_user', $frontity_filter_fields, 'filter', 20, 3);
+    // $this->loader->add_filter('rest_prepare_latest', $frontity_filter_fields, 'filter', 20, 3);
 
     $frontity_purifier = new Frontity_Purifier();
     $this->loader->add_action('registered_post_type', $frontity_purifier, 'add_post_type_filters');
