@@ -24,6 +24,7 @@ class Frontity_Images
   function add_post_type_filters($post_type)
   {
     add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids'), 10, 3);
+
   }
 
   // Deletes all the image id transients.
@@ -204,5 +205,30 @@ class Frontity_Images
       'id' => intval($attachment_id),
       'miss' => $transient_miss,
     );
+  }
+
+  // Add data-attachment-ids to galleries using the wp_get_attachment_image_attributes hook.
+  function add_id_to_gallery_image_attributes($attrs, $attachment)
+  {
+    $attrs['data-attachment-id'] = $attachment->ID;
+    $attrs['data-attachment-id-source'] = 'image-attributes-hook';
+    return $attrs;
+  }
+
+	// Add data-attachment-ids to galleries using the wp_get_attachment_link hook.
+  function add_id_to_gallery_images($html, $attachment_id)
+  {
+    $attachment_id = intval($attachment_id);
+    $html = str_replace(
+      '<img ',
+      sprintf(
+        '<img data-attachment-id="%1$d" data-attachment-id-source="attachment-link-hook"',
+        $attachment_id
+      ),
+      $html
+    );
+    $html = apply_filters('jp_carousel_add_data_to_images', $html, $attachment_id);
+
+    return $html;
   }
 }

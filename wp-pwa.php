@@ -25,58 +25,19 @@ define('FRONTITY_VERSION', '1.13.0');
 define('FRONTITY_PATH', plugin_dir_path(__FILE__));
 define('FRONTITY_URL', plugin_dir_url(__FILE__));
 
-// class Frontity
-// {
-// 	function __construct()
-// 	{
-// 		add_action('init', array($this, 'allow_origin'));
-// 		// Adds filters for custom post types.
-// 		add_action('registered_post_type', array($this, 'add_custom_post_types_filters'));
-// 		add_action('embed_footer', array($this, 'send_post_embed_height'));
-// 		add_filter('wp_get_attachment_link', array($this, 'add_id_to_gallery_images'), 10, 2);
-// 		add_filter('wp_get_attachment_image_attributes', array($this, 'add_id_to_gallery_image_attributes'), 10, 2);
-// 	}
+// Initializes Frontity.
+function frontity()
+{
+	// This global should be removed in favor of the constant FRONTITY_PATH.
+	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
+ 
+	// Require Frontity main class.
+	require_once FRONTITY_PATH . 'includes/class-frontity.php';
 
-// 	// Adds resizement to WP embedded posts.
-// 	function send_post_embed_height()
-// 	{
-// 		echo "<script>"
-// 			. "window.parent.postMessage({"
-// 			. "sentinel:'amp',type:'embed-size',height:document.body.scrollHeight"
-// 			. "},'*');"
-// 			. "</script>";
-// 	}
+	if (!isset($frontity)) $frontity = new Frontity();
 
-// 	// Add data-attachment-ids to galleries using the wp_get_attachment_image_attributes hook.
-// 	function add_id_to_gallery_image_attributes($attrs, $attachment)
-// 	{
-// 		$attrs['data-attachment-id'] = $attachment->ID;
-// 		$attrs['data-attachment-id-source'] = 'image-attributes-hook';
-// 		return $attrs;
-// 	}
-
-// 	// Add data-attachment-ids to galleries using the wp_get_attachment_link hook.	
-// 	function add_id_to_gallery_images($html, $attachment_id)
-// 	{
-// 		$attachment_id = intval($attachment_id);
-// 		$html = str_replace(
-// 			'<img ',
-// 			sprintf(
-// 				'<img data-attachment-id="%1$d" data-attachment-id-source="attachment-link-hook"',
-// 				$attachment_id
-// 			),
-// 			$html
-// 		);
-// 		$html = apply_filters('jp_carousel_add_data_to_images', $html, $attachment_id);
-// 		return $html;
-// 	}
-
-// 	// Adds Cross origin * to the header
-// 	function allow_origin()
-// 	{
-// 		if (!headers_sent()) header("Access-Control-Allow-Origin: *");
-// 	}
-// }
+	$frontity->run();
+}
 
 function frontity_activation()
 {
@@ -116,20 +77,5 @@ function frontity_uninstallation()
 register_activation_hook(__FILE__, 'frontity_activation');
 register_deactivation_hook(__FILE__, 'frontity_deactivation');
 register_uninstall_hook(__FILE__, 'frontity_uninstallation');
-
-
-// Initializes Frontity.
-function frontity()
-{
-	// This global should be removed in favor of the constant FRONTITY_PATH.
-	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
- 
-	// Require Frontity main class.
-	require_once FRONTITY_PATH . 'includes/class-frontity.php';
-
-	if (!isset($frontity)) $frontity = new Frontity();
-
-	$frontity->run();
-}
 
 frontity();
