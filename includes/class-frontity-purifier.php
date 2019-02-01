@@ -79,7 +79,7 @@ class Frontity_Purifier
   {
     if (!$this->should_purify) return $response;
 
-    $this->load_purifier();
+    if (!$this->purifier) $this->load_purifier();
 
     if (isset($response->data['content']['rendered'])) {
       $purified_content = $this->purifier->purify($response->data['content']['rendered']);

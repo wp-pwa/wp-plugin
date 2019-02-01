@@ -24,7 +24,6 @@ class Frontity_Images
   function add_post_type_filters($post_type)
   {
     add_filter('rest_prepare_' . $post_type, array($this, 'add_image_ids'), 10, 3);
-
   }
 
   // Deletes all the image id transients.
@@ -172,7 +171,6 @@ class Frontity_Images
         $file = basename(urldecode($url));
         $query_args = array(
           'post_type' => 'attachment',
-          'post_status' => 'inherit',
           'fields' => 'ids',
           'meta_query' => array(
             array(
@@ -227,7 +225,6 @@ class Frontity_Images
       ),
       $html
     );
-    $html = apply_filters('jp_carousel_add_data_to_images', $html, $attachment_id);
 
     return $html;
   }
