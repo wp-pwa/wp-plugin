@@ -96,7 +96,7 @@ class Frontity_Request
       ? $_GET['ampUrl']
       : $settings['amp_server'];
     self::$excludes = $settings['excludes'];
-    self::$excluded = !empty(array_filter($settings['excludes'], function ($_key, $value) {
+    self::$excluded = !empty(array_filter($settings['excludes'], function ($value) {
       $value = str_replace('/', '\/', $value);
       return !!preg_match("/{$value}/", $url);
     }));
