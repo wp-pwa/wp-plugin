@@ -26,10 +26,13 @@ const success = async () => {
 const prepare = async () => {
   const options = {
     files: "wp-pwa.php",
-    from: [/Version: \d+\.\d+\.\d+/, /plugin_version = '\d+\.\d+\.\d+'/],
+    from: [
+      /Version: \d+\.\d+\.\d+/,
+      /define\('FRONTITY_VERSION', '\d+\.\d+\.\d+'\)/,
+    ],
     to: [
       `Version: ${packageJson.version}`,
-      `plugin_version = '${packageJson.version}'`,
+      `define('FRONTITY_VERSION', '${packageJson.version}')`,
     ],
   };
   try {
