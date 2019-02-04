@@ -27,8 +27,10 @@ class Frontity_Purifier
   // Loads purifier config.
   function load_purifier()
   {
-    require_once FRONTITY_PATH . 'libs/htmlpurifier/library/HTMLPurifier.auto.php';
-    require_once FRONTITY_PATH . 'libs/htmlpurifier-html5/autoload.php';
+    if (!class_exists('HTMLPurifier_HTML5Config')) {
+      require_once FRONTITY_PATH . 'libs/htmlpurifier/library/HTMLPurifier.auto.php';
+      require_once FRONTITY_PATH . 'libs/htmlpurifier-html5/autoload.php';
+    }
 
     $config = HTMLPurifier_HTML5Config::createDefault();
 

@@ -13,18 +13,42 @@ class Frontity
 
   private function load_dependencies()
   {
-    require_once FRONTITY_PATH . 'includes/class-frontity-loader.php';
-    require_once FRONTITY_PATH . 'includes/class-frontity-admin.php';
-    require_once FRONTITY_PATH . 'includes/class-frontity-settings.php';
-    require_once FRONTITY_PATH . 'includes/class-frontity-request.php';
-    require_once FRONTITY_PATH . 'includes/class-frontity-injector.php';
-    require_once FRONTITY_PATH . 'includes/class-frontity-amp.php';
-    require_once FRONTITY_PATH . 'includes/class-frontity-rest-api-routes.php';
-    require_once FRONTITY_PATH . 'includes/class-frontity-rest-api-fields.php';
-    require_once FRONTITY_PATH . 'includes/class-frontity-filter-fields.php';
-    require_once FRONTITY_PATH . 'includes/class-frontity-purifier.php';
-    require_once FRONTITY_PATH . 'includes/class-frontity-images.php';
-    require_once FRONTITY_PATH . 'includes/class-frontity-miscellanea.php';
+    if (!class_exists('Frontity_Loader')) {
+      require_once FRONTITY_PATH . 'includes/class-frontity-loader.php';
+    }
+    if (!class_exists('Frontity_Admin')) {
+      require_once FRONTITY_PATH . 'includes/class-frontity-admin.php';
+    }
+    if (!class_exists('Frontity_Settings')) {
+      require_once FRONTITY_PATH . 'includes/class-frontity-settings.php';
+    }
+    if (!class_exists('Frontity_Request')) {
+      require_once FRONTITY_PATH . 'includes/class-frontity-request.php';
+    }
+    if (!class_exists('Frontity_Injector')) {
+      require_once FRONTITY_PATH . 'includes/class-frontity-injector.php';
+    }
+    if (!class_exists('Frontity_Amp')) {
+      require_once FRONTITY_PATH . 'includes/class-frontity-amp.php';
+    }
+    if (!class_exists('Frontity_Rest_Api_Routes')) {
+      require_once FRONTITY_PATH . 'includes/class-frontity-rest-api-routes.php';
+    }
+    if (!class_exists('Frontity_Rest_Api_Fields')) {
+      require_once FRONTITY_PATH . 'includes/class-frontity-rest-api-fields.php';
+    }
+    if (!class_exists('Frontity_Filter_Fields')) {
+      require_once FRONTITY_PATH . 'includes/class-frontity-filter-fields.php';
+    }
+    if (!class_exists('Frontity_Purifier')) {
+      require_once FRONTITY_PATH . 'includes/class-frontity-purifier.php';
+    }
+    if (!class_exists('Frontity_Images')) {
+      require_once FRONTITY_PATH . 'includes/class-frontity-images.php';
+    }
+    if (!class_exists('Frontity_Miscellanea')) {
+      require_once FRONTITY_PATH . 'includes/class-frontity-miscellanea.php';
+    }
 
     $this->loader = new Frontity_Loader();
   }

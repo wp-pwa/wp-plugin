@@ -32,7 +32,9 @@ function frontity()
 	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
  
 	// Require Frontity main class.
-	require_once FRONTITY_PATH . 'includes/class-frontity.php';
+	if (!class_exists('Frontity')) {
+		require_once FRONTITY_PATH . 'includes/class-frontity.php';
+	}
 
 	if (!isset($frontity)) $frontity = new Frontity();
 
@@ -41,7 +43,9 @@ function frontity()
 
 function frontity_activation()
 {
-	require_once FRONTITY_PATH . 'includes/class-frontity-settings.php';
+	if (!class_exists('Frontity_Settings')) {
+		require_once FRONTITY_PATH . 'includes/class-frontity-settings.php';
+	}
 	$frontity_settings = new Frontity_Settings();
 	$frontity_settings->keep_settings_updated();
 

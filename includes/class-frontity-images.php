@@ -56,7 +56,9 @@ class Frontity_Images
       $this->fix_forbidden_media($response->data['featured_media']);
     }
 
-    require_once FRONTITY_PATH . 'libs/simple_html_dom.php';
+    if (!class_exists('simple_html_dom')) {
+      require_once FRONTITY_PATH . 'libs/simple_html_dom.php';
+    }
 
     $dom = new simple_html_dom();
     $content = isset($response->data['content']['rendered'])
