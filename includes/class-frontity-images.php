@@ -79,9 +79,12 @@ class Frontity_Images
         $image_ids[] = intval($data_attachment_id);
       // Uses the id from "wp-image-$id" class if it does exist.
       } elseif ($wp_image && isset($wp_image[1])) {
-        $image->setAttribute('data-attachment-id', $wp_image[1]);
-        $image->setAttribute('data-attachment-id-source', 'wp-image-class');
-        $image_ids[] = intval($wp_image[1]);
+        // Checks if the src of the image is local so the image exists in db.
+        if (strpos($image->getAttribute('src'), site_url()) === 0) {
+          $image->setAttribute('data-attachment-id', $wp_image[1]);
+          $image->setAttribute('data-attachment-id-source', 'wp-image-class');
+          $image_ids[] = intval($wp_image[1]);
+        }
       // Uses the id retrieved from the db.
       } else {
         $result = $this->get_attachment_id($image->src);
