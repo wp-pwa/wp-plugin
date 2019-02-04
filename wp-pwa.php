@@ -71,6 +71,11 @@ function frontity_deactivation()
 
 function frontity_uninstallation()
 {
+	$transient_keys = get_option('image_id_transient_keys');
+	foreach ($transient_keys as $transient_key) {
+		delete_transient($transient_key);
+	}
+	delete_option('image_id_transient_keys');
 	delete_option('frontity_settings');
 }
 
