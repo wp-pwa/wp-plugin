@@ -28,31 +28,31 @@ class Frontity_Settings
       'frontpage_forced' => false,
       'html_purifier_active' => true,
       'excludes' => array(),
+      'injection_type' => 'inline'
     );
   }
 
   private function check_if_should_initialize()
   {
     $settings = get_option('frontity_settings');
-    $this->should_initialize = !isset($settings);
+    $this->should_initialize = !$settings;
   }
 
   private function check_if_should_migrate()
   {
     $old_settings = get_option('wp_pwa_settings');
-    $this->should_migrate = isset($old_settings);
+    $this->should_migrate = !!$old_settings;
   }
 
   private function check_if_should_update()
   {
     $transient_version = get_transient('frontity_version');
-    $this->should_update = (!$transient_version || $transient_version !== FRONTITY_VERSION);
+    $this->should_update = !$this->should_initialize && (!$transient_version || $transient_version !== FRONTITY_VERSION);
   }
 
   function initialize_settings()
   {
-    $defaults = $this->default_settings;
-    update_option('frontity_settings', $defaults);
+    update_option('frontity_settings', $this->default_settings);
     set_transient('frontity_version', FRONTITY_VERSION);
   }
 
@@ -100,22 +100,24 @@ class Frontity_Settings
   {
     $data = json_decode(stripslashes($_POST["data"]), true);
 
-    if ($data)
-      update_option('frontity_settings', $data);
+    if ($data) update_option('frontity_settings', $data);
 
     wp_send_json($data);
   }
 
   function keep_settings_updated()
   {
-    if ($this->should_initialize)
+    if ($this->should_initialize) {
       $this->initialize_settings();
+    }
 
-    if ($this->should_migrate)
+    if ($this->should_migrate) {
       $this->migrate_settings();
+    }
 
-    if ($this->should_update)
+    if ($this->should_update) {
       $this->update_settings();
+    }
   }
 
   function get($key)

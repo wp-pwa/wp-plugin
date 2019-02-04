@@ -3,7 +3,13 @@
 class Frontity_Injector
 {
   static protected $should_inject;
+  static protected $injection_type;
   static protected $injector_string;
+
+  function __construct()
+  {
+    self::$injection_type = get_option('frontity_settings')['injection_type'];
+  }
 
   // Evaluate if the injector should be injected.
   function check_if_should_inject()
@@ -52,18 +58,25 @@ class Frontity_Injector
     )));
 
     // Get the injector file as a string and set a hook to filter it.
-    ob_start();
-    include_once FRONTITY_PATH
-      . 'injector/'
-      . ($debug_injector ? 'injector.js' : 'injector.min.js');
-    $injector = apply_filters('frontity_injector_file', ob_get_clean());
+    if (self::$injection_type === 'inline') {
+      ob_start();
+      include_once FRONTITY_PATH
+        . 'injector/'
+        . ($debug_injector ? 'injector.js' : 'injector.min.js');
+      $injector_file = apply_filters('frontity_injector_file', ob_get_clean());
+    } else {
+      $injector_url = FRONTITY_URL
+        . 'injector/'
+        . ($debug_injector ? 'injector.js' : 'injector.min.js');
+    }
  
     // Save the injector string in the class property.
     self::$injector_string = '<script id="frontity-injector" type="text/javascript">'
       . 'window["wp-pwa"]=' . $window_frontity . ';'
       . ($debug_injector ? 'debugger;' : '')
-      . $injector
-      . '</script>';
+      . (self::$injection_type === "inline"
+      ? $injector_file . "</script>\n"
+      : "</script>\n<script type=\"text/javascript\" src=\"{$injector_url}\"></script>\n");
   }
 
   // Start storing in the buffer the header html.

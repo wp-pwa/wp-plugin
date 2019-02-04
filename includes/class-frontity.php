@@ -2,13 +2,10 @@
 
 class Frontity
 {
-  protected $version;
   protected $loader;
 
   function __construct()
   {
-    $this->version = FRONTITY_VERSION;
-
     $this->load_dependencies();
     $this->define_admin_hooks();
     $this->define_public_hooks();

@@ -199,8 +199,8 @@ describe("Admin › Models › Request", () => {
       name: "Harry Potter",
       email: "harrypotter@hogwarts.com",
       url: "https://harrypotter.com",
-      type: "Blog / News Site",
-      traffic: "More than 1 million",
+      type: "blog",
+      traffic: "A",
     });
     const validate = jest.fn(() => true);
     const setSiteIdJustRequested = jest.fn();

@@ -13,6 +13,10 @@ export default types
     frontpage_forced: false,
     html_purifier_active: true,
     excludes: types.array(types.string),
+    injection_type: types.optional(
+      types.enumeration(["inline", "external"]),
+      "inline"
+    ),
   })
   .views(self => ({
     get root() {
@@ -59,6 +63,9 @@ export default types
     },
     setExcludes({ target }) {
       self.excludes = target.value.split("\n");
+    },
+    setInjectionType({ target }) {
+      self.injection_type = target.value;
     },
     setSiteIdRequested(value) {
       self.site_id_requested = value;

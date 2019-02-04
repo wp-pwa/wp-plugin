@@ -21,6 +21,7 @@ const Settings = ({
   frontpageForced,
   htmlPurifierActive,
   excludes,
+  injectionType,
   setSiteId,
   setSsrServer,
   setStaticServer,
@@ -28,6 +29,7 @@ const Settings = ({
   setFrontpageForced,
   setHtmlPurifierActive,
   setExcludes,
+  setInjectionType,
   saveSettings,
   purgeHtmlPurifierCache,
   notification,
@@ -39,6 +41,7 @@ const Settings = ({
   fieldForceFrontpage,
   fieldHtmlPurifier,
   fieldExcludes,
+  fieldInjectionType,
   saveButtonText,
   siteIdValidation,
   ssrServerValidation,
@@ -149,6 +152,20 @@ const Settings = ({
               onChange={setExcludes}
             />
           </FormField>
+          <Box direction="row" justify="between" align="center" width="262px">
+            <Paragraph margin={{ vertical: "0", left: "12px", right: "20px" }}>
+              {fieldInjectionType.label}
+            </Paragraph>
+            <select value={injectionType} onChange={setInjectionType}>
+              {Object.entries(fieldInjectionType.options).map(
+                ([option, label]) => (
+                  <option key={option} value={option}>
+                    {label}
+                  </option>
+                )
+              )}
+            </select>
+          </Box>
         </form>
       </Form>
     </Options>
@@ -171,6 +188,7 @@ Settings.propTypes = {
   frontpageForced: bool.isRequired,
   htmlPurifierActive: bool.isRequired,
   excludes: string.isRequired,
+  injectionType: string.isRequired,
   setSiteId: func.isRequired,
   setSsrServer: func.isRequired,
   setStaticServer: func.isRequired,
@@ -178,6 +196,7 @@ Settings.propTypes = {
   setFrontpageForced: func.isRequired,
   setHtmlPurifierActive: func.isRequired,
   setExcludes: func.isRequired,
+  setInjectionType: func.isRequired,
   saveSettings: func.isRequired,
   purgeHtmlPurifierCache: func.isRequired,
   notification: shape({ highlight: string, content: string }).isRequired,
@@ -192,6 +211,10 @@ Settings.propTypes = {
     button: shape({ idle: string, busy: string, done: string }),
   }).isRequired,
   fieldExcludes: shape({ label: string, placeholder: string }).isRequired,
+  fieldInjectionType: shape({
+    label: string,
+    options: shape({ inline: string, external: string }),
+  }).isRequired,
   saveButtonText: shape({ idle: string, busy: string, done: string })
     .isRequired,
   siteIdValidation: string,
@@ -221,6 +244,7 @@ export default inject(
       frontpageForced: settings.frontpage_forced,
       htmlPurifierActive: settings.html_purifier_active,
       excludes: settings.excludes.join("\n"),
+      injectionType: settings.injection_type,
       setSiteId: settings.setSiteId,
       setSsrServer: settings.setSsrServer,
       setStaticServer: settings.setStaticServer,
@@ -228,6 +252,7 @@ export default inject(
       setFrontpageForced: settings.setFrontpageForced,
       setHtmlPurifierActive: settings.setHtmlPurifierActive,
       setExcludes: settings.setExcludes,
+      setInjectionType: settings.setInjectionType,
       saveSettings: settings.saveSettings,
       purgeHtmlPurifierCache: settings.purgeHtmlPurifierCache,
       siteIdValidation: validations.settings.site_id,
@@ -245,6 +270,7 @@ export default inject(
       fieldForceFrontpage: languages.get(`${form}.fieldForceFrontpage`),
       fieldHtmlPurifier: languages.get(`${form}.fieldHtmlPurifier`),
       fieldExcludes: languages.get(`${form}.fieldExcludes`),
+      fieldInjectionType: languages.get(`${form}.fieldInjectionType`),
       saveButtonText: languages.get("settings.saveButton"),
     };
   }
