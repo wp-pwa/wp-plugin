@@ -96,15 +96,20 @@ class Frontity_Request
       ? $_GET['ampUrl']
       : $settings['amp_server'];
     self::$excludes = $settings['excludes'];
-    self::$excluded = !empty(array_filter($settings['excludes'], function ($value) {
+    self::$excluded = array_reduce($settings['excludes'], function ($carry, $value) {
       $value = str_replace('/', '\/', $value);
-      return !!preg_match("/{$value}/", $url);
-    }));
-    self::$per_page = get_option('posts_per_page');
-    $protocol = isset($_SERVER['HTTPS'])
+      $url = (isset($_SERVER['HTTPS'])
+        ? 'https'
+        : 'http')
+        . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+      $result = !!preg_match("/{$value}/", $url);
+      return $result || $carry;
+    }, false);
+    $url = (isset($_SERVER['HTTPS'])
       ? 'https'
-      : 'http';
-    $url = "{$protocol}://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+      : 'http')
+      . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+    self::$per_page = get_option('posts_per_page');
     $pretty_permalinks = !empty(get_option('permalink_structure'));
     self::$initial_url = $pretty_permalinks
       ? strtok($url, '?')
