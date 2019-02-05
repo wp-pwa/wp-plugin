@@ -176,7 +176,7 @@ class Frontity_Rest_Api_Routes
       !empty($custom_post_types) ? $custom_post_types : get_post_types()
     );
 
-    return $this->get_latest_from_cpt($custom_post_types);
+    return $this->get_latest_from_cpt($custom_post_types, $request);
   }
 
   // Return the data for /wp-json/wp/v2/latest/(?P<id>\w+).
@@ -192,11 +192,11 @@ class Frontity_Rest_Api_Routes
       array($custom_post_type)
     );
 
-    return $this->get_latest_from_cpt($custom_post_type);
+    return $this->get_latest_from_cpt($custom_post_type, $request);
   }
 
   // Get latest info of each custom post type.
-  private function get_latest_from_cpt($cpts)
+  private function get_latest_from_cpt($cpts, $request)
   {
     $result = array();
     foreach ($cpts as &$cpt) {
@@ -210,16 +210,19 @@ class Frontity_Rest_Api_Routes
           } else {
             $link = get_post_type_archive_link($cpt);
           }
-          $data = array(
+
+          $latest = array(
             "id" => $cpt,
             "link" => $link,
             "count" => intval(wp_count_posts($cpt)->publish),
-            "name" => $cpt_object->label,
+            "name" => ($cpt === 'post' ? get_bloginfo('name') : $cpt_object->label),
             "slug" => $cpt_object->name,
             "taxonomy" => 'latest'
           );
-          if ($cpt === 'post') $data['name'] = get_bloginfo('name');
-          $result[] = apply_filters('rest_prepare_latest', $data);
+
+          $response = new WP_REST_Response($latest);
+          $request->set_param('context', 'view');
+          $result[] = apply_filters('rest_prepare_latest', $response, $latest, $request)->data;
         }
       }
     }

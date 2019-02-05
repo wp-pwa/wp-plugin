@@ -23,7 +23,7 @@ class Frontity_Filter_Fields
   {
     $embed = is_string($request->get_param('_embed'));
     $context = $request->get_param('context');
-  
+
     // Checks if the request is after data to populate a WP_REST_Response.
     if ($context === 'view') {
       $filters = array_filter(explode(',', $request->get_param('excludeFields')));

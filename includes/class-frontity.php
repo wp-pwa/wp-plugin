@@ -98,7 +98,7 @@ class Frontity
     $this->loader->add_filter('rest_prepare_comment', $frontity_filter_fields, 'filter', 20, 3);
     $this->loader->add_filter('rest_prepare_taxonomy', $frontity_filter_fields, 'filter', 20, 3);
     $this->loader->add_filter('rest_prepare_user', $frontity_filter_fields, 'filter', 20, 3);
-    // $this->loader->add_filter('rest_prepare_latest', $frontity_filter_fields, 'filter', 20, 3);
+    $this->loader->add_filter('rest_prepare_latest', $frontity_filter_fields, 'filter', 20, 3);
 
     $frontity_purifier = new Frontity_Purifier();
     $this->loader->add_action('registered_post_type', $frontity_purifier, 'add_post_type_filters');
