@@ -1,3 +1,24 @@
+## [1.12.1](https://github.com/frontity/wp-plugin/compare/v1.12.0...v1.12.1) (2019-01-30)
+
+
+### Bug Fixes
+
+* **update:** fixes update settings ([7632455](https://github.com/frontity/wp-plugin/commit/7632455))
+
+# [1.12.0](https://github.com/frontity/wp-plugin/compare/v1.11.0...v1.12.0) (2019-01-29)
+
+
+### Bug Fixes
+
+* **purifier:** fixes warnings when running purifier ([5e8f75c](https://github.com/frontity/wp-plugin/commit/5e8f75c))
+* **settings:** removes api_filters from settings ([b42942a](https://github.com/frontity/wp-plugin/commit/b42942a))
+
+
+### Features
+
+* **rest-api:** adds support for excludeFields param ([60d58b1](https://github.com/frontity/wp-plugin/commit/60d58b1))
+* **settings:** adds injection type setting ([d762327](https://github.com/frontity/wp-plugin/commit/d762327))
+
 # [1.11.0](https://github.com/frontity/wp-plugin/compare/v1.10.7...v1.11.0) (2019-01-18)
 
 
