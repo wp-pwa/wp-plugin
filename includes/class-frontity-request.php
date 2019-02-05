@@ -24,14 +24,7 @@ class Frontity_Request
   static protected $amp_forced;
   static protected $debug_injector;
 
-
-  function evaluate_request()
-  {
-    $this->evaluate_trinity();
-    $this->evaluate_settings();
-  }
-
-  private function evaluate_trinity()
+  function evaluate_trinity()
   {
     $frontpage_forced = get_option('frontity_settings')['frontpage_forced'];
     $queried_object = get_queried_object();
@@ -74,7 +67,7 @@ class Frontity_Request
     }
   }
 
-  private function evaluate_settings()
+  function evaluate_settings()
   {
     $settings = get_option('frontity_settings');
     self::$pwa_active = $settings['pwa_active'];

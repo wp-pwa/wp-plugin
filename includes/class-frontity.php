@@ -70,7 +70,8 @@ class Frontity
   private function define_public_hooks()
   {
     $frontity_request = new Frontity_Request();
-    $this->loader->add_action('wp', $frontity_request, 'evaluate_request', 0);
+    $this->loader->add_action('wp', $frontity_request, 'evaluate_trinity', 0);
+    $this->loader->add_action('wp', $frontity_request, 'evaluate_settings', 0);
 
     $frontity_injector = new Frontity_Injector();
     $this->loader->add_action('wp', $frontity_injector, 'check_if_should_inject');
