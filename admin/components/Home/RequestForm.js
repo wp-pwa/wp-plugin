@@ -1,5 +1,5 @@
 import React from "react";
-import { string, func, shape, arrayOf } from "prop-types";
+import { string, func, shape } from "prop-types";
 import { inject } from "mobx-react";
 import styled from "styled-components";
 import {
@@ -74,27 +74,29 @@ const RequestForm = ({
       >
         <RadioBox status={typeValidation}>
           <RadioHead>{requestFieldType.label}</RadioHead>
-          {requestFieldType.options.map(value => (
+          {Object.entries(requestFieldType.options).map(([option, label]) => (
             <RadioButton
-              key={value}
-              label={value}
-              name={value}
-              checked={type === value}
+              key={option}
+              label={label}
+              name={option}
+              checked={type === option}
               onChange={setType}
             />
           ))}
         </RadioBox>
         <RadioBox status={trafficValidation}>
           <RadioHead>{requestFieldTraffic.label}</RadioHead>
-          {requestFieldTraffic.options.map(option => (
-            <RadioButton
-              key={option}
-              label={option}
-              name={option}
-              checked={traffic === option}
-              onChange={setTraffic}
-            />
-          ))}
+          {Object.entries(requestFieldTraffic.options).map(
+            ([option, label]) => (
+              <RadioButton
+                key={option}
+                label={label}
+                name={option}
+                checked={traffic === option}
+                onChange={setTraffic}
+              />
+            )
+          )}
         </RadioBox>
       </RadioContainer>
     </Body>
@@ -122,10 +124,26 @@ RequestForm.propTypes = {
   requestFieldName: shape({ label: string, placeholder: string }).isRequired,
   requestFieldEmail: shape({ label: string, placeholder: string }).isRequired,
   requestFieldUrl: shape({ label: string, placeholder: string }).isRequired,
-  requestFieldType: shape({ label: string, options: arrayOf(string) })
-    .isRequired,
-  requestFieldTraffic: shape({ label: string, options: arrayOf(string) })
-    .isRequired,
+  requestFieldType: shape({
+    label: string,
+    options: shape({
+      blog: string,
+      ecommerce: string,
+      corpsite: string,
+      classifiedsite: string,
+      other: string,
+    }),
+  }).isRequired,
+  requestFieldTraffic: shape({
+    label: string,
+    options: shape({
+      A: string,
+      B: string,
+      C: string,
+      D: string,
+      UNKNOWN: string,
+    }),
+  }).isRequired,
 };
 
 RequestForm.defaultProps = {

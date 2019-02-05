@@ -40,22 +40,6 @@ export default types
       if (self.validations.traffic) self.validations.clear("traffic");
     },
     async sendRequest() {
-      const typeOptions = {
-        "Blog / News Site": "blog",
-        "eCommerce / Online store": "ecommerce",
-        "Corporate site / Online bussiness": "corpsite",
-        "Classifieds site": "classifiedsite",
-        Other: "other",
-      };
-
-      const trafficOptions = {
-        "More than 1 million": "A",
-        "500.000 - 1 million": "B",
-        "100.000 - 500.000": "C",
-        "Less than 100.000": "D",
-        "I don't know": "UNKNOWN",
-      };
-
       self.name = self.name.trim();
       self.email = self.email.trim();
       self.url = self.url.trim();
@@ -67,8 +51,8 @@ export default types
             name: self.name,
             email: self.email,
             url: self.url,
-            type: typeOptions[self.type],
-            traffic: trafficOptions[self.traffic],
+            type: self.type,
+            traffic: self.traffic,
             origin: "plugin",
           }
         );

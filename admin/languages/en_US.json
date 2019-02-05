@@ -55,23 +55,23 @@
         },
         "fieldType": {
           "label": "Type of your WordPress site:",
-          "options": [
-            "Blog / News Site",
-            "eCommerce / Online store",
-            "Corporate site / Online bussiness",
-            "Classifieds site",
-            "Other"
-          ]
+          "options": {
+            "blog": "Blog / News Site",
+            "ecommerce": "eCommerce / Online store",
+            "corpsite": "Corporate site / Online bussiness",
+            "classifiedsite": "Classifieds site",
+            "other": "Other"
+          }
         },
         "fieldTraffic": {
           "label": "Monthly traffic: (Pageviews per month)",
-          "options": [
-            "More than 1 million",
-            "500.000 - 1 million",
-            "100.000 - 500.000",
-            "Less than 100.000",
-            "I don't know"
-          ]
+          "options": {
+            "A": "More than 1 million",
+            "B": "500.000 - 1 million",
+            "C": "100.000 - 500.000",
+            "D": "Less than 100.000",
+            "UNKNOWN": "I don't know"
+          }
         },
         "alreadyLink": "I already have a Site ID",
         "requestButton": "Request Site ID"
@@ -88,7 +88,7 @@
       "content": "The Site ID connects your WordPress website with our platform.",
       "fieldSiteId": {
         "label": "Site ID",
-        "placeholder": "ID of 17 characters"
+        "placeholder": "Enter your site ID here"
       },
       "link": "I don't have a Site ID",
       "confirmButton": "Confirm"
@@ -157,7 +157,7 @@
       },
       "fieldInjectionType": {
         "label": "Injection type",
-        "options": ["Inline", "External"]
+        "options": { "inline": "Inline", "external": "External" }
       }
     },
     "saveButton": {

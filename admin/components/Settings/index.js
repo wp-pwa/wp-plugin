@@ -1,5 +1,5 @@
 import React from "react";
-import { string, bool, func, shape, arrayOf } from "prop-types";
+import { string, bool, func, shape } from "prop-types";
 import { inject } from "mobx-react";
 import styled from "styled-components";
 import {
@@ -156,12 +156,14 @@ const Settings = ({
             <Paragraph margin={{ vertical: "0", left: "12px", right: "20px" }}>
               {fieldInjectionType.label}
             </Paragraph>
-            <select onChange={setInjectionType} value={injectionType}>
-              {fieldInjectionType.options.map(opt => (
-                <option key={opt} value={opt.toLowerCase()}>
-                  {opt}
-                </option>
-              ))}
+            <select value={injectionType} onChange={setInjectionType}>
+              {Object.entries(fieldInjectionType.options).map(
+                ([option, label]) => (
+                  <option key={option} value={option}>
+                    {label}
+                  </option>
+                )
+              )}
             </select>
           </Box>
         </form>
@@ -209,8 +211,10 @@ Settings.propTypes = {
     button: shape({ idle: string, busy: string, done: string }),
   }).isRequired,
   fieldExcludes: shape({ label: string, placeholder: string }).isRequired,
-  fieldInjectionType: shape({ label: string, options: arrayOf(string) })
-    .isRequired,
+  fieldInjectionType: shape({
+    label: string,
+    options: shape({ inline: string, external: string }),
+  }).isRequired,
   saveButtonText: shape({ idle: string, busy: string, done: string })
     .isRequired,
   siteIdValidation: string,
