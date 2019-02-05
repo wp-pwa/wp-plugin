@@ -42,7 +42,7 @@ class Frontity_Images
   // Saves the image id transient key for future purges.
   function update_content_media_transients($transient_name, $attachment_id)
   {
-    set_transient($transient_name, $attachment_id, 0);
+    set_transient($transient_name, $attachment_id);
     $transient_keys = get_option('image_id_transient_keys');
     $transient_keys[] = $transient_name;
     update_option('image_id_transient_keys', $transient_keys);
