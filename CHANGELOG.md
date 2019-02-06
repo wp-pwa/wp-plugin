@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/frontity/wp-plugin/compare/v1.13.0...v1.13.1) (2019-02-06)
+
+
+### Bug Fixes
+
+* **injector:** adds version to injector url to refresh cache ([6b9f412](https://github.com/frontity/wp-plugin/commit/6b9f412))
+
 # [1.13.0](https://github.com/frontity/wp-plugin/compare/v1.12.1...v1.13.0) (2019-02-06)
 
 
