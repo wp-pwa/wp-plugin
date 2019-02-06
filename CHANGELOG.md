@@ -1,3 +1,10 @@
+## [1.13.2](https://github.com/frontity/wp-plugin/compare/v1.13.1...v1.13.2) (2019-02-06)
+
+
+### Bug Fixes
+
+* **loader:** fixes loader bar ([30c2274](https://github.com/frontity/wp-plugin/commit/30c2274))
+
 ## [1.13.1](https://github.com/frontity/wp-plugin/compare/v1.13.0...v1.13.1) (2019-02-06)
 
 
