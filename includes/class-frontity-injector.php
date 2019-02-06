@@ -67,9 +67,10 @@ class Frontity_Injector
     } else {
       $injector_url = FRONTITY_URL
         . 'injector/'
-        . ($debug_injector ? 'injector.js' : 'injector.min.js');
+        . ($debug_injector ? 'injector.js' : 'injector.min.js')
+        . '?ver=' . FRONTITY_VERSION;
     }
- 
+
     // Save the injector string in the class property.
     self::$injector_string = '<script id="frontity-injector" type="text/javascript">'
       . 'window["wp-pwa"]=' . $window_frontity . ';'
