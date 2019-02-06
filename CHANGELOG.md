@@ -1,3 +1,16 @@
+# [1.13.0](https://github.com/frontity/wp-plugin/compare/v1.12.1...v1.13.0) (2019-02-06)
+
+
+### Bug Fixes
+
+* **images:** prevents data-attachment-id if src is external ([d8a3c81](https://github.com/frontity/wp-plugin/commit/d8a3c81))
+* **latest:** fixes latest filter ([64b90ad](https://github.com/frontity/wp-plugin/commit/64b90ad))
+
+
+### Features
+
+* **injector:** adds auto injector ([4538e16](https://github.com/frontity/wp-plugin/commit/4538e16))
+
 ## [1.12.1](https://github.com/frontity/wp-plugin/compare/v1.12.0...v1.12.1) (2019-01-30)
 
 
