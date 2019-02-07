@@ -2,28 +2,10 @@
 <head>
   <meta name="viewport" content="width=device-width">
   <style>
-    @keyframes progress {
-      from {
-        width: 0%;
-      }
-      to {
-        width: 80%;
-      }
-    }
-    
-    body {
-      background: #FDFDFD;
-      display: flex;
-      justify-content:center;
-      align-items: center;
-      margin: 0;
-    }
-
-    div {
-      animation: 6s ease-out 1s 1 forwards progress;
-      height: 1px;
-      background: #000;
-    }
+    @keyframes progress { from { width: 0%; } to { width: 80%; } }
+    html, body { height: 100%; }
+    body { background: #FDFDFD; display: flex; justify-content: center; align-items: center; margin: 0; }
+    div { animation: 6s ease-out 1s 1 forwards progress; height: 1px; background: #000; }
   </style>
 </head>
 <body>

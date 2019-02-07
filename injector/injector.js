@@ -72,9 +72,8 @@
     isMobile(navigator.userAgent)
   ) {
     window.stop();
-    var html =
-      "%3Chead%3E%0A%20%20%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%22%3E%0A%20%20%3Cstyle%3E%0A%20%20%20%20@keyframes%20progress%20%7B%0A%20%20%20%20%20%20from%20%7B%0A%20%20%20%20%20%20%20%20width%3A%200%25%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20to%20%7B%0A%20%20%20%20%20%20%20%20width%3A%2080%25%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20body%20%7B%0A%20%20%20%20%20%20background%3A%20%23FDFDFD%3B%0A%20%20%20%20%20%20display%3A%20flex%3B%0A%20%20%20%20%20%20justify-content%3Acenter%3B%0A%20%20%20%20%20%20align-items%3A%20center%3B%0A%20%20%20%20%20%20margin%3A%200%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20div%20%7B%0A%20%20%20%20%20%20animation%3A%206s%20ease-out%201s%201%20forwards%20progress%3B%0A%20%20%20%20%20%20height%3A%201px%3B%0A%20%20%20%20%20%20background%3A%20%23000%3B%0A%20%20%20%20%7D%0A%20%20%3C/style%3E%0A%3C/head%3E%0A%3Cbody%3E%0A%20%20%3Cdiv%3E%3C/div%3E%0A%3C/body%3E";
-    document.write(unescape(html));
+    var html = "%3Chead%3E%0A%20%20%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%22%3E%0A%20%20%3Cstyle%3E%0A%20%20%20%20@keyframes%20progress%20%7B%20from%20%7B%20width%3A%200%25%3B%20%7D%20to%20%7B%20width%3A%2080%25%3B%20%7D%20%7D%0A%20%20%20%20html%2C%20body%20%7B%20height%3A%20100%25%3B%20%7D%0A%20%20%20%20body%20%7B%20background%3A%20%23FDFDFD%3B%20display%3A%20flex%3B%20justify-content%3A%20center%3B%20align-items%3A%20center%3B%20margin%3A%200%3B%20%7D%0A%20%20%20%20div%20%7B%20animation%3A%206s%20ease-out%201s%201%20forwards%20progress%3B%20height%3A%201px%3B%20background%3A%20%23000%3B%20%7D%0A%20%20%3C/style%3E%0A%3C/head%3E%0A%3Cbody%3E%0A%20%20%3Cdiv%3E%3C/div%3E%0A%3C/body%3E";
+    document.querySelector('html').innerHTML = unescape(html);
 
     var query =
       "?siteId=" +
