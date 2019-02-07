@@ -1,3 +1,10 @@
+## [1.13.3](https://github.com/frontity/wp-plugin/compare/v1.13.2...v1.13.3) (2019-02-07)
+
+
+### Bug Fixes
+
+* **loader:** fixes loader for external injection ([ae5979a](https://github.com/frontity/wp-plugin/commit/ae5979a))
+
 ## [1.13.2](https://github.com/frontity/wp-plugin/compare/v1.13.1...v1.13.2) (2019-02-06)
 
 
