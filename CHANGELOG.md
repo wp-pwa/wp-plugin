@@ -1,3 +1,10 @@
+## [1.13.5](https://github.com/frontity/wp-plugin/compare/v1.13.4...v1.13.5) (2019-02-08)
+
+
+### Bug Fixes
+
+* **versions:** fixes error messages on low php and wp versions ([752f5b6](https://github.com/frontity/wp-plugin/commit/752f5b6))
+
 ## [1.13.4](https://github.com/frontity/wp-plugin/compare/v1.13.3...v1.13.4) (2019-02-08)
 
 
