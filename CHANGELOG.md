@@ -1,3 +1,11 @@
+## [1.13.4](https://github.com/frontity/wp-plugin/compare/v1.13.3...v1.13.4) (2019-02-08)
+
+
+### Bug Fixes
+
+* **activation:** prevents activation if low php or wp version ([e8e5092](https://github.com/frontity/wp-plugin/commit/e8e5092))
+* **general:** fix small syntax problems with PHP 5.3 ([243c483](https://github.com/frontity/wp-plugin/commit/243c483))
+
 ## [1.13.3](https://github.com/frontity/wp-plugin/compare/v1.13.2...v1.13.3) (2019-02-07)
 
 
