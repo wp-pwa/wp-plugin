@@ -8,7 +8,8 @@ class Frontity_Injector
 
   function __construct()
   {
-    self::$injection_type = get_option('frontity_settings')['injection_type'];
+    $settings = get_option('frontity_settings');
+    self::$injection_type = $settings['injection_type'];
   }
 
   // Evaluate if the injector should be injected.
