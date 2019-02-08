@@ -26,7 +26,8 @@ class Frontity_Request
 
   function evaluate_trinity()
   {
-    $frontpage_forced = get_option('frontity_settings')['frontpage_forced'];
+    $settings = get_option('frontity_settings');
+    $frontpage_forced = $settings['frontpage_forced'];
     $queried_object = get_queried_object();
 
     if (($frontpage_forced && is_front_page()) || is_home()) {
@@ -103,7 +104,8 @@ class Frontity_Request
       : 'http')
       . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
     self::$per_page = get_option('posts_per_page');
-    $pretty_permalinks = !empty(get_option('permalink_structure'));
+    $permalink_structure = get_option('permalink_structure');
+    $pretty_permalinks = !empty($permalink_structure);
     self::$initial_url = $pretty_permalinks
       ? strtok($url, '?')
       : $url;

@@ -13,7 +13,8 @@ class Frontity_Purifier
   function check_if_should_purify()
   {
     $disable_html_purifier = isset($_GET['disableHtmlPurifier']);
-    $html_purifier_active = get_option('frontity_settings')['html_purifier_active'];
+    $settings = get_option('frontity_settings');
+    $html_purifier_active = $settings['html_purifier_active'];
 
     $this->should_purify = !$disable_html_purifier && $html_purifier_active;
   }

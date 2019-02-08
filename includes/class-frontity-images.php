@@ -64,7 +64,7 @@ class Frontity_Images
     $content = isset($response->data['content']['rendered'])
       ? $response->data['content']['rendered']
       : "";
-    $image_ids = [];
+    $image_ids = array();
 
     $dom->load($content);
 
@@ -167,9 +167,10 @@ class Frontity_Images
     if ($transient_miss) {
       $attachment_id = 0;
       $dir = wp_upload_dir();
-      $uploads_path = parse_url($dir['baseurl'])['path'];
+      $parsedUrl = parse_url($dir['baseurl']);
+      $uploads_path = $parsedUrl['path'];
       $is_in_upload_directory = strpos($url, $uploads_path . '/') !== false;
-      $wp_host = parse_url($dir['baseurl'])['host'];
+      $wp_host = $parsedUrl['host'];
       $is_not_external_domain = strpos($url, $wp_host . '/') !== false;
 
       if ($is_in_upload_directory && $is_not_external_domain) {

@@ -203,9 +203,10 @@ class Frontity_Rest_Api_Routes
       if (post_type_exists($cpt)) {
         $cpt_object = get_post_type_object($cpt);
         if ($cpt_object->show_in_rest) {
+          $settings = get_option('frontity_settings');
           if ($cpt === 'post'
             && get_option('show_on_front') === 'page'
-            && get_option('frontity_settings')['frontpage_forced']) {
+            && $settings['frontpage_forced']) {
             $link = get_option('home');
           } else {
             $link = get_post_type_archive_link($cpt);

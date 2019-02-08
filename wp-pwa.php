@@ -24,12 +24,55 @@ define('FRONTITY_VERSION', '1.13.3');
 define('FRONTITY_PATH', plugin_dir_path(__FILE__));
 define('FRONTITY_URL', plugin_dir_url(__FILE__));
 
+// Checks if the current PHP version is supported.
+function frontity_php_version_supported()
+{
+	$version_is_supported = version_compare(PHP_VERSION, '5.3', '>=');
+
+	if (!$version_is_supported) {
+		add_action('admin_notices', 'php_version_not_supported');
+
+		function php_version_not_supported()
+		{
+			$class = 'notice notice-error';
+			$message = 'Oops! You need PHP v5.3 or greater for Frontity to work.';
+
+			printf('<div class="notice notice-error"><p>%1$s</p></div>', esc_html($message));
+		}
+	}
+
+	return $version_is_supported;
+}
+
+// Checks if the current WP version is supported.
+function frontity_wp_version_supported()
+{
+	$version = $GLOBALS['wp_version'];
+	$version_is_supported = version_compare($version, '4.7', '>=');
+
+	if (!$version_is_supported) {
+		add_action('admin_notices', 'php_version_not_supported');
+
+		function php_version_not_supported()
+		{
+			$class = 'notice notice-error';
+			$message = 'Oops! You need WordPress v4.7 or greater for Frontity to work.';
+
+			printf('<div class="notice notice-error"><p>%1$s</p></div>', esc_html($message));
+		}
+	}
+
+	return $version_is_supported;
+}
+
 // Initializes Frontity.
 function frontity()
 {
+	if (!frontity_php_version_supported() || !frontity_wp_version_supported()) return;
+
 	// This global should be removed in favor of the constant FRONTITY_PATH.
 	$GLOBALS['wp_pwa_path'] = '/' . basename(plugin_dir_path(__FILE__));
- 
+
 	// Require Frontity main class.
 	if (!class_exists('Frontity')) {
 		require_once FRONTITY_PATH . 'includes/class-frontity.php';
@@ -42,6 +85,8 @@ function frontity()
 
 function frontity_activation()
 {
+	if (!frontity_php_version_supported() || !frontity_wp_version_supported()) return;
+
 	if (!class_exists('Frontity_Settings')) {
 		require_once FRONTITY_PATH . 'includes/class-frontity-settings.php';
 	}
