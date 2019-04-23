@@ -16,4 +16,4 @@ Make your site fast and highly engaging with a Progressive Web App (PWA) theme b
 
 **This plugin is deprecated and will no longer be maintained.**
 
-We are working on a new open source framework for creating WordPress with React JS. If you want to learn more, please visit [frontity.org](https://frontity.org?utm_source=wp-pwa-readme&utm_medium=frontity-link&utm_campaign=pre-launch).
+We are working on a new open source framework for creating WordPress themes with React JS. If you want to learn more, please visit [frontity.org](https://frontity.org?utm_source=wp-pwa-readme&utm_medium=frontity-link&utm_campaign=pre-launch).
