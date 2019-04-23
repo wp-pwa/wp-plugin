@@ -12,7 +12,7 @@ Make your site fast and highly engaging with a Progressive Web App (PWA) theme b
 
 ## Description ##
 
-<strong>IMPORTANT</strong>
+<strong>IMPORTANT:</strong>
 
 **This plugin is deprecated and will no longer be maintained.**
 
