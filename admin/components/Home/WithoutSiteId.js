@@ -3,25 +3,21 @@ import React from "react";
 import { string, bool, func, arrayOf, shape } from "prop-types";
 import { inject } from "mobx-react";
 import styled from "styled-components";
-import { Box, Heading, Paragraph, Button } from "grommet";
+import { Box, Heading, Paragraph } from "grommet";
 import SiteIdJustRequested from "./SiteIdJustRequested";
 import SiteIdRequested from "./SiteIdRequested";
-import RequestForm from "./RequestForm";
 
 const WithoutSiteId = ({
   pluginDirUrl,
   siteIdRequested,
   siteIdJustRequested,
-  sendRequest,
   setSiteIdRequested,
   descriptionTitleText,
   descriptionContentText,
   descriptionFeatures,
   descriptionImageFooterText,
-  descriptionButtonText,
   notifications,
   requestAlreadyLinkText,
-  requestButtonText,
 }) => {
   if (siteIdRequested)
     return siteIdJustRequested ? <SiteIdJustRequested /> : <SiteIdRequested />;
@@ -59,11 +55,6 @@ const WithoutSiteId = ({
               </Box>
             ))}
           </Box>
-          <ViewDemoButton
-            label={descriptionButtonText}
-            href="https://frontity.com/demo?utm_source=plugin-dashboard&utm_medium=cta-button&utm_campaign=plugin-dashboard"
-            target="_blank"
-          />
         </InnerContainer>
       </Container>
       <Separator />
@@ -78,11 +69,7 @@ const WithoutSiteId = ({
           </StyledParagraph>
         </Notification>
       ))}
-      <RequestForm />
-      <Box direction="row" justify="between" align="center">
-        <Link onClick={setSiteIdRequested}>{requestAlreadyLinkText}</Link>
-        <Button primary label={requestButtonText} onClick={sendRequest} />
-      </Box>
+      <Link onClick={setSiteIdRequested}>{requestAlreadyLinkText}</Link>
     </>
   );
 };
@@ -91,18 +78,15 @@ WithoutSiteId.propTypes = {
   pluginDirUrl: string.isRequired,
   siteIdRequested: bool.isRequired,
   siteIdJustRequested: bool.isRequired,
-  sendRequest: func.isRequired,
   setSiteIdRequested: func.isRequired,
   descriptionTitleText: string.isRequired,
   descriptionContentText: string.isRequired,
   descriptionFeatures: arrayOf(shape({ title: string, content: string }))
     .isRequired,
   descriptionImageFooterText: string.isRequired,
-  descriptionButtonText: string.isRequired,
   notifications: arrayOf(shape({ highlight: string, content: string }))
     .isRequired,
   requestAlreadyLinkText: string.isRequired,
-  requestButtonText: string.isRequired,
 };
 
 export default inject(
@@ -182,16 +166,6 @@ const InnerContainer = styled.div`
       margin: 0;
       margin-bottom: 32px;
     }
-  }
-`;
-
-const ViewDemoButton = styled(Button)`
-  width: 140px;
-  align-self: flex-end;
-
-  @media (max-width: 500px) {
-    align-self: center;
-    margin-top: 12px;
   }
 `;
 
