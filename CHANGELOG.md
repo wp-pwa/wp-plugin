@@ -1,3 +1,17 @@
+# [1.14.0](https://github.com/wp-pwa/wp-plugin/compare/v1.13.5...v1.14.0) (2019-08-09)
+
+
+### Bug Fixes
+
+* **injector:** remove window.stop and make xhr synchronous ([8077358](https://github.com/wp-pwa/wp-plugin/commit/8077358))
+* **readme:** fixes readme ([6f0d5fd](https://github.com/wp-pwa/wp-plugin/commit/6f0d5fd))
+* **readme:** fixes readme ([2b463ca](https://github.com/wp-pwa/wp-plugin/commit/2b463ca))
+
+
+### Features
+
+* **all:** deprecated warning message ([86b0770](https://github.com/wp-pwa/wp-plugin/commit/86b0770))
+
 ## [1.13.5](https://github.com/frontity/wp-plugin/compare/v1.13.4...v1.13.5) (2019-02-08)
 
 

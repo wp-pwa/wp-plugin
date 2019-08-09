@@ -3,7 +3,7 @@
 Plugin Name: WordPress PWA
 Plugin URI: https://wordpress.org/plugins/wp-pwa/
 Description: WordPress plugin to turn WordPress blogs into Progressive Web Apps.
-Version: 1.13.5
+Version: 1.14.0
 Author: WordPress PWA
 License: GPL v3
 Copyright: Worona Labs SL
@@ -19,7 +19,7 @@ if (!defined('DS')) {
 }
 
 // Define Frontity constants.
-define('FRONTITY_VERSION', '1.13.5');
+define('FRONTITY_VERSION', '1.14.0');
 define('FRONTITY_PATH', plugin_dir_path(__FILE__));
 define('FRONTITY_URL', plugin_dir_url(__FILE__));
 
