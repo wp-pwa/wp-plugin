@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/frontity/wp-plugin.git"
+    "url": "https://github.com/wp-pwa/wp-plugin.git"
   },
   "keywords": [
     "frontity",
@@ -28,9 +28,9 @@
   "author": "Luis Herranz (luis@frontity.com), Eduardo Campaña (eduardo@frontity.com)",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/frontity/wp-plugin/issues"
+    "url": "https://github.com/wp-pwa/wp-plugin/issues"
   },
-  "homepage": "https://github.com/frontity/wp-plugin#readme",
+  "homepage": "https://github.com/wp-pwa/wp-plugin#readme",
   "devDependencies": {
     "@babel/core": "^7.2.0",
     "@babel/plugin-proposal-class-properties": "^7.2.1",

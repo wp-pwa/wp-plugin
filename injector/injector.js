@@ -1,7 +1,6 @@
 // Uglify using "npx uglify-js injector.js --output injector.min.js --compress --mangle"
 (function(document, window, navigator) {
   var cookieExpire = 3; // seconds
-  var timeout = 30000; // miliseconds
 
   var isIphone = /ip(hone|od).*?OS (?![1-8]_|X)/i; // from iOS 9
   var isIpad = /ipad.*?OS (?![1-8]_|X)/i; // from iOS 9
@@ -52,9 +51,14 @@
   };
 
   var loadHtml = function(html) {
-    var newDoc = document.open("text/html", "replace");
-    newDoc.write(html);
-    newDoc.close();
+    var openDoc = document.open();
+    openDoc.write(html);
+
+    // Remove old content (wow. such magic 🐶)
+    openDoc.write('<plaintext id="before-frontity" style="display:none">');
+    openDoc.body.removeChild(openDoc.getElementById("before-frontity"));
+
+    openDoc.close();
   };
 
   if (readCookie("wppwaClassicVersion")) {
@@ -71,10 +75,6 @@
     navigator &&
     isMobile(navigator.userAgent)
   ) {
-    window.stop();
-    var html = "%3Chead%3E%0A%20%20%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%22%3E%0A%20%20%3Cstyle%3E%0A%20%20%20%20@keyframes%20progress%20%7B%20from%20%7B%20width%3A%200%25%3B%20%7D%20to%20%7B%20width%3A%2080%25%3B%20%7D%20%7D%0A%20%20%20%20html%2C%20body%20%7B%20height%3A%20100%25%3B%20%7D%0A%20%20%20%20body%20%7B%20background%3A%20%23FDFDFD%3B%20display%3A%20flex%3B%20justify-content%3A%20center%3B%20align-items%3A%20center%3B%20margin%3A%200%3B%20%7D%0A%20%20%20%20div%20%7B%20animation%3A%206s%20ease-out%201s%201%20forwards%20progress%3B%20height%3A%201px%3B%20background%3A%20%23000%3B%20%7D%0A%20%20%3C/style%3E%0A%3C/head%3E%0A%3Cbody%3E%0A%20%20%3Cdiv%3E%3C/div%3E%0A%3C/body%3E";
-    document.querySelector('html').innerHTML = unescape(html);
-
     var query =
       "?siteId=" +
       window["wp-pwa"].site_id +
@@ -118,7 +118,6 @@
 
     var loadWorona = function() {
       var xhr = new XMLHttpRequest();
-      xhr.timeout = timeout;
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
@@ -129,17 +128,12 @@
           }
         }
       };
-      xhr.ontimeout = function() {
-        injectorFailed(xhr, "timeout");
-        setCookie("wppwaInjectorFailed", "true", cookieExpire);
-        window.location.reload(true);
-      };
       xhr.onerror = function() {
         injectorFailed(xhr, "network error");
         setCookie("wppwaInjectorFailed", "true", cookieExpire);
         window.location.reload(true);
       };
-      xhr.open("GET", window["wp-pwa"].ssr_server + query, true);
+      xhr.open("GET", window["wp-pwa"].ssr_server + query, false);
       xhr.send();
     };
     loadWorona();
