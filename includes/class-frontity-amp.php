@@ -14,7 +14,7 @@ class Frontity_Amp
     $excluded = Frontity_Request::get('excluded');
 
     $this->should_inject = $amp_forced
-      || ($amp_active && is_single() && !$excluded);
+      || ($amp_active && is_single() && !is_attachment() && !$excluded);
   }
   
   // Generates the string with the AMP canonical link.
