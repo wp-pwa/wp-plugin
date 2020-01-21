@@ -1,3 +1,11 @@
+## [1.14.1](https://github.com/wp-pwa/wp-plugin/compare/v1.14.0...v1.14.1) (2020-01-21)
+
+
+### Bug Fixes
+
+* **amp:** don't include amphtml in attachments ([6c7bfac](https://github.com/wp-pwa/wp-plugin/commit/6c7bfac))
+* **images:** don't store transient ids in an array ([efc1406](https://github.com/wp-pwa/wp-plugin/commit/efc1406))
+
 # [1.14.0](https://github.com/wp-pwa/wp-plugin/compare/v1.13.5...v1.14.0) (2019-08-09)
 
 
