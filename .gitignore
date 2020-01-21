@@ -1,5 +1,4 @@
 node_modules
-dist
 analyze
 .env
 .DS_store
