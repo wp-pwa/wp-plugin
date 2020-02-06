@@ -1,3 +1,10 @@
+## [1.14.3](https://github.com/wp-pwa/wp-plugin/compare/v1.14.2...v1.14.3) (2020-02-06)
+
+
+### Bug Fixes
+
+* **injector:** update minified injector ([58cecb4](https://github.com/wp-pwa/wp-plugin/commit/58cecb4))
+
 ## [1.14.2](https://github.com/wp-pwa/wp-plugin/compare/v1.14.1...v1.14.2) (2020-02-06)
 
 
