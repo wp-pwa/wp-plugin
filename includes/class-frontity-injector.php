@@ -5,6 +5,7 @@ class Frontity_Injector
   static protected $should_inject;
   static protected $injection_type;
   static protected $injector_string;
+  static protected $ob_initial_level = 0;
 
   function __construct()
   {
@@ -84,6 +85,7 @@ class Frontity_Injector
   // Start storing in the buffer the header html.
   function buffer_header_html()
   {
+    self::$ob_initial_level = ob_get_level();      
     ob_start();
   }
 
@@ -93,7 +95,7 @@ class Frontity_Injector
   {
     $header_html = '';
 
-    while (ob_get_level()) {
+    while (ob_get_level() > self::$ob_initial_level) {
       $header_html .= ob_get_clean();
     }
 
