@@ -1,3 +1,10 @@
+## [1.14.2](https://github.com/wp-pwa/wp-plugin/compare/v1.14.1...v1.14.2) (2020-02-06)
+
+
+### Bug Fixes
+
+* **injector:** clean ob up to the initial level ([a53e34d](https://github.com/wp-pwa/wp-plugin/commit/a53e34d))
+
 ## [1.14.1](https://github.com/wp-pwa/wp-plugin/compare/v1.14.0...v1.14.1) (2020-01-21)
 
 
